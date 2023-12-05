@@ -214,7 +214,7 @@ namespace starq::odrive
             float vel_integrator_gain = 0.0f;
             float velocity_limit = 0.0f;
             float current_limit = 0.0f;
-        } configs_[MAX_CAN_ID];
+        } configs_[MAX_CAN_ID + 1];
     };
 
 }

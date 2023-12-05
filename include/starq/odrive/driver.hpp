@@ -29,15 +29,22 @@ namespace starq::odrive
     public:
         using Ptr = std::shared_ptr<ODriveDriver>;
 
+        /// @brief Create an ODrive driver.
+        /// @param socket CAN socket to use for communication.
         ODriveDriver(const starq::can::CANSocket::Ptr socket)
             : socket_(socket)
         {
         }
 
+        /// @brief Destroy the ODrive driver.
         ~ODriveDriver()
         {
         }
 
+        /// @brief Set the axis state.
+        /// @param can_id CAN ID of the axis.
+        /// @param state Axis state.
+        /// @return If the command was sent successfully.
         bool setAxisState(const uint8_t can_id, const uint32_t state)
         {
             const int cmd_id = 0x007;
@@ -53,6 +60,11 @@ namespace starq::odrive
             return true;
         }
 
+        /// @brief Set the control mode.
+        /// @param can_id CAN ID of the axis.
+        /// @param control_mode Control mode.
+        /// @param input_mode Input mode.
+        /// @return If the command was sent successfully.
         bool setControlMode(const uint8_t can_id, const uint32_t control_mode, const uint32_t input_mode = 0x1)
         {
             const int cmd_id = 0x00b;
@@ -69,6 +81,11 @@ namespace starq::odrive
             return true;
         }
 
+        /// @brief Set the limits.
+        /// @param can_id CAN ID of the axis.
+        /// @param velocity_limit Velocity limit.
+        /// @param current_limit Current limit.
+        /// @return If the command was sent successfully.
         bool setLimits(const uint8_t can_id, const float velocity_limit, const float current_limit)
         {
             const int cmd_id = 0x00f;
@@ -85,6 +102,10 @@ namespace starq::odrive
             return true;
         }
 
+        /// @brief Set the position gain.
+        /// @param can_id CAN ID of the axis.
+        /// @param pos_gain Position gain.
+        /// @return If the command was sent successfully.
         bool setPosGain(const uint8_t can_id, const float pos_gain)
         {
             const int cmd_id = 0x01a;
@@ -100,6 +121,11 @@ namespace starq::odrive
             return true;
         }
 
+        /// @brief Set the velocity gains.
+        /// @param can_id CAN ID of the axis.
+        /// @param vel_gain Velocity gain.
+        /// @param vel_integrator_gain Velocity integrator gain.
+        /// @return If the command was sent successfully.
         bool setVelGains(const uint8_t can_id, const float vel_gain, const float vel_integrator_gain)
         {
             const int cmd_id = 0x01b;
@@ -116,6 +142,12 @@ namespace starq::odrive
             return true;
         }
 
+        /// @brief Set the position.
+        /// @param can_id CAN ID of the axis.
+        /// @param pos Position.
+        /// @param vel_ff Feedforward velocity.
+        /// @param torque_ff Feedforward torque.
+        /// @return If the command was sent successfully.
         bool setPosition(const uint8_t can_id, const float pos, const float vel_ff = 0.F, const float torque_ff = 0.F)
         {
             const int cmd_id = 0x01c;
@@ -136,6 +168,11 @@ namespace starq::odrive
             return true;
         }
 
+        /// @brief Set the velocity.
+        /// @param can_id CAN ID of the axis.
+        /// @param vel Velocity.
+        /// @param torque_ff Feedforward torque.
+        /// @return If the command was sent successfully.
         bool setVelocity(const uint8_t can_id, const float vel, const float torque_ff = 0.F)
         {
             const int cmd_id = 0x01d;
@@ -152,6 +189,10 @@ namespace starq::odrive
             return true;
         }
 
+        /// @brief Set the torque.
+        /// @param can_id CAN ID of the axis.
+        /// @param torque Torque.
+        /// @return If the command was sent successfully.
         bool setTorque(const uint8_t can_id, const float torque)
         {
             const int cmd_id = 0x01e;

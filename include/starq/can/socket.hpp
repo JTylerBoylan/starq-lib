@@ -25,12 +25,15 @@ namespace starq::can
     public:
         using Ptr = std::shared_ptr<CANSocket>;
 
+        /// @brief Connect to a CAN interface.
+        /// @param interface The name of the CAN interface.
         CANSocket(const std::string &interface)
-            : socket_(-1)
+            : interface_(interface), socket_(-1)
         {
-            init(interface);
+            init();
         }
 
+        /// @brief Disconnect from the CAN interface.
         ~CANSocket()
         {
             if (socket_ >= 0)
@@ -39,7 +42,8 @@ namespace starq::can
             }
         }
 
-        bool init(const std::string &interface)
+        /// @brief Initialize the CAN interface.
+        bool init()
         {
             if (socket_ >= 0)
             {
@@ -55,7 +59,7 @@ namespace starq::can
             }
 
             struct ifreq ifr;
-            std::strcpy(ifr.ifr_name, interface.c_str());
+            std::strcpy(ifr.ifr_name, interface_.c_str());
             ioctl(socket_, SIOCGIFINDEX, &ifr);
 
             struct sockaddr_can addr;
@@ -73,6 +77,11 @@ namespace starq::can
             return true;
         }
 
+        /// @brief Send a CAN frame.
+        /// @param can_id CAN ID.
+        /// @param data Data to be sent.
+        /// @param size Size of data.
+        /// @return If the CAN frame was sent successfully.
         bool send(const uint8_t can_id, const uint8_t *data, const uint8_t size)
         {
             if (socket_ < 0)
@@ -109,6 +118,9 @@ namespace starq::can
             return true;
         }
 
+        /// @brief Receive a CAN frame.
+        /// @param frame Frame to be filled.
+        /// @return Size of the received frame.
         ssize_t receive(struct can_frame &frame)
         {
             if (socket_ < 0)
@@ -126,6 +138,7 @@ namespace starq::can
         }
 
     private:
+        std::string interface_;
         int socket_;
         std::mutex mutex_;
     };

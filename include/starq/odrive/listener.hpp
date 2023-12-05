@@ -13,68 +13,104 @@ namespace starq::odrive
     public:
         using Ptr = std::shared_ptr<ODriveListener>;
 
+        /// @brief Create an ODrive listener.
+        /// @param socket CAN Socket to listen on.
         ODriveListener(const starq::can::CANSocket::Ptr socket)
             : socket_(socket), running_(false)
         {
             start();
         }
 
+        /// @brief Destroy the ODrive listener.
         ~ODriveListener()
         {
             stop();
             poll_thread_.join();
         }
 
+        /// @brief Get the axis error.
+        /// @param can_id CAN ID of the axis.
+        /// @return Axis error.
         uint32_t getAxisError(const uint8_t can_id) const
         {
             return info_[can_id].axis_error;
         }
 
+        /// @brief Get the axis state.
+        /// @param can_id CAN ID of the axis.
+        /// @return Axis state.
         uint8_t getAxisState(const uint8_t can_id) const
         {
             return info_[can_id].axis_state;
         }
 
+        /// @brief Get the Iq setpoint.
+        /// @param can_id CAN ID of the axis.
+        /// @return Iq setpoint.
         float getIqSetpoint(const uint8_t can_id) const
         {
             return info_[can_id].iq_setpoint;
         }
 
+        /// @brief Get the Iq measured.
+        /// @param can_id CAN ID of the axis.
+        /// @return Iq measured.
         float getIqMeasured(const uint8_t can_id) const
         {
             return info_[can_id].iq_measured;
         }
 
+        /// @brief Get the FET temperature.
+        /// @param can_id CAN ID of the axis.
+        /// @return FET temperature.
         float getFETTemperature(const uint8_t can_id) const
         {
             return info_[can_id].fet_temperature;
         }
 
+        /// @brief Get the motor temperature.
+        /// @param can_id CAN ID of the axis.
+        /// @return Motor temperature.
         float getMotorTemperature(const uint8_t can_id) const
         {
             return info_[can_id].motor_temperature;
         }
 
+        /// @brief Get the bus voltage.
+        /// @param can_id CAN ID of the axis.
+        /// @return Bus voltage.
         float getBusVoltage(const uint8_t can_id) const
         {
             return info_[can_id].bus_voltage;
         }
 
+        /// @brief Get the bus current.
+        /// @param can_id CAN ID of the axis.
+        /// @return Bus current.
         float getBusCurrent(const uint8_t can_id) const
         {
             return info_[can_id].bus_current;
         }
 
+        /// @brief Get the position estimate.
+        /// @param can_id CAN ID of the axis.
+        /// @return Position estimate.
         float getPosEstimate(const uint8_t can_id) const
         {
             return info_[can_id].pos_estimate;
         }
 
+        /// @brief Get the velocity estimate.
+        /// @param can_id CAN ID of the axis.
+        /// @return Velocity estimate.
         float getVelEstimate(const uint8_t can_id) const
         {
             return info_[can_id].vel_estimate;
         }
 
+        /// @brief Get the torque estimate.
+        /// @param can_id CAN ID of the axis.
+        /// @return Torque estimate.
         float getTorqueEstimate(const uint8_t can_id) const
         {
             return info_[can_id].torque_estimate;
@@ -213,7 +249,7 @@ namespace starq::odrive
             float pos_estimate = 0.0f;
             float vel_estimate = 0.0f;
             float torque_estimate = 0.0f;
-        } info_[MAX_CAN_ID];
+        } info_[MAX_CAN_ID + 1];
 
         std::mutex mutex_;
     };
