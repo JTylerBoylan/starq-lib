@@ -5,8 +5,6 @@
 
 #include "starq/can/socket.hpp"
 
-#define MAX_CAN_ID 0x3F
-
 namespace starq::odrive
 {
 
@@ -67,9 +65,19 @@ namespace starq::odrive
             return info_[can_id].bus_current;
         }
 
-        float getTorqueTarget(const uint8_t can_id) const
+        float getPosEstimate(const uint8_t can_id) const
         {
-            return info_[can_id].torque_target;
+            return info_[can_id].pos_estimate;
+        }
+
+        float getVelEstimate(const uint8_t can_id) const
+        {
+            return info_[can_id].vel_estimate;
+        }
+
+        float getTorqueEstimate(const uint8_t can_id) const
+        {
+            return info_[can_id].torque_estimate;
         }
 
     private:
@@ -102,7 +110,7 @@ namespace starq::odrive
             running_ = false;
             return true;
         }
-        
+
         void run()
         {
             while (running_)
@@ -116,6 +124,12 @@ namespace starq::odrive
 
                 uint8_t can_id = getCanID(frame.can_id);
                 uint8_t cmd_id = getCommandID(frame.can_id);
+
+                if (can_id > MAX_CAN_ID)
+                {
+                    std::cerr << "Invalid CAN ID." << std::endl;
+                    continue;
+                }
 
                 std::lock_guard<std::mutex> lock(mutex_);
 
@@ -154,11 +168,19 @@ namespace starq::odrive
                     info_[can_id].bus_voltage = bus_voltage;
                     info_[can_id].bus_current = bus_current;
                     break;
+                case 0x009:
+                    // Get_Encoder_Estimates
+                    float pos_estimate, vel_estimate;
+                    std::memcpy(&pos_estimate, frame.data, sizeof(pos_estimate));
+                    std::memcpy(&vel_estimate, frame.data + 4, sizeof(vel_estimate));
+                    info_[can_id].pos_estimate = pos_estimate;
+                    info_[can_id].vel_estimate = vel_estimate;
+                    break;
                 case 0x01C:
                     // Get_Torques
-                    float torque_target;
-                    std::memcpy(&torque_target, frame.data, sizeof(torque_target));
-                    info_[can_id].torque_target = torque_target;
+                    float torque_estimate;
+                    std::memcpy(&torque_estimate, frame.data, sizeof(torque_estimate));
+                    info_[can_id].torque_estimate = torque_estimate;
                     break;
                 }
             }
@@ -188,7 +210,9 @@ namespace starq::odrive
             float motor_temperature = 0.0f;
             float bus_voltage = 0.0f;
             float bus_current = 0.0f;
-            float torque_target = 0.0f;
+            float pos_estimate = 0.0f;
+            float vel_estimate = 0.0f;
+            float torque_estimate = 0.0f;
         } info_[MAX_CAN_ID];
 
         std::mutex mutex_;

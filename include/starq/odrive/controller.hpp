@@ -145,9 +145,19 @@ namespace starq::odrive
             return listener_->getBusCurrent(can_id);
         }
 
-        float getTorqueTarget(const uint8_t can_id) const
+        float getPositionEstimate(const uint8_t can_id) const
         {
-            return listener_->getTorqueTarget(can_id);
+            return listener_->getPosEstimate(can_id);
+        }
+
+        float getVelocityEstimate(const uint8_t can_id) const
+        {
+            return listener_->getVelEstimate(can_id);
+        }
+
+        float getTorqueEstimate(const uint8_t can_id) const
+        {
+            return listener_->getTorqueEstimate(can_id);
         }
 
         uint32_t getAxisStateConfig(const uint8_t can_id) const

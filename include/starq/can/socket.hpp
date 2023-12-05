@@ -16,6 +16,8 @@
 #include <string>
 #include <mutex>
 
+#define MAX_CAN_ID 0x3F
+
 namespace starq::can
 {
     class CANSocket
@@ -76,6 +78,12 @@ namespace starq::can
             if (socket_ < 0)
             {
                 std::cerr << "CAN socket is not initialized." << std::endl;
+                return false;
+            }
+
+            if (can_id > MAX_CAN_ID)
+            {
+                std::cerr << "CAN ID is too large." << std::endl;
                 return false;
             }
 
