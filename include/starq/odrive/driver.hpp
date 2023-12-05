@@ -152,6 +152,21 @@ namespace starq::odrive
             return true;
         }
 
+        bool setTorque(const uint8_t can_id, const float torque)
+        {
+            const int cmd_id = 0x01e;
+            const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
+
+            uint8_t data[4];
+            std::memcpy(data, &torque, sizeof(torque));
+            if (!socket_->send(arb_id, data, 4))
+            {
+                std::cerr << "Could not send torque." << std::endl;
+                return false;
+            }
+            return true;
+        }
+
     private:
         uint32_t getArbitrationID(const uint8_t can_id, const uint8_t cmd_id) const
         {

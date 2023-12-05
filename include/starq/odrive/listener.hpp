@@ -18,42 +18,13 @@ namespace starq::odrive
         ODriveListener(const starq::can::CANSocket::Ptr socket)
             : socket_(socket), running_(false)
         {
+            start();
         }
 
         ~ODriveListener()
         {
             stop();
             poll_thread_.join();
-        }
-
-        bool start()
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-
-            if (running_)
-            {
-                std::cerr << "ODrive listener already running." << std::endl;
-                return false;
-            }
-
-            running_ = true;
-            poll_thread_ = std::thread(&ODriveListener::run, this);
-            poll_thread_.detach();
-            return true;
-        }
-
-        bool stop()
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-
-            if (!running_)
-            {
-                std::cerr << "ODrive listener not running." << std::endl;
-                return false;
-            }
-
-            running_ = false;
-            return true;
         }
 
         uint32_t getAxisError(const uint8_t can_id) const
@@ -102,6 +73,36 @@ namespace starq::odrive
         }
 
     private:
+        bool start()
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+
+            if (running_)
+            {
+                std::cerr << "ODrive listener already running." << std::endl;
+                return false;
+            }
+
+            running_ = true;
+            poll_thread_ = std::thread(&ODriveListener::run, this);
+            poll_thread_.detach();
+            return true;
+        }
+
+        bool stop()
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+
+            if (!running_)
+            {
+                std::cerr << "ODrive listener not running." << std::endl;
+                return false;
+            }
+
+            running_ = false;
+            return true;
+        }
+        
         void run()
         {
             while (running_)

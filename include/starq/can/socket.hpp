@@ -26,6 +26,7 @@ namespace starq::can
         CANSocket(const std::string &interface)
             : socket_(-1)
         {
+            init(interface);
         }
 
         ~CANSocket()
