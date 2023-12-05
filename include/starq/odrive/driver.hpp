@@ -8,20 +8,20 @@ namespace starq::odrive
 
     enum ControlMode
     {
-        VOLTAGE = 0,
-        TORQUE = 1,
-        VELOCITY = 2,
-        POSITION = 3
+        VOLTAGE = 0x0,
+        TORQUE = 0x1,
+        VELOCITY = 0x2,
+        POSITION = 0x3
     };
 
     enum InputMode
     {
-        INACTIVE = 0,
-        PASSTHROUGH = 1,
-        VEL_RAMP = 2,
-        POS_FILTER = 3,
-        TRAP_TRAJ = 5,
-        TORQUE_RAMP = 6
+        INACTIVE = 0x0,
+        PASSTHROUGH = 0x1,
+        VEL_RAMP = 0x2,
+        POS_FILTER = 0x3,
+        TRAP_TRAJ = 0x5,
+        TORQUE_RAMP = 0x6
     };
 
     class ODriveDriver

@@ -2,6 +2,7 @@
 #define STARQ_ODRIVE__LISTENER_HPP_
 
 #include <thread>
+#include <mutex>
 
 #include "starq/can/socket.hpp"
 
@@ -25,94 +26,104 @@ namespace starq::odrive
         ~ODriveListener()
         {
             stop();
-            poll_thread_.join();
         }
 
         /// @brief Get the axis error.
         /// @param can_id CAN ID of the axis.
         /// @return Axis error.
-        uint32_t getAxisError(const uint8_t can_id) const
+        uint32_t getAxisError(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].axis_error;
         }
 
         /// @brief Get the axis state.
         /// @param can_id CAN ID of the axis.
         /// @return Axis state.
-        uint8_t getAxisState(const uint8_t can_id) const
+        uint8_t getAxisState(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].axis_state;
         }
 
         /// @brief Get the Iq setpoint.
         /// @param can_id CAN ID of the axis.
         /// @return Iq setpoint.
-        float getIqSetpoint(const uint8_t can_id) const
+        float getIqSetpoint(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].iq_setpoint;
         }
 
         /// @brief Get the Iq measured.
         /// @param can_id CAN ID of the axis.
         /// @return Iq measured.
-        float getIqMeasured(const uint8_t can_id) const
+        float getIqMeasured(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].iq_measured;
         }
 
         /// @brief Get the FET temperature.
         /// @param can_id CAN ID of the axis.
         /// @return FET temperature.
-        float getFETTemperature(const uint8_t can_id) const
+        float getFETTemperature(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].fet_temperature;
         }
 
         /// @brief Get the motor temperature.
         /// @param can_id CAN ID of the axis.
         /// @return Motor temperature.
-        float getMotorTemperature(const uint8_t can_id) const
+        float getMotorTemperature(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].motor_temperature;
         }
 
         /// @brief Get the bus voltage.
         /// @param can_id CAN ID of the axis.
         /// @return Bus voltage.
-        float getBusVoltage(const uint8_t can_id) const
+        float getBusVoltage(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].bus_voltage;
         }
 
         /// @brief Get the bus current.
         /// @param can_id CAN ID of the axis.
         /// @return Bus current.
-        float getBusCurrent(const uint8_t can_id) const
+        float getBusCurrent(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].bus_current;
         }
 
         /// @brief Get the position estimate.
         /// @param can_id CAN ID of the axis.
         /// @return Position estimate.
-        float getPosEstimate(const uint8_t can_id) const
+        float getPosEstimate(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].pos_estimate;
         }
 
         /// @brief Get the velocity estimate.
         /// @param can_id CAN ID of the axis.
         /// @return Velocity estimate.
-        float getVelEstimate(const uint8_t can_id) const
+        float getVelEstimate(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].vel_estimate;
         }
 
         /// @brief Get the torque estimate.
         /// @param can_id CAN ID of the axis.
         /// @return Torque estimate.
-        float getTorqueEstimate(const uint8_t can_id) const
+        float getTorqueEstimate(const uint8_t can_id)
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return info_[can_id].torque_estimate;
         }
 
@@ -143,6 +154,7 @@ namespace starq::odrive
                 return false;
             }
 
+            poll_thread_.join();
             running_ = false;
             return true;
         }

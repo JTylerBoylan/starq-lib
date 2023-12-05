@@ -14,7 +14,6 @@
 #include <cstdint>
 #include <memory>
 #include <string>
-#include <mutex>
 
 #define MAX_CAN_ID 0x3F
 
@@ -45,6 +44,7 @@ namespace starq::can
         /// @brief Initialize the CAN interface.
         bool init()
         {
+
             if (socket_ >= 0)
             {
                 std::cerr << "CAN socket already initialized." << std::endl;
@@ -52,6 +52,7 @@ namespace starq::can
             }
 
             socket_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+
             if (socket_ < 0)
             {
                 std::cerr << "Could not create CAN socket." << std::endl;
@@ -107,14 +108,11 @@ namespace starq::can
             frame.can_dlc = size;
             std::memcpy(frame.data, data, size);
 
-            std::lock_guard<std::mutex> lock(mutex_);
-
             if (write(socket_, &frame, sizeof(frame)) <= 0)
             {
                 std::cerr << "Could not send CAN frame." << std::endl;
                 return false;
             }
-
             return true;
         }
 
@@ -128,7 +126,9 @@ namespace starq::can
                 std::cerr << "CAN socket is not initialized." << std::endl;
                 return -1;
             }
+
             ssize_t nbytes = read(socket_, &frame, sizeof(struct can_frame));
+
             if (nbytes < 0)
             {
                 std::cerr << "Could not read CAN frame." << std::endl;
@@ -140,7 +140,6 @@ namespace starq::can
     private:
         std::string interface_;
         int socket_;
-        std::mutex mutex_;
     };
 
 }
