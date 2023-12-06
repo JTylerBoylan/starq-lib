@@ -161,7 +161,8 @@ namespace starq::odrive
 
         void run()
         {
-            while (running_)
+            bool running = true;
+            while (running)
             {
                 struct can_frame frame;
                 if (socket_->receive(frame) < 0)
@@ -179,8 +180,6 @@ namespace starq::odrive
                     continue;
                 }
 
-                std::lock_guard<std::mutex> lock(mutex_);
-
                 switch (cmd_id)
                 {
                 case 0x001:
@@ -189,47 +188,70 @@ namespace starq::odrive
                     uint8_t axis_state;
                     std::memcpy(&axis_error, frame.data, sizeof(axis_error));
                     std::memcpy(&axis_state, frame.data + 4, sizeof(axis_state));
-                    info_[can_id].axis_error = axis_error;
-                    info_[can_id].axis_state = axis_state;
+                    {
+                        std::lock_guard<std::mutex> lock(mutex_);
+                        info_[can_id].axis_error = axis_error;
+                        info_[can_id].axis_state = axis_state;
+                    }
                     break;
                 case 0x014:
                     // Get_Iq
                     float iq_setpoint, iq_measured;
                     std::memcpy(&iq_setpoint, frame.data, sizeof(iq_setpoint));
                     std::memcpy(&iq_measured, frame.data + 4, sizeof(iq_measured));
-                    info_[can_id].iq_setpoint = iq_setpoint;
-                    info_[can_id].iq_measured = iq_measured;
+                    {
+                        std::lock_guard<std::mutex> lock(mutex_);
+                        info_[can_id].iq_setpoint = iq_setpoint;
+                        info_[can_id].iq_measured = iq_measured;
+                    }
                     break;
                 case 0x015:
                     // Get_Temperature
                     float fet_temperature, motor_temperature;
                     std::memcpy(&fet_temperature, frame.data, sizeof(fet_temperature));
                     std::memcpy(&motor_temperature, frame.data + 4, sizeof(motor_temperature));
-                    info_[can_id].fet_temperature = fet_temperature;
-                    info_[can_id].motor_temperature = motor_temperature;
+                    {
+                        std::lock_guard<std::mutex> lock(mutex_);
+                        info_[can_id].fet_temperature = fet_temperature;
+                        info_[can_id].motor_temperature = motor_temperature;
+                    }
                     break;
                 case 0x017:
                     // Get_Bus_Voltage_Current
                     float bus_voltage, bus_current;
                     std::memcpy(&bus_voltage, frame.data, sizeof(bus_voltage));
                     std::memcpy(&bus_current, frame.data + 4, sizeof(bus_current));
-                    info_[can_id].bus_voltage = bus_voltage;
-                    info_[can_id].bus_current = bus_current;
+                    {
+                        std::lock_guard<std::mutex> lock(mutex_);
+                        info_[can_id].bus_voltage = bus_voltage;
+                        info_[can_id].bus_current = bus_current;
+                    }
                     break;
                 case 0x009:
                     // Get_Encoder_Estimates
                     float pos_estimate, vel_estimate;
                     std::memcpy(&pos_estimate, frame.data, sizeof(pos_estimate));
                     std::memcpy(&vel_estimate, frame.data + 4, sizeof(vel_estimate));
-                    info_[can_id].pos_estimate = pos_estimate;
-                    info_[can_id].vel_estimate = vel_estimate;
+                    {
+                        std::lock_guard<std::mutex> lock(mutex_);
+                        info_[can_id].pos_estimate = pos_estimate;
+                        info_[can_id].vel_estimate = vel_estimate;
+                    }
                     break;
                 case 0x01C:
                     // Get_Torques
                     float torque_estimate;
                     std::memcpy(&torque_estimate, frame.data, sizeof(torque_estimate));
-                    info_[can_id].torque_estimate = torque_estimate;
+                    {
+                        std::lock_guard<std::mutex> lock(mutex_);
+                        info_[can_id].torque_estimate = torque_estimate;
+                    }
                     break;
+                }
+
+                {
+                    std::lock_guard<std::mutex> lock(mutex_);
+                    running = running_;
                 }
             }
         }
