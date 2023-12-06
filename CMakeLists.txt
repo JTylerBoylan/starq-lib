@@ -13,8 +13,8 @@ add_library(starq_sdk SHARED)
 target_sources(starq_sdk PRIVATE
     src/controllers/leg_controller.cpp
     src/odrive/odrive_controller.cpp
-    src/odrive/driver.cpp 
-    src/odrive/listener.cpp 
+    src/odrive/can_driver.cpp 
+    src/odrive/can_listener.cpp 
 )
 target_include_directories(starq_sdk PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

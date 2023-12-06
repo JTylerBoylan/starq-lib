@@ -1,18 +1,18 @@
-#include "starq/odrive/driver.hpp"
+#include "starq/odrive/can_driver.hpp"
 
 namespace starq::odrive
 {
 
-    ODriveDriver::ODriveDriver(const starq::can::CANSocket::Ptr socket)
+    ODriveCANDriver::ODriveCANDriver(const starq::can::CANSocket::Ptr socket)
         : socket_(socket)
     {
     }
 
-    ODriveDriver::~ODriveDriver()
+    ODriveCANDriver::~ODriveCANDriver()
     {
     }
 
-    bool ODriveDriver::setAxisState(const uint8_t can_id, const uint32_t state)
+    bool ODriveCANDriver::setAxisState(const uint8_t can_id, const uint32_t state)
     {
         const int cmd_id = 0x007;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
@@ -27,7 +27,7 @@ namespace starq::odrive
         return true;
     }
 
-    bool ODriveDriver::setControlMode(const uint8_t can_id, const uint32_t control_mode, const uint32_t input_mode)
+    bool ODriveCANDriver::setControlMode(const uint8_t can_id, const uint32_t control_mode, const uint32_t input_mode)
     {
         const int cmd_id = 0x00b;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
@@ -43,7 +43,7 @@ namespace starq::odrive
         return true;
     }
 
-    bool ODriveDriver::setLimits(const uint8_t can_id, const float velocity_limit, const float current_limit)
+    bool ODriveCANDriver::setLimits(const uint8_t can_id, const float velocity_limit, const float current_limit)
     {
         const int cmd_id = 0x00f;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
@@ -59,7 +59,7 @@ namespace starq::odrive
         return true;
     }
 
-    bool ODriveDriver::setPosGain(const uint8_t can_id, const float pos_gain)
+    bool ODriveCANDriver::setPosGain(const uint8_t can_id, const float pos_gain)
     {
         const int cmd_id = 0x01a;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
@@ -74,7 +74,7 @@ namespace starq::odrive
         return true;
     }
 
-    bool ODriveDriver::setVelGains(const uint8_t can_id, const float vel_gain, const float vel_integrator_gain)
+    bool ODriveCANDriver::setVelGains(const uint8_t can_id, const float vel_gain, const float vel_integrator_gain)
     {
         const int cmd_id = 0x01b;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
@@ -90,7 +90,7 @@ namespace starq::odrive
         return true;
     }
 
-    bool ODriveDriver::setPosition(const uint8_t can_id, const float pos, const float vel_ff, const float torque_ff)
+    bool ODriveCANDriver::setPosition(const uint8_t can_id, const float pos, const float vel_ff, const float torque_ff)
     {
         const int cmd_id = 0x01c;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
@@ -110,7 +110,7 @@ namespace starq::odrive
         return true;
     }
 
-    bool ODriveDriver::setVelocity(const uint8_t can_id, const float vel, const float torque_ff)
+    bool ODriveCANDriver::setVelocity(const uint8_t can_id, const float vel, const float torque_ff)
     {
         const int cmd_id = 0x01d;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
@@ -126,7 +126,7 @@ namespace starq::odrive
         return true;
     }
 
-    bool ODriveDriver::setTorque(const uint8_t can_id, const float torque)
+    bool ODriveCANDriver::setTorque(const uint8_t can_id, const float torque)
     {
         const int cmd_id = 0x01e;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);

@@ -1,8 +1,8 @@
 #ifndef STARQ_ODRIVE__ODRIVE_CONTROLLER_HPP_
 #define STARQ_ODRIVE__ODRIVE_CONTROLLER_HPP_
 
-#include "starq/odrive/driver.hpp"
-#include "starq/odrive/listener.hpp"
+#include "starq/odrive/can_driver.hpp"
+#include "starq/odrive/can_listener.hpp"
 #include "starq/controllers/motor_controller.hpp"
 
 namespace starq::odrive
@@ -130,8 +130,8 @@ namespace starq::odrive
         float getTorqueEstimate(const uint8_t can_id)  override;
 
     private:
-        ODriveDriver::Ptr driver_;
-        ODriveListener::Ptr listener_;
+        ODriveCANDriver::Ptr driver_;
+        ODriveCANListener::Ptr listener_;
     };
 
 }

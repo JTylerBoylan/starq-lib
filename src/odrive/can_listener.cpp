@@ -1,86 +1,86 @@
-#include "starq/odrive/listener.hpp"
+#include "starq/odrive/can_listener.hpp"
 
 namespace starq::odrive
 {
 
-    ODriveListener::ODriveListener(const starq::can::CANSocket::Ptr socket)
+    ODriveCANListener::ODriveCANListener(const starq::can::CANSocket::Ptr socket)
         : socket_(socket), running_(false)
     {
         start();
     }
 
-    ODriveListener::~ODriveListener()
+    ODriveCANListener::~ODriveCANListener()
     {
         stop();
     }
 
-    uint32_t ODriveListener::getAxisError(const uint8_t can_id)
+    uint32_t ODriveCANListener::getAxisError(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].axis_error;
     }
 
-    uint8_t ODriveListener::getAxisState(const uint8_t can_id)
+    uint8_t ODriveCANListener::getAxisState(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].axis_state;
     }
 
-    float ODriveListener::getIqSetpoint(const uint8_t can_id)
+    float ODriveCANListener::getIqSetpoint(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].iq_setpoint;
     }
 
-    float ODriveListener::getIqMeasured(const uint8_t can_id)
+    float ODriveCANListener::getIqMeasured(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].iq_measured;
     }
 
-    float ODriveListener::getFETTemperature(const uint8_t can_id)
+    float ODriveCANListener::getFETTemperature(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].fet_temperature;
     }
 
-    float ODriveListener::getMotorTemperature(const uint8_t can_id)
+    float ODriveCANListener::getMotorTemperature(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].motor_temperature;
     }
 
-    float ODriveListener::getBusVoltage(const uint8_t can_id)
+    float ODriveCANListener::getBusVoltage(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].bus_voltage;
     }
 
-    float ODriveListener::getBusCurrent(const uint8_t can_id)
+    float ODriveCANListener::getBusCurrent(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].bus_current;
     }
 
-    float ODriveListener::getPosEstimate(const uint8_t can_id)
+    float ODriveCANListener::getPosEstimate(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].pos_estimate;
     }
 
-    float ODriveListener::getVelEstimate(const uint8_t can_id)
+    float ODriveCANListener::getVelEstimate(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].vel_estimate;
     }
 
-    float ODriveListener::getTorqueEstimate(const uint8_t can_id)
+    float ODriveCANListener::getTorqueEstimate(const uint8_t can_id)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return info_[can_id].torque_estimate;
     }
 
-    bool ODriveListener::start()
+    bool ODriveCANListener::start()
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
@@ -91,12 +91,12 @@ namespace starq::odrive
         }
 
         running_ = true;
-        poll_thread_ = std::thread(&ODriveListener::run, this);
+        poll_thread_ = std::thread(&ODriveCANListener::run, this);
         poll_thread_.detach();
         return true;
     }
 
-    bool ODriveListener::stop()
+    bool ODriveCANListener::stop()
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
@@ -111,7 +111,7 @@ namespace starq::odrive
         return true;
     }
 
-    void ODriveListener::run()
+    void ODriveCANListener::run()
     {
         bool running = true;
         while (running)

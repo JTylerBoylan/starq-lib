@@ -1,5 +1,5 @@
-#ifndef STARQ_ODRIVE__LISTENER_HPP_
-#define STARQ_ODRIVE__LISTENER_HPP_
+#ifndef STARQ_ODRIVE__CAN_LISTENER_HPP_
+#define STARQ_ODRIVE__CAN_LISTENER_HPP_
 
 #include <thread>
 #include <mutex>
@@ -9,17 +9,17 @@
 namespace starq::odrive
 {
 
-    class ODriveListener
+    class ODriveCANListener
     {
     public:
-        using Ptr = std::shared_ptr<ODriveListener>;
+        using Ptr = std::shared_ptr<ODriveCANListener>;
 
         /// @brief Create an ODrive listener.
         /// @param socket CAN Socket to listen on.
-        ODriveListener(const starq::can::CANSocket::Ptr socket);
+        ODriveCANListener(const starq::can::CANSocket::Ptr socket);
 
         /// @brief Destroy the ODrive listener.
-        ~ODriveListener();
+        ~ODriveCANListener();
 
         /// @brief Get the axis error.
         /// @param can_id CAN ID of the axis.

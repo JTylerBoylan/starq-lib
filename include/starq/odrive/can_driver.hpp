@@ -1,5 +1,5 @@
-#ifndef STARQ_ODRIVE__DRIVER_HPP_
-#define STARQ_ODRIVE__DRIVER_HPP_
+#ifndef STARQ_ODRIVE__CAN_DRIVER_HPP_
+#define STARQ_ODRIVE__CAN_DRIVER_HPP_
 
 #include "starq/can/socket.hpp"
 
@@ -24,17 +24,17 @@ namespace starq::odrive
         TORQUE_RAMP = 0x6
     };
 
-    class ODriveDriver
+    class ODriveCANDriver
     {
     public:
-        using Ptr = std::shared_ptr<ODriveDriver>;
+        using Ptr = std::shared_ptr<ODriveCANDriver>;
 
         /// @brief Create an ODrive driver.
         /// @param socket CAN socket to use for communication.
-        ODriveDriver(const starq::can::CANSocket::Ptr socket);
+        ODriveCANDriver(const starq::can::CANSocket::Ptr socket);
 
         /// @brief Destroy the ODrive driver.
-        ~ODriveDriver();
+        ~ODriveCANDriver();
 
         /// @brief Set the axis state.
         /// @param can_id CAN ID of the axis.

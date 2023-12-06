@@ -4,8 +4,8 @@ namespace starq::odrive
 {
 
     ODriveController::ODriveController(const starq::can::CANSocket::Ptr socket)
-        : driver_(std::make_shared<ODriveDriver>(socket)),
-          listener_(std::make_shared<ODriveListener>(socket))
+        : driver_(std::make_shared<ODriveCANDriver>(socket)),
+          listener_(std::make_shared<ODriveCANListener>(socket))
     {
     }
 
