@@ -60,9 +60,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     enable_testing()
 
     # Add the executable
-    add_executable(test_sdk tests/test_sdk.cpp)
-    target_include_directories(test_sdk PUBLIC include)
-    target_link_libraries(test_sdk PUBLIC stdc++ stdc++fs m starq_sdk)
+    add_executable(test_can tests/test_can.cpp)
+    target_include_directories(test_can PUBLIC include)
+    target_link_libraries(test_can PUBLIC stdc++ stdc++fs m starq_sdk)
 
 
 endif()

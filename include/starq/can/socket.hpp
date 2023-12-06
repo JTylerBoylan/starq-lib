@@ -70,7 +70,7 @@ namespace starq::can
 
             if (bind(socket_, (struct sockaddr *)&addr, sizeof(addr)) < 0)
             {
-                std::cerr << "Could not bind CAN socket." << std::endl;
+                std::cerr << "Could not bind to CAN socket." << std::endl;
                 return false;
             }
 
