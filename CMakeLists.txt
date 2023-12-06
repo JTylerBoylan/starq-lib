@@ -10,7 +10,12 @@ include_directories(include)
 list(APPEND CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 add_library(starq_sdk SHARED)
-#target_sources(starq_sdk PRIVATE src/starq_sdk.cpp)
+target_sources(starq_sdk PRIVATE
+    src/controllers/leg_controller.cpp
+    src/odrive/odrive_controller.cpp
+    src/odrive/driver.cpp 
+    src/odrive/listener.cpp 
+)
 target_include_directories(starq_sdk PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>

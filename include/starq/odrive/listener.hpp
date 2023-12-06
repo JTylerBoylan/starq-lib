@@ -16,251 +16,90 @@ namespace starq::odrive
 
         /// @brief Create an ODrive listener.
         /// @param socket CAN Socket to listen on.
-        ODriveListener(const starq::can::CANSocket::Ptr socket)
-            : socket_(socket), running_(false)
-        {
-            start();
-        }
+        ODriveListener(const starq::can::CANSocket::Ptr socket);
 
         /// @brief Destroy the ODrive listener.
-        ~ODriveListener()
-        {
-            stop();
-        }
+        ~ODriveListener();
 
         /// @brief Get the axis error.
         /// @param can_id CAN ID of the axis.
         /// @return Axis error.
-        uint32_t getAxisError(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].axis_error;
-        }
+        uint32_t getAxisError(const uint8_t can_id);
 
         /// @brief Get the axis state.
         /// @param can_id CAN ID of the axis.
         /// @return Axis state.
-        uint8_t getAxisState(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].axis_state;
-        }
+        uint8_t getAxisState(const uint8_t can_id);
 
         /// @brief Get the Iq setpoint.
         /// @param can_id CAN ID of the axis.
         /// @return Iq setpoint.
-        float getIqSetpoint(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].iq_setpoint;
-        }
+        float getIqSetpoint(const uint8_t can_id);
 
         /// @brief Get the Iq measured.
         /// @param can_id CAN ID of the axis.
         /// @return Iq measured.
-        float getIqMeasured(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].iq_measured;
-        }
+        float getIqMeasured(const uint8_t can_id);
 
         /// @brief Get the FET temperature.
         /// @param can_id CAN ID of the axis.
         /// @return FET temperature.
-        float getFETTemperature(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].fet_temperature;
-        }
+        float getFETTemperature(const uint8_t can_id);
 
         /// @brief Get the motor temperature.
         /// @param can_id CAN ID of the axis.
         /// @return Motor temperature.
-        float getMotorTemperature(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].motor_temperature;
-        }
+        float getMotorTemperature(const uint8_t can_id);
 
         /// @brief Get the bus voltage.
         /// @param can_id CAN ID of the axis.
         /// @return Bus voltage.
-        float getBusVoltage(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].bus_voltage;
-        }
+        float getBusVoltage(const uint8_t can_id);
 
         /// @brief Get the bus current.
         /// @param can_id CAN ID of the axis.
         /// @return Bus current.
-        float getBusCurrent(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].bus_current;
-        }
+        float getBusCurrent(const uint8_t can_id);
 
         /// @brief Get the position estimate.
         /// @param can_id CAN ID of the axis.
         /// @return Position estimate.
-        float getPosEstimate(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].pos_estimate;
-        }
+        float getPosEstimate(const uint8_t can_id);
 
         /// @brief Get the velocity estimate.
         /// @param can_id CAN ID of the axis.
         /// @return Velocity estimate.
-        float getVelEstimate(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].vel_estimate;
-        }
+        float getVelEstimate(const uint8_t can_id);
 
         /// @brief Get the torque estimate.
         /// @param can_id CAN ID of the axis.
         /// @return Torque estimate.
-        float getTorqueEstimate(const uint8_t can_id)
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            return info_[can_id].torque_estimate;
-        }
+        float getTorqueEstimate(const uint8_t can_id);
 
     private:
-        bool start()
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
 
-            if (running_)
-            {
-                std::cerr << "ODrive listener already running." << std::endl;
-                return false;
-            }
+        /// @brief Start the listener.
+        /// @return If the listener was started successfully.
+        bool start();
 
-            running_ = true;
-            poll_thread_ = std::thread(&ODriveListener::run, this);
-            poll_thread_.detach();
-            return true;
-        }
+        /// @brief Stop the listener.
+        /// @return If the listener was stopped successfully.
+        bool stop();
 
-        bool stop()
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
+        /// @brief Run the listener. (Called by the poll thread.)
+        void run();
 
-            if (!running_)
-            {
-                std::cerr << "ODrive listener not running." << std::endl;
-                return false;
-            }
-
-            poll_thread_.join();
-            running_ = false;
-            return true;
-        }
-
-        void run()
-        {
-            bool running = true;
-            while (running)
-            {
-                struct can_frame frame;
-                if (socket_->receive(frame) < 0)
-                {
-                    std::cerr << "Error listening on ODrive socket." << std::endl;
-                    continue;
-                }
-
-                uint8_t can_id = getCanID(frame.can_id);
-                uint8_t cmd_id = getCommandID(frame.can_id);
-
-                if (can_id > MAX_CAN_ID)
-                {
-                    std::cerr << "Invalid CAN ID." << std::endl;
-                    continue;
-                }
-
-                switch (cmd_id)
-                {
-                case 0x001:
-                    // Heartbeat
-                    uint32_t axis_error;
-                    uint8_t axis_state;
-                    std::memcpy(&axis_error, frame.data, sizeof(axis_error));
-                    std::memcpy(&axis_state, frame.data + 4, sizeof(axis_state));
-                    {
-                        std::lock_guard<std::mutex> lock(mutex_);
-                        info_[can_id].axis_error = axis_error;
-                        info_[can_id].axis_state = axis_state;
-                    }
-                    break;
-                case 0x014:
-                    // Get_Iq
-                    float iq_setpoint, iq_measured;
-                    std::memcpy(&iq_setpoint, frame.data, sizeof(iq_setpoint));
-                    std::memcpy(&iq_measured, frame.data + 4, sizeof(iq_measured));
-                    {
-                        std::lock_guard<std::mutex> lock(mutex_);
-                        info_[can_id].iq_setpoint = iq_setpoint;
-                        info_[can_id].iq_measured = iq_measured;
-                    }
-                    break;
-                case 0x015:
-                    // Get_Temperature
-                    float fet_temperature, motor_temperature;
-                    std::memcpy(&fet_temperature, frame.data, sizeof(fet_temperature));
-                    std::memcpy(&motor_temperature, frame.data + 4, sizeof(motor_temperature));
-                    {
-                        std::lock_guard<std::mutex> lock(mutex_);
-                        info_[can_id].fet_temperature = fet_temperature;
-                        info_[can_id].motor_temperature = motor_temperature;
-                    }
-                    break;
-                case 0x017:
-                    // Get_Bus_Voltage_Current
-                    float bus_voltage, bus_current;
-                    std::memcpy(&bus_voltage, frame.data, sizeof(bus_voltage));
-                    std::memcpy(&bus_current, frame.data + 4, sizeof(bus_current));
-                    {
-                        std::lock_guard<std::mutex> lock(mutex_);
-                        info_[can_id].bus_voltage = bus_voltage;
-                        info_[can_id].bus_current = bus_current;
-                    }
-                    break;
-                case 0x009:
-                    // Get_Encoder_Estimates
-                    float pos_estimate, vel_estimate;
-                    std::memcpy(&pos_estimate, frame.data, sizeof(pos_estimate));
-                    std::memcpy(&vel_estimate, frame.data + 4, sizeof(vel_estimate));
-                    {
-                        std::lock_guard<std::mutex> lock(mutex_);
-                        info_[can_id].pos_estimate = pos_estimate;
-                        info_[can_id].vel_estimate = vel_estimate;
-                    }
-                    break;
-                case 0x01C:
-                    // Get_Torques
-                    float torque_estimate;
-                    std::memcpy(&torque_estimate, frame.data, sizeof(torque_estimate));
-                    {
-                        std::lock_guard<std::mutex> lock(mutex_);
-                        info_[can_id].torque_estimate = torque_estimate;
-                    }
-                    break;
-                }
-
-                {
-                    std::lock_guard<std::mutex> lock(mutex_);
-                    running = running_;
-                }
-            }
-        }
-
+        /// @brief Get the CAN ID.
+        /// @param arb_id Arbitration ID.
+        /// @return CAN ID.
         uint8_t getCanID(const uint32_t arb_id) const
         {
             return (uint8_t)((arb_id >> 5) & 0b111111);
         }
 
+        /// @brief Get the command ID.
+        /// @param arb_id Arbitration ID.
+        /// @return Command ID.
         uint8_t getCommandID(const uint32_t arb_id) const
         {
             return (uint8_t)(arb_id & 0b11111);
