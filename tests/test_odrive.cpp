@@ -4,6 +4,7 @@
 
 using namespace starq::can;
 using namespace starq::odrive;
+using namespace starq::controllers;
 
 #define CAN_ID 0
 
@@ -12,6 +13,16 @@ int main(void)
     printf("Hello world!\n");
 
     CANSocket::Ptr socket = std::make_shared<CANSocket>("can0");
+
+    if (socket->connect())
+    {
+        printf("Connected to CAN interface.\n");
+    }
+    else
+    {
+        printf("Failed to connect to CAN interface.\n");
+        return 1;
+    }
 
     ODriveController::Ptr odrive = std::make_shared<ODriveController>(socket);
 

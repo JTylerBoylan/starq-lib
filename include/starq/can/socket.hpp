@@ -29,7 +29,6 @@ namespace starq::can
         CANSocket(const std::string &interface)
             : interface_(interface), socket_(-1)
         {
-            init();
         }
 
         /// @brief Disconnect from the CAN interface.
@@ -42,7 +41,7 @@ namespace starq::can
         }
 
         /// @brief Initialize the CAN interface.
-        bool init()
+        bool connect()
         {
 
             if (socket_ >= 0)

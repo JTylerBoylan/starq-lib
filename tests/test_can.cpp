@@ -10,6 +10,16 @@ int main(void)
 
     starq::can::CANSocket socket("can0");
 
+    if (socket.connect())
+    {
+        printf("Connected to CAN interface.\n");
+    }
+    else
+    {
+        printf("Failed to connect to CAN interface.\n");
+        return 1;
+    }
+
     printf("Publishing %d can frames...\n", NUM_FRAMES);
 
     struct can_frame frame;

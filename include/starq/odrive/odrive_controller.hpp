@@ -77,42 +77,42 @@ namespace starq::odrive
         /// @brief Get the axis error.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The axis error.
-        uint32_t getAxisError(const uint8_t can_id);
+        uint32_t getAxisError(const uint8_t can_id) override;
 
         /// @brief Get the axis state.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The axis state.
-        uint8_t getAxisState(const uint8_t can_id);
+        uint8_t getAxisState(const uint8_t can_id) override;
 
         /// @brief Get the Iq setpoint.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The Iq setpoint.
-        float getIqSetpoint(const uint8_t can_id);
+        float getIqSetpoint(const uint8_t can_id) override;
 
         /// @brief Get the Iq measured.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The Iq measured.
-        float getIqMeasured(const uint8_t can_id);
+        float getIqMeasured(const uint8_t can_id) override;
 
         /// @brief Get the FET temperature.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The FET temperature.
-        float getFETTemperature(const uint8_t can_id);
+        float getFETTemperature(const uint8_t can_id) override;
 
         /// @brief Get the motor temperature.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The motor temperature.
-        float getMotorTemperature(const uint8_t can_id);
+        float getMotorTemperature(const uint8_t can_id) override;
 
         /// @brief Get the DC bus voltage.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The DC bus voltage.
-        float getBusVoltage(const uint8_t can_id);
+        float getBusVoltage(const uint8_t can_id) override;
 
         /// @brief Get the DC bus current.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The DC bus current.
-        float getBusCurrent(const uint8_t can_id);
+        float getBusCurrent(const uint8_t can_id) override;
 
         /// @brief Get the encoder position estimate.
         /// @param can_id The CAN ID of the ODrive.
@@ -128,10 +128,6 @@ namespace starq::odrive
         /// @param can_id The CAN ID of the ODrive.
         /// @return The controller torque estimate.
         float getTorqueEstimate(const uint8_t can_id)  override;
-
-        /// @brief Print the ODrive info.
-        /// @param can_id The CAN ID of the ODrive.
-        void printInfo(const uint8_t can_id);
 
     private:
         ODriveCANDriver::Ptr driver_;

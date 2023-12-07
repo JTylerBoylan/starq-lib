@@ -85,9 +85,10 @@ namespace starq::publishers
                 continue;
             }
 
-            if (leg_controller->getControlMode(leg_cmd.leg_id) != leg_cmd.control_mode)
+            if (leg_controller_->getControlModeConfig(leg_cmd.leg_id) != leg_cmd.control_mode ||
+                leg_controller_->getInputModeConfig(leg_cmd.leg_id) != leg_cmd.input_mode)
                 leg_controller_->setControlMode(leg_cmd.leg_id, leg_cmd.control_mode, leg_cmd.input_mode);
-                
+
             switch (leg_cmd.control_mode)
             {
             case ControlMode::POSITION:

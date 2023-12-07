@@ -2,6 +2,7 @@
 #define STARQ_CONTROLLERS__MOTOR_CONTROLLER_HPP_
 
 #include <memory>
+#include <iostream>
 
 #define MAX_MOTOR_ID 0x3F
 
@@ -92,6 +93,46 @@ namespace starq::controllers
         /// @return If the command was sent successfully.
         virtual bool setTorque(const uint8_t motor_id, const float torque) = 0;
 
+        /// @brief Get the axis error.
+        /// @param motor_id The ID of the motor.
+        /// @return The axis error.
+        virtual uint32_t getAxisError(const uint8_t motor_id) = 0;
+
+        /// @brief Get the axis state.
+        /// @param motor_id The ID of the motor.
+        /// @return The axis state.
+        virtual uint8_t getAxisState(const uint8_t motor_id) = 0;
+
+        /// @brief Get the Iq setpoint.
+        /// @param motor_id The ID of the motor.
+        /// @return The Iq setpoint.
+        virtual float getIqSetpoint(const uint8_t motor_id) = 0;
+
+        /// @brief Get the Iq measured.
+        /// @param motor_id The ID of the motor.
+        /// @return The Iq measured.
+        virtual float getIqMeasured(const uint8_t motor_id) = 0;
+
+        /// @brief Get the FET temperature.
+        /// @param motor_id The ID of the motor.
+        /// @return The FET temperature.
+        virtual float getFETTemperature(const uint8_t motor_id) = 0;
+
+        /// @brief Get the motor temperature.
+        /// @param motor_id The ID of the motor.
+        /// @return The motor temperature.
+        virtual float getMotorTemperature(const uint8_t motor_id) = 0;
+
+        /// @brief Get the DC bus voltage.
+        /// @param motor_id The ID of the motor.
+        /// @return The DC bus voltage.
+        virtual float getBusVoltage(const uint8_t motor_id) = 0;
+
+        /// @brief Get the DC bus current.
+        /// @param motor_id The ID of the motor.
+        /// @return The DC bus current.
+        virtual float getBusCurrent(const uint8_t motor_id) = 0;
+
         /// @brief Get the encoder position estimate.
         /// @param motor_id The ID of the motor.
         /// @return The encoder position estimate.
@@ -100,75 +141,108 @@ namespace starq::controllers
         /// @brief Get the encoder velocity estimate.
         /// @param motor_id The ID of the motor.
         /// @return The encoder velocity estimate.
-        virtual float getVelocityEstimate(const uint8_t can_id) = 0;
+        virtual float getVelocityEstimate(const uint8_t motor_id) = 0;
 
         /// @brief Get the controller torque estimate.
         /// @param motor_id The ID of the motor.
         /// @return The controller torque estimate.
-        virtual float getTorqueEstimate(const uint8_t can_id) = 0;
+        virtual float getTorqueEstimate(const uint8_t motor_id) = 0;
 
         /// @brief Get the axis state config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The axis state config.
-        uint32_t getAxisStateConfig(const uint8_t can_id) const
+        uint32_t getAxisStateConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].axis_state;
+            return configs_[motor_id].axis_state;
         }
 
         /// @brief Get the control mode config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The control mode config.
-        uint32_t getControlModeConfig(const uint8_t can_id) const
+        uint32_t getControlModeConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].control_mode;
+            return configs_[motor_id].control_mode;
         }
 
         /// @brief Get the input mode config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The input mode config.
-        uint32_t getInputModeConfig(const uint8_t can_id) const
+        uint32_t getInputModeConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].input_mode;
+            return configs_[motor_id].input_mode;
         }
 
         /// @brief Get the position gain config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The position gain config.
-        float getPosGainConfig(const uint8_t can_id) const
+        float getPosGainConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].pos_gain;
+            return configs_[motor_id].pos_gain;
         }
 
         /// @brief Get the velocity gain config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The velocity gain config.
-        float getVelGainConfig(const uint8_t can_id) const
+        float getVelGainConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].vel_gain;
+            return configs_[motor_id].vel_gain;
         }
 
         /// @brief Get the velocity integrator gain config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The velocity integrator gain config.
-        float getVelIntegratorGainConfig(const uint8_t can_id) const
+        float getVelIntegratorGainConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].vel_integrator_gain;
+            return configs_[motor_id].vel_integrator_gain;
         }
 
         /// @brief Get the velocity limit config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The velocity limit config.
-        float getVelocityLimitConfig(const uint8_t can_id) const
+        float getVelocityLimitConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].velocity_limit;
+            return configs_[motor_id].velocity_limit;
         }
 
         /// @brief Get the current limit config.
-        /// @param can_id The CAN ID of the ODrive.
+        /// @param motor_id The ID of the motor.
         /// @return The current limit config.
-        float getCurrentLimitConfig(const uint8_t can_id) const
+        float getCurrentLimitConfig(const uint8_t motor_id) const
         {
-            return configs_[can_id].current_limit;
+            return configs_[motor_id].current_limit;
+        }
+
+        /// @brief Print the motor info.
+        /// @param motor_id The ID of the motor.
+        void printInfo(const uint8_t motor_id)
+        {
+            std::cout << "Motor " << (int)motor_id << " info:" << std::endl;
+            std::cout << "  Axis error: " << getAxisError(motor_id) << std::endl;
+            std::cout << "  Axis state: " << (int)getAxisState(motor_id) << std::endl;
+            std::cout << "  Iq setpoint: " << getIqSetpoint(motor_id) << std::endl;
+            std::cout << "  Iq measured: " << getIqMeasured(motor_id) << std::endl;
+            std::cout << "  FET temperature: " << getFETTemperature(motor_id) << std::endl;
+            std::cout << "  Motor temperature: " << getMotorTemperature(motor_id) << std::endl;
+            std::cout << "  Bus voltage: " << getBusVoltage(motor_id) << std::endl;
+            std::cout << "  Bus current: " << getBusCurrent(motor_id) << std::endl;
+            std::cout << "  Position estimate: " << getPositionEstimate(motor_id) << std::endl;
+            std::cout << "  Velocity estimate: " << getVelocityEstimate(motor_id) << std::endl;
+            std::cout << "  Torque estimate: " << getTorqueEstimate(motor_id) << std::endl;
+        }
+
+        /// @brief Print the motor config.
+        /// @param motor_id The ID of the motor.
+        void printConfig(const uint8_t motor_id)
+        {
+            std::cout << "Motor " << (int)motor_id << " config:" << std::endl;
+            std::cout << "  Axis state: " << (int)getAxisStateConfig(motor_id) << std::endl;
+            std::cout << "  Control mode: " << (int)getControlModeConfig(motor_id) << std::endl;
+            std::cout << "  Input mode: " << (int)getInputModeConfig(motor_id) << std::endl;
+            std::cout << "  Position gain: " << getPosGainConfig(motor_id) << std::endl;
+            std::cout << "  Velocity gain: " << getVelGainConfig(motor_id) << std::endl;
+            std::cout << "  Velocity integrator gain: " << getVelIntegratorGainConfig(motor_id) << std::endl;
+            std::cout << "  Velocity limit: " << getVelocityLimitConfig(motor_id) << std::endl;
+            std::cout << "  Current limit: " << getCurrentLimitConfig(motor_id) << std::endl;
         }
 
     protected:
