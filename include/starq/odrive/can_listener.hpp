@@ -107,7 +107,6 @@ namespace starq::odrive
 
         const starq::can::CANSocket::Ptr socket_;
         bool running_;
-        std::thread poll_thread_;
 
         struct
         {

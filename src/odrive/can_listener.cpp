@@ -91,8 +91,7 @@ namespace starq::odrive
         }
 
         running_ = true;
-        poll_thread_ = std::thread(&ODriveCANListener::run, this);
-        poll_thread_.detach();
+        std::thread(&ODriveCANListener::run, this).detach();
         return true;
     }
 

@@ -149,6 +149,12 @@ namespace starq::controllers
             return false;
         }
 
+        if (foot_position.size() == 0)
+        {
+            std::cerr << "Empty foot position." << std::endl;
+            return false;
+        }
+
         VectorXf joint_angles;
         if (!configs_[leg_id].dynamics->inverseKinematics(foot_position, joint_angles))
         {
@@ -188,6 +194,12 @@ namespace starq::controllers
             return false;
         }
 
+        if (foot_velocity.size() == 0)
+        {
+            std::cerr << "Empty foot velocity." << std::endl;
+            return false;
+        }
+
         VectorXf joint_velocity = jacobian.inverse() * foot_velocity;
         VectorXf joint_torque = foot_torque_ff.size() > 0 ? jacobian.transpose() * foot_torque_ff : VectorXf();
 
@@ -216,6 +228,12 @@ namespace starq::controllers
         if (!configs_[leg_id].dynamics->jacobian(current_joint_angles, jacobian))
         {
             std::cerr << "Failed to get Jacobian." << std::endl;
+            return false;
+        }
+
+        if (foot_force.size() == 0)
+        {
+            std::cerr << "Empty foot force." << std::endl;
             return false;
         }
 
