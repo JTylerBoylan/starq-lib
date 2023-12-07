@@ -151,4 +151,20 @@ namespace starq::odrive
         return listener_->getTorqueEstimate(can_id);
     }
 
+    void ODriveController::printInfo(const uint8_t can_id)
+    {
+        std::cout << "ODrive " << (int)can_id << " info:" << std::endl;
+        std::cout << "  Axis error: " << getAxisError(can_id) << std::endl;
+        std::cout << "  Axis state: " << (int)getAxisState(can_id) << std::endl;
+        std::cout << "  Iq setpoint: " << getIqSetpoint(can_id) << std::endl;
+        std::cout << "  Iq measured: " << getIqMeasured(can_id) << std::endl;
+        std::cout << "  FET temperature: " << getFETTemperature(can_id) << std::endl;
+        std::cout << "  Motor temperature: " << getMotorTemperature(can_id) << std::endl;
+        std::cout << "  Bus voltage: " << getBusVoltage(can_id) << std::endl;
+        std::cout << "  Bus current: " << getBusCurrent(can_id) << std::endl;
+        std::cout << "  Position estimate: " << getPositionEstimate(can_id) << std::endl;
+        std::cout << "  Velocity estimate: " << getVelocityEstimate(can_id) << std::endl;
+        std::cout << "  Torque estimate: " << getTorqueEstimate(can_id) << std::endl;
+    }
+
 }

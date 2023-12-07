@@ -17,17 +17,20 @@ int main(void)
 
     odrive->setAxisState(CAN_ID, AxisState::CLOSED_LOOP_CONTROL);
     odrive->setControlMode(CAN_ID, ControlMode::POSITION);
+    odrive->setPosition(CAN_ID, 0.0f);
+    sleep(1);
+    printf("--------------------\n");
+    odrive->printInfo(CAN_ID);
 
     const float position_increment = 0.2;
-    for (float p = 0.0f; p < 1.0f; p += position_increment)
+    for (float p = 0.0f; p <= 1.0f; p += position_increment)
     {
-        printf("Sending command...\n");
+        printf("--------------------\n");
+        printf("Setting position to %f\n", p);
         odrive->setPosition(CAN_ID, p);
-        printf("Set position to %.5f\n", p);
-
-        const float pos_estimate = odrive->getPositionEstimate(CAN_ID);
-        printf("Current position estimate: %.5f\n", pos_estimate);
         sleep(1);
+        printf("--------------------\n");
+        odrive->printInfo(CAN_ID);
     }
 
     odrive->setAxisState(CAN_ID, AxisState::IDLE);
