@@ -92,7 +92,7 @@ namespace starq::odrive
 
     bool ODriveCANDriver::setPosition(const uint8_t can_id, const float pos, const float vel_ff, const float torque_ff)
     {
-        const int cmd_id = 0x01c;
+        const int cmd_id = 0x00c;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
 
         const int16_t vel_ff_int = (int16_t)(vel_ff * 1E3F);
@@ -112,7 +112,7 @@ namespace starq::odrive
 
     bool ODriveCANDriver::setVelocity(const uint8_t can_id, const float vel, const float torque_ff)
     {
-        const int cmd_id = 0x01d;
+        const int cmd_id = 0x00d;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
 
         uint8_t data[8];
@@ -128,7 +128,7 @@ namespace starq::odrive
 
     bool ODriveCANDriver::setTorque(const uint8_t can_id, const float torque)
     {
-        const int cmd_id = 0x01e;
+        const int cmd_id = 0x00e;
         const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
 
         uint8_t data[4];
