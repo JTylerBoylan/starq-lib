@@ -62,7 +62,12 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Add the executable
     add_executable(test_can tests/test_can.cpp)
     target_include_directories(test_can PUBLIC include)
-    target_link_libraries(test_can PUBLIC stdc++ stdc++fs m starq_sdk)
+    target_link_libraries(test_can PUBLIC stdc++ stdc++fs m starq_sdk pthread)
+
+    # Add the executable
+    add_executable(test_odrive tests/test_odrive.cpp)
+    target_include_directories(test_odrive PUBLIC include)
+    target_link_libraries(test_odrive PUBLIC stdc++ stdc++fs m starq_sdk pthread)
 
 
 endif()

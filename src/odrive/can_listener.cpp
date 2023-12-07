@@ -105,8 +105,7 @@ namespace starq::odrive
             std::cerr << "ODrive listener not running." << std::endl;
             return false;
         }
-
-        poll_thread_.join();
+        
         running_ = false;
         return true;
     }

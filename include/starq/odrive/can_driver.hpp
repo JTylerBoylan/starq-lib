@@ -6,6 +6,13 @@
 namespace starq::odrive
 {
 
+    enum AxisState
+    {
+        UNDEFINED = 0x0,
+        IDLE = 0x1,
+        CLOSED_LOOP_CONTROL = 0x8
+    };
+
     enum ControlMode
     {
         VOLTAGE = 0x0,
