@@ -104,16 +104,23 @@ namespace starq::odrive
             std::cerr << "ODrive listener not running." << std::endl;
             return false;
         }
-        
+
         running_ = false;
         return true;
     }
 
     void ODriveCANListener::run()
     {
-        bool running = true;
-        while (running)
+
+        while (true)
         {
+
+            {
+                std::lock_guard<std::mutex> lock(mutex_);
+                if (!running_)
+                    break;
+            }
+
             struct can_frame frame;
             if (socket_->receive(frame) < 0)
             {
@@ -197,11 +204,6 @@ namespace starq::odrive
                     info_[can_id].torque_estimate = torque_estimate;
                 }
                 break;
-            }
-
-            {
-                std::lock_guard<std::mutex> lock(mutex_);
-                running = running_;
             }
         }
     }
