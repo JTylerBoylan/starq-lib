@@ -49,7 +49,7 @@ namespace starq::publishers
 
         /// @brief Add a leg command to the queue.
         /// @param leg_cmd Command to add to the queue.
-        void push(const LegCommand &leg_cmd);
+        void push(LegCommand::Ptr leg_cmd);
 
         /// @brief Clear the leg command queue.
         void clear();

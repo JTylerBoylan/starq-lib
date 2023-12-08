@@ -24,10 +24,10 @@ namespace starq::publishers
         stop();
     }
 
-    void LegCommandPublisher::push(const LegCommand &leg_cmd)
+    void LegCommandPublisher::push(LegCommand::Ptr leg_cmd)
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        leg_command_queue_.push(std::make_shared<LegCommand>(leg_cmd));
+        leg_command_queue_.push(leg_cmd);
     }
 
     void LegCommandPublisher::clear()
