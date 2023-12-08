@@ -51,6 +51,8 @@ namespace starq::controllers
         {
             success &= motor_controller_->setAxisState(motor_id, state);
         }
+
+        configs_[leg_id].axis_state = state;
         return success;
     }
 
@@ -68,6 +70,9 @@ namespace starq::controllers
         {
             success &= motor_controller_->setControlMode(motor_id, control_mode, input_mode);
         }
+
+        configs_[leg_id].control_mode = control_mode;
+        configs_[leg_id].input_mode = input_mode;
         return success;
     }
 
@@ -85,6 +90,8 @@ namespace starq::controllers
         {
             success &= motor_controller_->setPosGain(motor_id, pos_gain);
         }
+
+        configs_[leg_id].pos_gain = pos_gain;
         return success;
     }
 
@@ -102,6 +109,9 @@ namespace starq::controllers
         {
             success &= motor_controller_->setVelGains(motor_id, vel_gain, vel_integrator_gain);
         }
+
+        configs_[leg_id].vel_gain = vel_gain;
+        configs_[leg_id].vel_integrator_gain = vel_integrator_gain;
         return success;
     }
 
@@ -119,6 +129,9 @@ namespace starq::controllers
         {
             success &= motor_controller_->setLimits(motor_id, vel_limit, current_limit);
         }
+
+        configs_[leg_id].velocity_limit = vel_limit;
+        configs_[leg_id].current_limit = current_limit;
         return success;
     }
 

@@ -2,6 +2,16 @@
 
 namespace starq::publishers
 {
+    LegCommand::LegCommand(const uint8_t leg_id)
+        : leg_id(leg_id)
+    {
+        release_time = std::chrono::system_clock::now().time_since_epoch().count();
+    }
+
+    void LegCommand::setTimeFromNow(const double time_in_seconds)
+    {
+        release_time = std::chrono::system_clock::now().time_since_epoch().count() + time_in_seconds * 1000;
+    }
 
     LegCommandPublisher::LegCommandPublisher(LegController::Ptr leg_controller)
         : leg_controller_(leg_controller), running_(false)
@@ -17,7 +27,7 @@ namespace starq::publishers
     void LegCommandPublisher::push(const LegCommand &leg_cmd)
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        leg_command_queue_.push(leg_cmd);
+        leg_command_queue_.push(std::make_shared<LegCommand>(leg_cmd));
     }
 
     void LegCommandPublisher::clear()
@@ -71,7 +81,7 @@ namespace starq::publishers
             }
 
             bool is_empty = false;
-            LegCommand leg_cmd;
+            LegCommand::Ptr leg_cmd;
             {
                 std::lock_guard<std::mutex> lock(mutex_);
                 if (leg_command_queue_.empty())
@@ -84,22 +94,30 @@ namespace starq::publishers
                 }
             }
 
-            if (!is_empty && leg_cmd.release_time <= system_clock::now().time_since_epoch().count())
+            if (!is_empty && leg_cmd->release_time <= system_clock::now().time_since_epoch().count())
             {
-                if (leg_controller_->getControlModeConfig(leg_cmd.leg_id) != leg_cmd.control_mode ||
-                    leg_controller_->getInputModeConfig(leg_cmd.leg_id) != leg_cmd.input_mode)
-                    leg_controller_->setControlMode(leg_cmd.leg_id, leg_cmd.control_mode, leg_cmd.input_mode);
+                if (leg_controller_->getControlModeConfig(leg_cmd->leg_id) != leg_cmd->control_mode ||
+                    leg_controller_->getInputModeConfig(leg_cmd->leg_id) != leg_cmd->input_mode)
+                    leg_controller_->setControlMode(leg_cmd->leg_id,
+                                                    leg_cmd->control_mode,
+                                                    leg_cmd->input_mode);
 
-                switch (leg_cmd.control_mode)
+                switch (leg_cmd->control_mode)
                 {
                 case ControlMode::POSITION:
-                    leg_controller_->setFootPosition(leg_cmd.leg_id, leg_cmd.target_position, leg_cmd.target_velocity, leg_cmd.target_force);
+                    leg_controller_->setFootPosition(leg_cmd->leg_id,
+                                                     leg_cmd->target_position,
+                                                     leg_cmd->target_velocity,
+                                                     leg_cmd->target_force);
                     break;
                 case ControlMode::VELOCITY:
-                    leg_controller_->setFootVelocity(leg_cmd.leg_id, leg_cmd.target_velocity, leg_cmd.target_force);
+                    leg_controller_->setFootVelocity(leg_cmd->leg_id,
+                                                     leg_cmd->target_velocity,
+                                                     leg_cmd->target_force);
                     break;
                 case ControlMode::TORQUE:
-                    leg_controller_->setFootForce(leg_cmd.leg_id, leg_cmd.target_force);
+                    leg_controller_->setFootForce(leg_cmd->leg_id,
+                                                  leg_cmd->target_force);
                     break;
                 }
 
