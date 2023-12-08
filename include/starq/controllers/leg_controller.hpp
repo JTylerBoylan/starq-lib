@@ -27,10 +27,7 @@ namespace starq::controllers
 
         /// @brief Get the motor controller.
         /// @return Motor controller.
-        MotorController::Ptr getMotorController()
-        {
-            return motor_controller_;
-        }
+        MotorController::Ptr getMotorController() { return motor_controller_; }
 
         /// @brief Set the motor IDs for a leg.
         /// @param leg_id ID of the leg.
