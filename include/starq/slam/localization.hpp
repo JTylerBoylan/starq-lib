@@ -20,21 +20,21 @@ namespace starq::slam
         /// @brief Destroy the localization.
         ~Localization() {}
 
-        /// @brief Get the position.
-        /// @return Position.
-        virtual Vector3f getPosition() = 0;
+        /// @brief Get the current position of the robot.
+        /// @return Position vector [m] (x, y, z) in the world frame.
+        virtual Vector3f getCurrentPosition() = 0;
 
-        /// @brief Get the orientation.
-        /// @return Orientation.
-        virtual Vector3f getOrientation() = 0;
+        /// @brief Get the current orientation of the robot.
+        /// @return Orientation vector [rad] (roll, pitch, yaw) in the world frame.
+        virtual Vector3f getCurrentOrientation() = 0;
 
-        /// @brief Get the velocity.
-        /// @return Velocity.
-        virtual Vector3f getVelocity() = 0;
+        /// @brief Get the current velocity of the robot.
+        /// @return Velocity vector [m/s] (x, y, z) in the world frame.
+        virtual Vector3f getCurrentVelocity() = 0;
 
-        /// @brief Get the angular velocity.
-        /// @return Angular velocity.
-        virtual Vector3f getAngularVelocity() = 0;
+        /// @brief Get the current angular velocity of the robot.
+        /// @return Angular velocity vector [rad/s] (roll, pitch, yaw) in the world frame.
+        virtual Vector3f getCurrentAngularVelocity() = 0;
 
     private:
     };

@@ -43,7 +43,8 @@ namespace starq::controllers
 
         /// @brief Move to a position.
         /// @param position Position to move to.
-        virtual void moveTo(const Vector3f &position) = 0;
+        /// @param orientation Orientation to move to.
+        virtual void moveTo(const Vector3f &position, const Vector3f &orientation) = 0;
 
     private:
         starq::publishers::LegCommandPublisher::Ptr leg_command_publisher_;

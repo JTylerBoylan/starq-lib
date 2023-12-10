@@ -20,8 +20,8 @@ namespace starq::slam
         ~TerrainMap() {}
 
         /// @brief Get the distance to the nearest obstacle.
-        /// @param position Position.
-        /// @return Distance to the nearest obstacle.
+        /// @param position Position vector [m] (x, y, z) in the world frame.
+        /// @return Distance to the nearest obstacle [m]
         virtual double getDistanceToObstacle(const Vector3f &position) = 0;
 
     private:
