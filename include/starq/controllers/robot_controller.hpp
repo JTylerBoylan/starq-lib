@@ -19,8 +19,8 @@ namespace starq::controllers
 
         /// @brief Create a robot controller.
         RobotController(MotorController::Ptr motor_controller,
-                        slam::Localization::Ptr localization,
-                        slam::TerrainMap::Ptr terrain_map)
+                        slam::Localization::Ptr localization = nullptr,
+                        slam::TerrainMap::Ptr terrain_map = nullptr)
             : motor_controller_(motor_controller),
               leg_controller_(std::make_shared<LegController>(motor_controller)),
               leg_command_publisher_(std::make_shared<publishers::LegCommandPublisher>(leg_controller_)),
