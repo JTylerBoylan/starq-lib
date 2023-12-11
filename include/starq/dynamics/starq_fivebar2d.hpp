@@ -22,15 +22,20 @@ namespace starq::dynamics
             if (joint_angles.size() != 2)
                 return false;
 
-            const float thetaA = joint_angles(0);
-            const float thetaB = joint_angles(1);
+            const float thetaA = joint_angles(0) / GR1_;
+            const float thetaB = joint_angles(1) / GR2_;
 
-            const float cosA = std::cos(thetaA);
-            const float cosB = std::cos(thetaB);
-            const float sinA = std::sin(thetaA);
-            const float sinB = std::sin(thetaB);
+            const float alpha = 0.5f * (M_PI - thetaA - thetaB);
+            const float gamma = std::asin(L1_ * std::sin(alpha) / L2_);
+            const float phi = M_PI - alpha - gamma;
 
-            /* TODO */
+            const float theta = thetaA + alpha;
+            const float R = L2_ * std::sin(phi) / std::sin(alpha);
+
+            const float X = R * std::cos(theta);
+            const float Y = R * std::sin(theta);
+
+            foot_position = Vector2f(X, Y);
 
             return true;
         }
@@ -42,7 +47,21 @@ namespace starq::dynamics
         bool inverseKinematics(const VectorXf &foot_position, VectorXf &joint_angles) override
         {
 
-            /* TODO */
+            if (foot_position.size() != 2)
+                return false;
+
+            const float X = foot_position(0);
+            const float Y = foot_position(1);
+
+            const float theta0 = std::atan2(Y, X);
+            const float theta1 = std::atan2(Y, -X);
+            const float R = std::sqrt(X * X + Y * Y);
+            const float alpha = std::acos((R * R + L1_ * L1_ - L2_ * L2_) / (2.0f * R * L1_));
+
+            const float thetaA = GR1_ * (theta0 + alpha) / (2.0f * M_PI);
+            const float thetaB = GR2_ * (theta1 + alpha) / (2.0f * M_PI);
+
+            joint_angles = Vector2f(thetaA, thetaB);
 
             return true;
         }
@@ -59,18 +78,32 @@ namespace starq::dynamics
             const float thetaA = joint_angles(0);
             const float thetaB = joint_angles(1);
 
-            const float cosA = std::cos(thetaA);
-            const float cosB = std::cos(thetaB);
-            const float sinA = std::sin(thetaA);
-            const float sinB = std::sin(thetaB);
+            /* TODO : Jacobian */
 
-            /* TODO */
+            return false;
+        }
 
-            return true;
+        /// @brief Set leg lengths.
+        /// @param L1 Length of link 1.
+        /// @param L2 Length of link 2.
+        void setLegLengths(float L1, float L2)
+        {
+            L1_ = L1;
+            L2_ = L2;
+        }
+
+        /// @brief Set gear ratios.
+        /// @param GR1 Gear ratio of joint 1.
+        /// @param GR2 Gear ratio of joint 2.
+        void setGearRatios(float GR1, float GR2)
+        {
+            GR1_ = GR1;
+            GR2_ = GR2;
         }
 
     private:
         float L1_, L2_;
+        float GR1_, GR2_;
     };
 
 }

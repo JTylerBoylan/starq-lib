@@ -344,7 +344,6 @@ namespace starq::controllers
         return true;
     }
 
-
     VectorXf LegController::getCurrentJointAngles(const uint8_t leg_id)
     {
         VectorXf joint_angles(configs_[leg_id].motor_ids.size());
@@ -376,9 +375,9 @@ namespace starq::controllers
     }
 
     bool LegController::setJointAngles(const uint8_t leg_id,
-                        const VectorXf &joint_angles,
-                        const VectorXf &joint_velocity_ff,
-                        const VectorXf &joint_torque_ff)
+                                       const VectorXf &joint_angles,
+                                       const VectorXf &joint_velocity_ff,
+                                       const VectorXf &joint_torque_ff)
     {
         size_t expected_size = configs_[leg_id].motor_ids.size();
         if (joint_angles.size() != expected_size ||
@@ -390,21 +389,21 @@ namespace starq::controllers
         }
 
         bool success = true;
-        for (size_t i = 0; i < expected_size; i++)
+        for (size_t i = 0; (i < expected_size) && success; i++)
         {
             float velocity_ff = (joint_velocity_ff.size() > 0) ? joint_velocity_ff(i, 0) : 0.0f;
             float torque_ff = (joint_torque_ff.size() > 0) ? joint_torque_ff(i, 0) : 0.0f;
             success &= motor_controller_->setPosition(configs_[leg_id].motor_ids[i],
-                                                       joint_angles(i, 0),
-                                                       velocity_ff,
-                                                       torque_ff);
+                                                      joint_angles(i, 0),
+                                                      velocity_ff,
+                                                      torque_ff);
         }
         return success;
     }
 
     bool LegController::setJointVelocities(const uint8_t leg_id,
-                            const VectorXf &joint_velocities,
-                            const VectorXf &joint_torque_ff)
+                                           const VectorXf &joint_velocities,
+                                           const VectorXf &joint_torque_ff)
     {
         size_t expected_size = configs_[leg_id].motor_ids.size();
         if (joint_velocities.size() != expected_size ||
@@ -415,18 +414,18 @@ namespace starq::controllers
         }
 
         bool success = true;
-        for (size_t i = 0; i < expected_size; i++)
+        for (size_t i = 0; (i < expected_size) && success; i++)
         {
             float torque_ff = (joint_torque_ff.size() > 0) ? joint_torque_ff(i, 0) : 0.0f;
             success &= motor_controller_->setVelocity(configs_[leg_id].motor_ids[i],
-                                                       joint_velocities(i, 0),
-                                                       torque_ff);
+                                                      joint_velocities(i, 0),
+                                                      torque_ff);
         }
         return success;
     }
 
     bool LegController::setJointTorques(const uint8_t leg_id,
-                         const VectorXf &joint_torques)
+                                        const VectorXf &joint_torques)
     {
         size_t expected_size = configs_[leg_id].motor_ids.size();
         if (joint_torques.size() != expected_size)
@@ -436,10 +435,10 @@ namespace starq::controllers
         }
 
         bool success = true;
-        for (size_t i = 0; i < expected_size; i++)
+        for (size_t i = 0; (i < expected_size) && success; i++)
         {
             success &= motor_controller_->setTorque(configs_[leg_id].motor_ids[i],
-                                                     joint_torques(i, 0));
+                                                    joint_torques(i, 0));
         }
         return success;
     }

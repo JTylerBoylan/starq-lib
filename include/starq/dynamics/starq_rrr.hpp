@@ -9,7 +9,17 @@ namespace starq::dynamics
     {
         using Ptr = std::shared_ptr<STARQ_RRR>;
 
-        STARQ_RRR(float L1, float L2, float L3) : L1_(L1), L2_(L2), L3_(L3) {}
+        /// @brief Constructor for RRR leg.
+        /// @param L1 First leg length.
+        /// @param L2 Second leg length.
+        /// @param L3 Third leg length.
+        /// @param GR1 First gear ratio.
+        /// @param GR2 Second gear ratio.
+        /// @param GR3 Third gear ratio.
+        STARQ_RRR(float L1, float L2, float L3, float GR1, float GR2, float GR3)
+            : L1_(L1), L2_(L2), L3_(L3), GR1_(GR1), GR2_(GR2), GR3_(GR3)
+        {
+        }
 
         /// @brief Forward kinematics for RRR leg.
         /// @param joint_angles Joint angles.
@@ -20,9 +30,9 @@ namespace starq::dynamics
             if (joint_angles.size() != 3)
                 return false;
 
-            const float thetaA = joint_angles(0);
-            const float thetaB = joint_angles(1);
-            const float thetaC = joint_angles(2);
+            const float thetaA = joint_angles(0) / GR1_;
+            const float thetaB = joint_angles(1) / GR2_;
+            const float thetaC = joint_angles(2) / GR3_;
 
             const float cosA = std::cos(thetaA);
             const float cosB = std::cos(thetaB);
@@ -104,8 +114,20 @@ namespace starq::dynamics
             L3_ = L3;
         }
 
+        /// @brief Set the gear ratios.
+        /// @param GR1 First gear ratio.
+        /// @param GR2 Second gear ratio.
+        /// @param GR3 Third gear ratio.
+        void setGearRatios(float GR1, float GR2, float GR3)
+        {
+            GR1_ = GR1;
+            GR2_ = GR2;
+            GR3_ = GR3;
+        }
+
     private:
         float L1_, L2_, L3_;
+        float GR1_, GR2_, GR3_;
     };
 }
 

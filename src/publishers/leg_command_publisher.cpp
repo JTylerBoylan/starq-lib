@@ -16,7 +16,7 @@ namespace starq::publishers
     LegCommandPublisher::LegCommandPublisher(LegController::Ptr leg_controller)
         : leg_controller_(leg_controller),
           running_(false),
-          stop_on_fail_(false),
+          stop_on_fail_(true),
           sleep_duration_us_(1000)
     {
         start();
@@ -130,8 +130,11 @@ namespace starq::publishers
                 else
                 {
                     std::cerr << "Failed to send leg command." << std::endl;
+
                     if (stop_on_fail_)
+                    {
                         stop();
+                    }
                 }
             }
 
