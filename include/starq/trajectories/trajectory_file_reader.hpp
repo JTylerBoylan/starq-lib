@@ -22,17 +22,22 @@ namespace starq::trajectories
         using Ptr = std::shared_ptr<TrajectoryFileReader>;
 
         /// @brief Create a trajectory file reader.
-        TrajectoryFileReader() {}
+        TrajectoryFileReader();
 
         /// @brief Destroy the trajectory file reader.
-        ~TrajectoryFileReader() {}
+        ~TrajectoryFileReader();
 
         /// @brief Load a trajectory from a file.
         /// @param file_path Path to the file.
-        /// @return Leg trajectory.
-        LegTrajectory loadTrajectoryFromFile(const std::string &file_path);
+        /// @return True if the trajectory was loaded successfully, false otherwise.
+        bool load(const std::string &file_path);
+
+        /// @brief Get the trajectory.
+        /// @return Trajectory.
+        LegTrajectory::Ptr getTrajectory() { return trajectory_; }
 
     private:
+        LegTrajectory::Ptr trajectory_;
     };
 
 }
