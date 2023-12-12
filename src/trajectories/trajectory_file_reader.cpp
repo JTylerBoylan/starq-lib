@@ -17,15 +17,8 @@ TrajectoryFileReader::~TrajectoryFileReader()
 
 bool TrajectoryFileReader::load(const std::string &file_path)
 {
-    if (trajectory_ == nullptr)
-    {
-        trajectory_ = std::make_shared<LegTrajectory>();
-    }
-    else
-    {
-        trajectory_->trajectory.clear();
-        trajectory_->size = 0;
-    }
+
+    trajectory_.clear();
 
     std::ifstream file(file_path);
 
@@ -65,8 +58,7 @@ bool TrajectoryFileReader::load(const std::string &file_path)
         command->target_velocity = velocity;
         command->target_force = force;
         
-        trajectory_->trajectory.push_back(command);
-        trajectory_->size++;
+        trajectory_.push_back(command);
     }
 
     return true;

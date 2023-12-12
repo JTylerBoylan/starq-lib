@@ -22,6 +22,9 @@ namespace starq::controllers
         /// @param orientation Orientation to move to.
         virtual void moveTo(const Vector3f &position, const Vector3f &orientation) = 0;
 
+        /// @brief Stop the gait.
+        virtual void stop() = 0;
+
     private:
     };
 

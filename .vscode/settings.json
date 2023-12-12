@@ -57,7 +57,8 @@
         "typeinfo": "cpp",
         "condition_variable": "cpp",
         "mutex": "cpp",
-        "dense": "cpp"
+        "dense": "cpp",
+        "fstream": "cpp"
     },
     "cmake.configureOnOpen": true
 }

@@ -6,15 +6,6 @@
 namespace starq::trajectories
 {
 
-    /// @brief Leg trajectory.
-    struct LegTrajectory
-    {
-        using Ptr = std::shared_ptr<LegTrajectory>;
-
-        size_t size;
-        std::vector<starq::publishers::LegCommand::Ptr> trajectory;
-    };
-
     class TrajectoryFileReader
     {
 
@@ -33,11 +24,11 @@ namespace starq::trajectories
         bool load(const std::string &file_path);
 
         /// @brief Get the trajectory.
-        /// @return Trajectory.
-        LegTrajectory::Ptr getTrajectory() { return trajectory_; }
+        /// @return Vector of leg commands.
+        std::vector<starq::publishers::LegCommand::Ptr> getTrajectory() { return trajectory_; }
 
     private:
-        LegTrajectory::Ptr trajectory_;
+        std::vector<starq::publishers::LegCommand::Ptr> trajectory_;
     };
 
 }
