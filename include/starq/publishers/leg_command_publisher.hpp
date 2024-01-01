@@ -16,23 +16,21 @@ namespace starq::publishers
     /// @brief Leg command structure
     struct LegCommand
     {
-        using Ptr = std::shared_ptr<LegCommand>;
-
-        time_t release_time;
-        uint8_t leg_id;
+        double delay_in_seconds = 0.0;
+        uint8_t leg_id = 0;
         uint32_t control_mode = 0;
         uint32_t input_mode = 0x1;
         VectorXf target_position = VectorXf();
         VectorXf target_velocity = VectorXf();
         VectorXf target_force = VectorXf();
 
-        /// @brief Construct a new Leg Command object
-        /// @param leg_id ID of the leg.
-        LegCommand(const uint8_t leg_id);
+        time_t release_time = 0L;
 
-        /// @brief Set the time from now to release the command.
-        /// @param time_in_seconds Time to release in seconds.
-        void setTimeFromNow(const double time_in_seconds);
+        /// @brief Stamp the release time of the leg command.
+        void stamp()
+        {
+            release_time = std::chrono::system_clock::now().time_since_epoch().count() + delay_in_seconds * 1000;
+        }  
     };
 
     class LegCommandPublisher
@@ -49,7 +47,11 @@ namespace starq::publishers
 
         /// @brief Add a leg command to the queue.
         /// @param leg_cmd Command to add to the queue.
-        void push(LegCommand::Ptr leg_cmd);
+        void push(LegCommand leg_cmd);
+
+        /// @brief Add a vector of leg commands to the queue.
+        /// @param trajectory Vector of leg commands to add to the queue.
+        void push(std::vector<LegCommand> trajectory);
 
         /// @brief Clear the leg command queue.
         void clear();
@@ -81,9 +83,9 @@ namespace starq::publishers
         /// @brief Sort leg commands by release time.
         struct CompareLegCommand
         {
-            bool operator()(const LegCommand::Ptr &lhs, const LegCommand::Ptr &rhs) const
+            bool operator()(const LegCommand &lhs, const LegCommand &rhs) const
             {
-                return lhs->release_time > rhs->release_time;
+                return lhs.release_time > rhs.release_time;
             }
         };
 
@@ -91,7 +93,7 @@ namespace starq::publishers
         bool running_;
         bool stop_on_fail_;
         time_t sleep_duration_us_;
-        std::priority_queue<LegCommand::Ptr, std::vector<LegCommand::Ptr>, CompareLegCommand> leg_command_queue_;
+        std::priority_queue<LegCommand, std::vector<LegCommand>, CompareLegCommand> leg_command_queue_;
         std::mutex mutex_;
     };
 }

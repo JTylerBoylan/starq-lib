@@ -9,7 +9,10 @@ namespace starq::walking
           running_(false),
           sleep_duration_us_(10000)
     {
-        trajectory_file_reader_->load("/app/trajectories/walk.txt");
+        if (!trajectory_file_reader_->load("/app/trajectories/walk.txt"))
+        {
+            std::cerr << "Failed to load walking trajectory file." << std::endl;
+        }
     }
 
     WalkingGaitController::~WalkingGaitController()
@@ -47,6 +50,8 @@ namespace starq::walking
                 if (!running_)
                     break;
             }
+
+            /* TODO : Check if at desired state */
 
             /* TODO : Get COM Trajectory */
             /* TODO : Generate footfall positions */

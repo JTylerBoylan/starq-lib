@@ -25,10 +25,10 @@ namespace starq::trajectories
 
         /// @brief Get the trajectory.
         /// @return Vector of leg commands.
-        std::vector<starq::publishers::LegCommand::Ptr> getTrajectory() { return trajectory_; }
+        std::vector<starq::publishers::LegCommand> getTrajectory() { return trajectory_; }
 
     private:
-        std::vector<starq::publishers::LegCommand::Ptr> trajectory_;
+        std::vector<starq::publishers::LegCommand> trajectory_;
     };
 
 }
