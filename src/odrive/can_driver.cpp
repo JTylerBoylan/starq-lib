@@ -1,5 +1,7 @@
 #include "starq/odrive/can_driver.hpp"
 
+#include <iostream>
+
 namespace starq::odrive
 {
 

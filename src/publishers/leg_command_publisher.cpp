@@ -135,7 +135,10 @@ namespace starq::publishers
 
                     if (stop_on_fail_)
                     {
-                        stop();
+                        if (!stop())
+                        {
+                            std::cerr << "Failed to stop leg command publisher." << std::endl;
+                        }
                     }
                 }
             }

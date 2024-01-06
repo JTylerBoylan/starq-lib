@@ -49,7 +49,7 @@ namespace starq::odrive
         if (driver_->setVelGains(can_id, vel_gain, vel_integrator_gain))
         {
             configs_[can_id].vel_gain = vel_gain;
-            configs_[can_id].vel_integrator_gain = vel_integrator_gain;
+            configs_[can_id].integrator_gain = vel_integrator_gain;
             return true;
         }
         return false;

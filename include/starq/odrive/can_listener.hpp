@@ -1,7 +1,6 @@
 #ifndef STARQ_ODRIVE__CAN_LISTENER_HPP_
 #define STARQ_ODRIVE__CAN_LISTENER_HPP_
 
-#include <thread>
 #include <mutex>
 
 #include "starq/can/socket.hpp"

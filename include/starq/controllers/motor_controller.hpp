@@ -191,9 +191,9 @@ namespace starq::controllers
         /// @brief Get the velocity integrator gain config.
         /// @param motor_id The ID of the motor.
         /// @return The velocity integrator gain config.
-        float getVelIntegratorGainConfig(const uint8_t motor_id) const
+        float getIntegratorGainConfig(const uint8_t motor_id) const
         {
-            return configs_[motor_id].vel_integrator_gain;
+            return configs_[motor_id].integrator_gain;
         }
 
         /// @brief Get the velocity limit config.
@@ -240,7 +240,7 @@ namespace starq::controllers
             std::cout << "  Input mode: " << (int)getInputModeConfig(motor_id) << std::endl;
             std::cout << "  Position gain: " << getPosGainConfig(motor_id) << std::endl;
             std::cout << "  Velocity gain: " << getVelGainConfig(motor_id) << std::endl;
-            std::cout << "  Velocity integrator gain: " << getVelIntegratorGainConfig(motor_id) << std::endl;
+            std::cout << "  Integrator gain: " << getIntegratorGainConfig(motor_id) << std::endl;
             std::cout << "  Velocity limit: " << getVelocityLimitConfig(motor_id) << std::endl;
             std::cout << "  Current limit: " << getCurrentLimitConfig(motor_id) << std::endl;
         }
@@ -253,7 +253,7 @@ namespace starq::controllers
             uint32_t input_mode = 0;
             float pos_gain = 0.0f;
             float vel_gain = 0.0f;
-            float vel_integrator_gain = 0.0f;
+            float integrator_gain = 0.0f;
             float velocity_limit = 0.0f;
             float current_limit = 0.0f;
         } configs_[MAX_MOTOR_ID + 1];
