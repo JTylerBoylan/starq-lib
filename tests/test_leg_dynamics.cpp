@@ -68,8 +68,10 @@ int main(void)
     const float center_x = 0.0f;
     const float center_y = -150.0f;
 
+    leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
+
     printf("Starting leg movement in sine wave.\n");
-    for (float t = 0.0f; t < 2.0f * M_PI; t += 0.01f)
+    for (float t = 0.0f; t <= 2.0f * M_PI + 0.01; t += 0.01f)
     {
         const float y_off = 25.0f * std::sin(t);
 
@@ -79,8 +81,11 @@ int main(void)
         printf("Setting foot position to (%f, %f)\n", foot_position(0), foot_position(1));
 
         leg->setFootPosition(LEG_ID, foot_position);
-        usleep(100000);
+        usleep(5000);
     }
+
+    leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
+    leg->setAxisState(LEG_ID, AxisState::IDLE);
 
     return 0;
 }

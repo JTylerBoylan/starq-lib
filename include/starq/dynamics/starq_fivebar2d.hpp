@@ -81,7 +81,7 @@ namespace starq::dynamics
 
             /* TODO : Jacobian */
 
-            return false;
+            return true;
         }
 
         /// @brief Set leg lengths.

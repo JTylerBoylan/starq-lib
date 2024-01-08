@@ -61,14 +61,16 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
     enable_testing()
 
-    # Add the executable
     add_executable(test_can tests/test_can.cpp)
     target_include_directories(test_can PUBLIC include)
     target_link_libraries(test_can PUBLIC stdc++ stdc++fs m starq_lib pthread)
 
-    # Add the executable
     add_executable(test_odrive tests/test_odrive.cpp)
     target_include_directories(test_odrive PUBLIC include)
     target_link_libraries(test_odrive PUBLIC stdc++ stdc++fs m starq_lib pthread)
+
+    add_executable(test_leg_dynamics tests/test_leg_dynamics.cpp)
+    target_include_directories(test_leg_dynamics PUBLIC include)
+    target_link_libraries(test_leg_dynamics PUBLIC stdc++ stdc++fs m starq_lib pthread)
 
 endif()
