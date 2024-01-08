@@ -1,5 +1,7 @@
 #include "starq/odrive/odrive_controller.hpp"
 
+#include <iostream>
+
 namespace starq::odrive
 {
 
@@ -149,6 +151,35 @@ namespace starq::odrive
     float ODriveController::getTorqueEstimate(const uint8_t can_id)
     {
         return listener_->getTorqueEstimate(can_id);
+    }
+
+    void ODriveController::printInfo(const uint8_t motor_id)
+    {
+        std::cout << "Motor " << (int)motor_id << " info:" << std::endl;
+        std::cout << "  Axis error: " << getAxisError(motor_id) << std::endl;
+        std::cout << "  Axis state: " << (int)getAxisState(motor_id) << std::endl;
+        std::cout << "  Iq setpoint: " << getIqSetpoint(motor_id) << std::endl;
+        std::cout << "  Iq measured: " << getIqMeasured(motor_id) << std::endl;
+        std::cout << "  FET temperature: " << getFETTemperature(motor_id) << std::endl;
+        std::cout << "  Motor temperature: " << getMotorTemperature(motor_id) << std::endl;
+        std::cout << "  Bus voltage: " << getBusVoltage(motor_id) << std::endl;
+        std::cout << "  Bus current: " << getBusCurrent(motor_id) << std::endl;
+        std::cout << "  Position estimate: " << getPositionEstimate(motor_id) << std::endl;
+        std::cout << "  Velocity estimate: " << getVelocityEstimate(motor_id) << std::endl;
+        std::cout << "  Torque estimate: " << getTorqueEstimate(motor_id) << std::endl;
+    }
+
+    void ODriveController::printConfig(const uint8_t motor_id)
+    {
+        std::cout << "Motor " << (int)motor_id << " config:" << std::endl;
+        std::cout << "  Axis state: " << (int)getAxisStateConfig(motor_id) << std::endl;
+        std::cout << "  Control mode: " << (int)getControlModeConfig(motor_id) << std::endl;
+        std::cout << "  Input mode: " << (int)getInputModeConfig(motor_id) << std::endl;
+        std::cout << "  Position gain: " << getPosGainConfig(motor_id) << std::endl;
+        std::cout << "  Velocity gain: " << getVelGainConfig(motor_id) << std::endl;
+        std::cout << "  Integrator gain: " << getIntegratorGainConfig(motor_id) << std::endl;
+        std::cout << "  Velocity limit: " << getVelocityLimitConfig(motor_id) << std::endl;
+        std::cout << "  Current limit: " << getCurrentLimitConfig(motor_id) << std::endl;
     }
 
 }

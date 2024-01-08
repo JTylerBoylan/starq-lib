@@ -17,19 +17,19 @@ namespace starq::dynamics
         /// @param joint_angles Joint angles.
         /// @param foot_position Foot position.
         /// @return If the forward kinematics was successful.
-        virtual bool forwardKinematics(const VectorXf &joint_angles, VectorXf &foot_position) = 0;
+        virtual bool getForwardKinematics(const VectorXf &joint_angles, VectorXf &foot_position) = 0;
 
         /// @brief Get the inverse kinematics of a foot position.
         /// @param foot_position Foot position.
         /// @param joint_angles Joint angles.
         /// @return If the inverse kinematics was successful.
-        virtual bool inverseKinematics(const VectorXf &foot_position, VectorXf &joint_angles) = 0;
+        virtual bool getInverseKinematics(const VectorXf &foot_position, VectorXf &joint_angles) = 0;
 
         /// @brief Get the Jacobian matrix for a set of joint angles.
         /// @param joint_angles Joint angles.
         /// @param jacobian Jacobian matrix.
         /// @return If the Jacobian matrix was successful.
-        virtual bool jacobian(const VectorXf &joint_angles, MatrixXf &jacobian) = 0;
+        virtual bool getJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) = 0;
     };
 }
 

@@ -15,7 +15,8 @@ target_sources(starq_lib PRIVATE
     src/controllers/leg_controller.cpp
     src/odrive/odrive_controller.cpp
     src/odrive/can_driver.cpp 
-    src/odrive/can_listener.cpp 
+    src/odrive/can_listener.cpp
+    src/dynamics/starq_fiverbar2d.cpp
 )
 target_include_directories(starq_lib PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -129,6 +129,14 @@ namespace starq::odrive
         /// @return The controller torque estimate.
         float getTorqueEstimate(const uint8_t can_id)  override;
 
+        /// @brief Print the motor info.
+        /// @param motor_id The ID of the motor.
+        void printInfo(const uint8_t motor_id);
+
+        /// @brief Print the motor config.
+        /// @param motor_id The ID of the motor.
+        void printConfig(const uint8_t motor_id);
+
     private:
         ODriveCANDriver::Ptr driver_;
         ODriveCANListener::Ptr listener_;

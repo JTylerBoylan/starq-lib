@@ -153,30 +153,65 @@ namespace starq::controllers
             return false;
         }
 
-        VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
-
-        MatrixXf jacobian;
-        if (!configs_[leg_id].dynamics->jacobian(current_joint_angles, jacobian))
-        {
-            std::cerr << "Failed to get Jacobian." << std::endl;
-            return false;
-        }
-
         if (foot_position.size() == 0)
         {
             std::cerr << "Empty foot position." << std::endl;
             return false;
         }
 
+        const bool has_velocity_ff = foot_velocity_ff.size() > 0;
+        const bool has_torque_ff = foot_torque_ff.size() > 0;
+
+        MatrixXf jacobian;
+        if (has_velocity_ff || has_torque_ff)
+        {
+            const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
+
+            if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
+            {
+                std::cerr << "Failed to get Jacobian." << std::endl;
+                return false;
+            }
+        }
+
         VectorXf joint_angles;
-        if (!configs_[leg_id].dynamics->inverseKinematics(foot_position, joint_angles))
+        if (!configs_[leg_id].dynamics->getInverseKinematics(foot_position, joint_angles))
         {
             std::cerr << "Failed to get inverse kinematics." << std::endl;
             return false;
         }
 
-        VectorXf joint_velocity = foot_velocity_ff.size() > 0 ? jacobian.inverse() * foot_velocity_ff : VectorXf();
-        VectorXf joint_torque = foot_torque_ff.size() > 0 ? jacobian.transpose() * foot_torque_ff : VectorXf();
+        VectorXf joint_velocity;
+        if (has_velocity_ff)
+        {
+            if (jacobian.rows() != foot_velocity_ff.size())
+            {
+                std::cerr << "Invalid foot velocity feedforward." << std::endl;
+                return false;
+            }
+
+            joint_velocity = jacobian.inverse() * foot_velocity_ff;
+        }
+        else
+        {
+            joint_velocity = VectorXf::Zero(joint_angles.size());
+        }
+
+        VectorXf joint_torque;
+        if (has_torque_ff)
+        {
+            if (jacobian.rows() != foot_torque_ff.size())
+            {
+                std::cerr << "Invalid foot torque feedforward." << std::endl;
+                return false;
+            }
+
+            joint_torque = jacobian.transpose() * foot_torque_ff;
+        }
+        else
+        {
+            joint_torque = VectorXf::Zero(joint_angles.size());
+        }
 
         return setJointAngles(leg_id, joint_angles, joint_velocity, joint_torque);
     }
@@ -198,25 +233,54 @@ namespace starq::controllers
             return false;
         }
 
-        VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
-
-        MatrixXf jacobian;
-        if (!configs_[leg_id].dynamics->jacobian(current_joint_angles, jacobian))
-        {
-            std::cerr << "Failed to get Jacobian." << std::endl;
-            return false;
-        }
-
         if (foot_velocity.size() == 0)
         {
             std::cerr << "Empty foot velocity." << std::endl;
             return false;
         }
 
-        VectorXf joint_velocity = jacobian.inverse() * foot_velocity;
-        VectorXf joint_torque = foot_torque_ff.size() > 0 ? jacobian.transpose() * foot_torque_ff : VectorXf();
+        const bool has_torque_ff = foot_torque_ff.size() > 0;
 
-        return setJointVelocities(leg_id, joint_velocity, joint_torque);
+        if (has_torque_ff && foot_torque_ff.size() != foot_velocity.size())
+        {
+            std::cerr << "Invalid foot torque feedforward." << std::endl;
+            return false;
+        }
+
+        const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
+
+        MatrixXf jacobian;
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
+        {
+            std::cerr << "Failed to get Jacobian." << std::endl;
+            return false;
+        }
+
+        if (jacobian.rows() != foot_velocity.size())
+        {
+            std::cerr << "Invalid foot velocity." << std::endl;
+            return false;
+        }
+
+        VectorXf joint_velocities = jacobian.inverse() * foot_velocity;
+
+        VectorXf joint_torque;
+        if (has_torque_ff)
+        {
+            if (jacobian.rows() != foot_torque_ff.size())
+            {
+                std::cerr << "Invalid foot torque feedforward." << std::endl;
+                return false;
+            }
+
+            joint_torque = jacobian.transpose() * foot_torque_ff;
+        }
+        else
+        {
+            joint_torque = VectorXf::Zero(joint_velocities.size());
+        }
+
+        return setJointVelocities(leg_id, joint_velocities, joint_torque);
     }
 
     bool LegController::setFootForce(const uint8_t leg_id,
@@ -235,22 +299,28 @@ namespace starq::controllers
             return false;
         }
 
-        VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
-
-        MatrixXf jacobian;
-        if (!configs_[leg_id].dynamics->jacobian(current_joint_angles, jacobian))
-        {
-            std::cerr << "Failed to get Jacobian." << std::endl;
-            return false;
-        }
-
         if (foot_force.size() == 0)
         {
             std::cerr << "Empty foot force." << std::endl;
             return false;
         }
 
-        VectorXf joint_torque = jacobian.transpose() * foot_force;
+        const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
+
+        MatrixXf jacobian;
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
+        {
+            std::cerr << "Failed to get Jacobian." << std::endl;
+            return false;
+        }
+
+        if (jacobian.rows() != foot_force.size())
+        {
+            std::cerr << "Invalid foot force." << std::endl;
+            return false;
+        }
+
+        const VectorXf joint_torque = jacobian.transpose() * foot_force;
 
         return setJointTorques(leg_id, joint_torque);
     }
@@ -271,9 +341,9 @@ namespace starq::controllers
             return false;
         }
 
-        VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
+        const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
-        if (!configs_[leg_id].dynamics->forwardKinematics(current_joint_angles, foot_position))
+        if (!configs_[leg_id].dynamics->getForwardKinematics(current_joint_angles, foot_position))
         {
             std::cerr << "Failed to get forward kinematics." << std::endl;
             return false;
@@ -298,10 +368,10 @@ namespace starq::controllers
             return false;
         }
 
-        VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
+        const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
         MatrixXf jacobian;
-        if (!configs_[leg_id].dynamics->jacobian(current_joint_angles, jacobian))
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
         {
             std::cerr << "Failed to get Jacobian." << std::endl;
             return false;
@@ -329,10 +399,10 @@ namespace starq::controllers
             return false;
         }
 
-        VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
+        const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
         MatrixXf jacobian;
-        if (!configs_[leg_id].dynamics->jacobian(current_joint_angles, jacobian))
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
         {
             std::cerr << "Failed to get Jacobian." << std::endl;
             return false;
@@ -379,24 +449,13 @@ namespace starq::controllers
                                        const VectorXf &joint_velocity_ff,
                                        const VectorXf &joint_torque_ff)
     {
-        size_t expected_size = configs_[leg_id].motor_ids.size();
-        if (joint_angles.size() != expected_size ||
-            ((joint_velocity_ff.size() > 0) && (joint_velocity_ff.size() != expected_size)) ||
-            ((joint_torque_ff.size() > 0) && (joint_torque_ff.size() != expected_size)))
-        {
-            std::cerr << "Invalid joint parameters." << std::endl;
-            return false;
-        }
-
         bool success = true;
-        for (size_t i = 0; (i < expected_size) && success; i++)
+        for (size_t i = 0; (i < configs_[leg_id].motor_ids.size()) && success; i++)
         {
-            float velocity_ff = (joint_velocity_ff.size() > 0) ? joint_velocity_ff(i, 0) : 0.0f;
-            float torque_ff = (joint_torque_ff.size() > 0) ? joint_torque_ff(i, 0) : 0.0f;
             success &= motor_controller_->setPosition(configs_[leg_id].motor_ids[i],
                                                       joint_angles(i, 0),
-                                                      velocity_ff,
-                                                      torque_ff);
+                                                      joint_velocity_ff(i, 0),
+                                                      joint_torque_ff(i, 0));
         }
         return success;
     }
@@ -405,21 +464,12 @@ namespace starq::controllers
                                            const VectorXf &joint_velocities,
                                            const VectorXf &joint_torque_ff)
     {
-        size_t expected_size = configs_[leg_id].motor_ids.size();
-        if (joint_velocities.size() != expected_size ||
-            ((joint_torque_ff.size() > 0) && (joint_torque_ff.size() != expected_size)))
-        {
-            std::cerr << "Invalid joint parameters." << std::endl;
-            return false;
-        }
-
         bool success = true;
-        for (size_t i = 0; (i < expected_size) && success; i++)
+        for (size_t i = 0; (i < configs_[leg_id].motor_ids.size()) && success; i++)
         {
-            float torque_ff = (joint_torque_ff.size() > 0) ? joint_torque_ff(i, 0) : 0.0f;
             success &= motor_controller_->setVelocity(configs_[leg_id].motor_ids[i],
                                                       joint_velocities(i, 0),
-                                                      torque_ff);
+                                                      joint_torque_ff(i, 0));
         }
         return success;
     }
@@ -427,15 +477,8 @@ namespace starq::controllers
     bool LegController::setJointTorques(const uint8_t leg_id,
                                         const VectorXf &joint_torques)
     {
-        size_t expected_size = configs_[leg_id].motor_ids.size();
-        if (joint_torques.size() != expected_size)
-        {
-            std::cerr << "Invalid joint parameters." << std::endl;
-            return false;
-        }
-
         bool success = true;
-        for (size_t i = 0; (i < expected_size) && success; i++)
+        for (size_t i = 0; (i < configs_[leg_id].motor_ids.size()) && success; i++)
         {
             success &= motor_controller_->setTorque(configs_[leg_id].motor_ids[i],
                                                     joint_torques(i, 0));

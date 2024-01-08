@@ -203,22 +203,22 @@ namespace starq::controllers
         /// @brief Set the joint angles for a leg.
         /// @param leg_id Leg ID.
         /// @param joint_angles Joint angles.
-        /// @param joint_velocity_ff Joint velocity feedforward. (default: empty)
-        /// @param joint_torque_ff Joint torque feedforward (default: empty)
+        /// @param joint_velocity_ff Joint velocity feedforward.
+        /// @param joint_torque_ff Joint torque feedforward.
         /// @return If the command was sent successfully.
         bool setJointAngles(const uint8_t leg_id,
                             const VectorXf &joint_angles,
-                            const VectorXf &joint_velocity_ff = VectorXf(),
-                            const VectorXf &joint_torque_ff = VectorXf());
+                            const VectorXf &joint_velocity_ff,
+                            const VectorXf &joint_torque_ff);
 
         /// @brief Set the joint velocities for a leg.
         /// @param leg_id Leg ID.
         /// @param joint_velocities Joint velocities.
-        /// @param joint_torque_ff Joint torque feedforward (default: empty)
+        /// @param joint_torque_ff Joint torque feedforward.
         /// @return If the command was sent successfully.
         bool setJointVelocities(const uint8_t leg_id,
                                 const VectorXf &joint_velocities,
-                                const VectorXf &joint_torque_ff = VectorXf());
+                                const VectorXf &joint_torque_ff);
 
         /// @brief Set the joint torques for a leg.
         /// @param leg_id Leg ID.

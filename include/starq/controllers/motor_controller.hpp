@@ -2,7 +2,6 @@
 #define STARQ_CONTROLLERS__MOTOR_CONTROLLER_HPP_
 
 #include <memory>
-#include <iostream>
 
 #define MAX_MOTOR_ID 0x3F
 
@@ -210,39 +209,6 @@ namespace starq::controllers
         float getCurrentLimitConfig(const uint8_t motor_id) const
         {
             return configs_[motor_id].current_limit;
-        }
-
-        /// @brief Print the motor info.
-        /// @param motor_id The ID of the motor.
-        void printInfo(const uint8_t motor_id)
-        {
-            std::cout << "Motor " << (int)motor_id << " info:" << std::endl;
-            std::cout << "  Axis error: " << getAxisError(motor_id) << std::endl;
-            std::cout << "  Axis state: " << (int)getAxisState(motor_id) << std::endl;
-            std::cout << "  Iq setpoint: " << getIqSetpoint(motor_id) << std::endl;
-            std::cout << "  Iq measured: " << getIqMeasured(motor_id) << std::endl;
-            std::cout << "  FET temperature: " << getFETTemperature(motor_id) << std::endl;
-            std::cout << "  Motor temperature: " << getMotorTemperature(motor_id) << std::endl;
-            std::cout << "  Bus voltage: " << getBusVoltage(motor_id) << std::endl;
-            std::cout << "  Bus current: " << getBusCurrent(motor_id) << std::endl;
-            std::cout << "  Position estimate: " << getPositionEstimate(motor_id) << std::endl;
-            std::cout << "  Velocity estimate: " << getVelocityEstimate(motor_id) << std::endl;
-            std::cout << "  Torque estimate: " << getTorqueEstimate(motor_id) << std::endl;
-        }
-
-        /// @brief Print the motor config.
-        /// @param motor_id The ID of the motor.
-        void printConfig(const uint8_t motor_id)
-        {
-            std::cout << "Motor " << (int)motor_id << " config:" << std::endl;
-            std::cout << "  Axis state: " << (int)getAxisStateConfig(motor_id) << std::endl;
-            std::cout << "  Control mode: " << (int)getControlModeConfig(motor_id) << std::endl;
-            std::cout << "  Input mode: " << (int)getInputModeConfig(motor_id) << std::endl;
-            std::cout << "  Position gain: " << getPosGainConfig(motor_id) << std::endl;
-            std::cout << "  Velocity gain: " << getVelGainConfig(motor_id) << std::endl;
-            std::cout << "  Integrator gain: " << getIntegratorGainConfig(motor_id) << std::endl;
-            std::cout << "  Velocity limit: " << getVelocityLimitConfig(motor_id) << std::endl;
-            std::cout << "  Current limit: " << getCurrentLimitConfig(motor_id) << std::endl;
         }
 
     protected:
