@@ -11,7 +11,8 @@ namespace starq::dynamics
     public:
         using Ptr = std::shared_ptr<STARQ_FiveBar2D>;
 
-        STARQ_FiveBar2D(float L1, float L2) : L1_(L1), L2_(L2) {}
+        STARQ_FiveBar2D(float L1, float L2, float GR1, float GR2)
+            : L1_(L1), L2_(L2), GR1_(GR1), GR2_(GR2) {}
 
         /// @brief Forward kinematics for FiveBar2D leg.
         /// @param joint_angles Joint angles.
