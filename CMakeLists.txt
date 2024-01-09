@@ -74,6 +74,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     target_include_directories(test_fivebar2d_position_control PUBLIC include)
     target_link_libraries(test_fivebar2d_position_control PUBLIC stdc++ stdc++fs m starq_lib pthread)
 
+    add_executable(test_fivebar2d_force_control tests/test_fivebar2d_force_control.cpp)
+    target_include_directories(test_fivebar2d_force_control PUBLIC include)
+    target_link_libraries(test_fivebar2d_force_control PUBLIC stdc++ stdc++fs m starq_lib pthread)
+
     add_executable(test_fivebar2d_dummy tests/test_fivebar2d_dummy.cpp)
     target_include_directories(test_fivebar2d_dummy PUBLIC include)
     target_link_libraries(test_fivebar2d_dummy PUBLIC stdc++ stdc++fs m starq_lib pthread)
