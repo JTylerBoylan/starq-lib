@@ -1,5 +1,5 @@
-#ifndef STARQ_DYNAMICS__LEG_DYNAMICS_HPP_
-#define STARQ_DYNAMICS__LEG_DYNAMICS_HPP_
+#ifndef STARQ__LEG_DYNAMICS_HPP_
+#define STARQ__LEG_DYNAMICS_HPP_
 
 #include <memory>
 #include "eigen3/Eigen/Dense"

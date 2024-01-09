@@ -1,5 +1,5 @@
-#ifndef STARQ_PUBLISHERS__LEG_COMMAND_PUBLISHER_HPP_
-#define STARQ_PUBLISHERS__LEG_COMMAND_PUBLISHER_HPP_
+#ifndef STARQ__LEG_COMMAND_PUBLISHER_HPP_
+#define STARQ__LEG_COMMAND_PUBLISHER_HPP_
 
 #include "starq/leg_controller.hpp"
 #include <queue>
