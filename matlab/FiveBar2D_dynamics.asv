@@ -32,7 +32,7 @@ L1 = 0.05;
 L2 = 0.15;
 
 thA = -0.4402;
-thB = -0.2002;
+thB = -0.4402;
 
 Jf_00 = getForwardJacobian(L1, L2, thA, thB)
 
@@ -42,12 +42,31 @@ Tf = Jf_00' * Ff
 
 %% INVERSE
 
-inverse_jacobian = inv(forward_jacobian)
+syms X Y
+
+theta0_i = atan2(Y, X);
+theta1_i = atan2(Y, -X);
+R_i = sqrt(X^2 + Y^2);
+alpha_i = acos((R_i^2 + L1_M^2 - L2_M^2) / (2 * R_i * L1_M));
+
+thetaA_i = theta0_i + alpha_i;
+thetaB_i = theta1_i + alpha_i;
+
+Q_i = [thetaA_i, thetaB_i];
+
+J_i = jacobian(Q_i, [X; Y]);
+
+inverse_jacobian = simplify(real(J_i))
 
 getInverseJacobian = matlabFunction(inverse_jacobian);
 
 %% Test
 
-Ji_00 = getInverseJacobian(L1, L2, thA, thB)
+Xe = 0;
+Ye = -164.32;
 
+Ji_00 = getInverseJacobian(L1, L2, Xe, Ye)
 
+Ti = [-0.13; -0.13];
+
+Fi = Ji_00' * Ti

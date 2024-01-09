@@ -25,17 +25,11 @@ namespace starq::dynamics
         /// @return If the inverse kinematics was successful.
         bool getInverseKinematics(const VectorXf &foot_position, VectorXf &joint_angles) override;
 
-        /// @brief Forward Jacobian for FiveBar2D leg.
+        /// @brief Jacobian for FiveBar2D leg.
         /// @param joint_angles Joint angles.
         /// @param jacobian Jacobian matrix.
         /// @return If the Jacobian matrix was successful.
-        bool getForwardJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) override;
-
-        /// @brief Inverse Jacobian for FiveBar2D leg.
-        /// @param joint_angles Joint angles.
-        /// @param jacobian Jacobian matrix.
-        /// @return If the Jacobian matrix was successful.
-        bool getInverseJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) override;
+        bool getJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) override;
 
     private:
         float L1_, L2_;

@@ -53,7 +53,7 @@ namespace starq::dynamics
         return true;
     }
 
-    bool STARQ_FiveBar2D::getForwardJacobian(const VectorXf &joint_angles, MatrixXf &jacobian)
+    bool STARQ_FiveBar2D::getJacobian(const VectorXf &joint_angles, MatrixXf &jacobian)
     {
         if (joint_angles.size() != 2)
             return false;
@@ -67,10 +67,10 @@ namespace starq::dynamics
         const float thetaA_2 = 0.5f * thetaA;
         const float thetaB_2 = 0.5f * thetaB;
 
-        const float dXdA = (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2.0f * L2_M * std::sqrt(-(std::pow(L1_M, 2.0f) - 2.0f * std::pow(L2_M, 2.0f) + std::pow(L1_M, 2.0f) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2.0f))) + 0.5f)) / std::cos(thetaA_2 + thetaB_2) - (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::pow(std::cos(thetaA_2 + thetaB_2), 2.0f)) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::cos(thetaA_2 + thetaB_2));
-        const float dXdB = (L2_M * std::cos(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::cos(thetaA_2 + thetaB_2)) - (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::pow(std::cos(thetaA_2 + thetaB_2), 2.0f)) + (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2.0f * L2_M * std::sqrt(-(std::pow(L1_M, 2.0f) - 2.0f * std::pow(L2_M, 2.0f) + std::pow(L1_M, 2.0f) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2.0f))) + 0.5f)) / std::cos(thetaA_2 + thetaB_2);
-        const float dYdA = (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::pow(std::cos(thetaA_2 + thetaB_2), 2.0f)) - (L2_M * std::sin(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::cos(thetaA_2 + thetaB_2)) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2.0f * L2_M * std::sqrt(-(std::pow(L1_M, 2.0f) - 2.0f * std::pow(L2_M, 2.0f) + std::pow(L1_M, 2.0f) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2.0f))) + 0.5f)) / std::cos(thetaA_2 + thetaB_2);
-        const float dYdB = (L2_M * std::sin(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::cos(thetaA_2 + thetaB_2)) + (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2.0f * std::pow(std::cos(thetaA_2 + thetaB_2), 2.0f)) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 - std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2.0f * L2_M * std::sqrt(-(std::pow(L1_M, 2.0f) - 2.0f * std::pow(L2_M, 2.0f) + std::pow(L1_M, 2.0f) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2.0f))) + 0.5f)) / std::cos(thetaA_2 + thetaB_2);
+        const float dXdA = (L2_M * std::cos(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::cos(thetaA_2 + thetaB_2)) + (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2 * L2_M * std::sqrt(-(std::pow(L1_M, 2) - 2 * std::pow(L2_M, 2) + std::pow(L1_M, 2) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2))) - 0.5f)) / std::cos(thetaA_2 + thetaB_2) + (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::pow(std::cos(thetaA_2 + thetaB_2), 2));
+        const float dXdB = (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2 * L2_M * std::sqrt(-(std::pow(L1_M, 2) - 2 * std::pow(L2_M, 2) + std::pow(L1_M, 2) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2))) - 0.5f)) / std::cos(thetaA_2 + thetaB_2) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::cos(thetaA_2 + thetaB_2)) + (L2_M * std::sin(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::pow(std::cos(thetaA_2 + thetaB_2), 2));
+        const float dYdA = (L2_M * std::sin(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::cos(thetaA_2 + thetaB_2)) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2 * L2_M * std::sqrt(-(std::pow(L1_M, 2) - 2 * std::pow(L2_M, 2) + std::pow(L1_M, 2) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2))) - 0.5f)) / std::cos(thetaA_2 + thetaB_2) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::pow(std::cos(thetaA_2 + thetaB_2), 2));
+        const float dYdB = -(L2_M * std::sin(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::cos(thetaA_2 + thetaB_2)) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2f * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2 * L2_M * std::sqrt(-(std::pow(L1_M, 2) - 2 * std::pow(L2_M, 2) + std::pow(L1_M, 2) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2))) - 0.5f)) / std::cos(thetaA_2 + thetaB_2) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::pow(std::cos(thetaA_2 + thetaB_2), 2));
 
         jacobian = MatrixXf(2, 2);
         jacobian << dXdA, dXdB, dYdA, dYdB;
@@ -78,26 +78,4 @@ namespace starq::dynamics
         return true;
     }
 
-    bool STARQ_FiveBar2D::getInverseJacobian(const VectorXf &joint_angles, MatrixXf &jacobian)
-    {
-
-        if (joint_angles.size() != 2)
-            return false;
-
-        const float thetaA = joint_angles(0);
-        const float thetaB = joint_angles(1);
-
-        const float L1_M = L1_ * 1E-3F;
-        const float L2_M = L2_ * 1E-3F;
-
-        const float dXdA = 0;
-        const float dXdB = 0;
-        const float dYdA = 0;
-        const float dYdB = 0;
-
-        jacobian = MatrixXf(2, 2);
-        jacobian << dXdA, dXdB, dYdA, dYdB;
-
-        return true;
-    }
 }

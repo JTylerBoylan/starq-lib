@@ -25,17 +25,11 @@ namespace starq
         /// @return If the inverse kinematics was successful.
         virtual bool getInverseKinematics(const VectorXf &foot_position, VectorXf &joint_angles) = 0;
 
-        /// @brief Get the forward Jacobian matrix for a set of joint angles.
+        /// @brief Get the Jacobian matrix for a set of joint angles.
         /// @param joint_angles Joint angles.
         /// @param jacobian Jacobian matrix.
         /// @return If the Jacobian matrix was successful.
-        virtual bool getForwardJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) = 0;
-
-        /// @brief Get the inverse Jacobian matrix for a set of joint angles.
-        /// @param joint_angles Joint angles.
-        /// @param jacobian Jacobian matrix.
-        /// @return If the Jacobian matrix was successful.
-        virtual bool getInverseJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) = 0;
+        virtual bool getJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) = 0;
         
     };
 }

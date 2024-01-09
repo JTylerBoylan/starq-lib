@@ -102,17 +102,11 @@ namespace starq
 
         const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
-        MatrixXf inverse_jacobian;
-        if (has_velocity_ff && !configs_[leg_id].dynamics->getInverseJacobian(current_joint_angles, inverse_jacobian))
+        MatrixXf jacobian;
+        if ((has_velocity_ff || has_torque_ff) &&
+            !configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
         {
-            std::cerr << "Failed to get Inverse Jacobian." << std::endl;
-            return false;
-        }
-
-        MatrixXf forward_jacobian;
-        if (has_torque_ff && !configs_[leg_id].dynamics->getForwardJacobian(current_joint_angles, forward_jacobian))
-        {
-            std::cerr << "Failed to get Forward Jacobian." << std::endl;
+            std::cerr << "Failed to get Jacobian." << std::endl;
             return false;
         }
 
@@ -123,10 +117,10 @@ namespace starq
             return false;
         }
 
-        const VectorXf joint_velocity = has_velocity_ff ? (VectorXf)(inverse_jacobian * foot_velocity_ff)
+        const VectorXf joint_velocity = has_velocity_ff ? (VectorXf)(jacobian.inverse() * foot_velocity_ff)
                                                         : VectorXf::Zero(joint_angles.size());
 
-        const VectorXf joint_torque = has_torque_ff ? (VectorXf)(forward_jacobian.transpose() * foot_torque_ff)
+        const VectorXf joint_torque = has_torque_ff ? (VectorXf)(jacobian.transpose() * foot_torque_ff)
                                                     : VectorXf::Zero(joint_angles.size());
 
         return setJointAngles(leg_id, joint_angles, joint_velocity, joint_torque);
@@ -159,23 +153,16 @@ namespace starq
 
         const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
-        MatrixXf inverse_jacobian;
-        if (!configs_[leg_id].dynamics->getInverseJacobian(current_joint_angles, inverse_jacobian))
+        MatrixXf jacobian;
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
         {
-            std::cerr << "Failed to get Inverse Jacobian." << std::endl;
+            std::cerr << "Failed to get Jacobian." << std::endl;
             return false;
         }
 
-        MatrixXf forward_jacobian;
-        if (has_torque_ff && !configs_[leg_id].dynamics->getForwardJacobian(current_joint_angles, forward_jacobian))
-        {
-            std::cerr << "Failed to get Forward Jacobian." << std::endl;
-            return false;
-        }
+        VectorXf joint_velocities = jacobian.inverse() * foot_velocity;
 
-        VectorXf joint_velocities = inverse_jacobian * foot_velocity;
-
-        const VectorXf joint_torque = has_torque_ff ? (VectorXf)(forward_jacobian.transpose() * foot_torque_ff)
+        const VectorXf joint_torque = has_torque_ff ? (VectorXf)(jacobian.transpose() * foot_torque_ff)
                                                     : VectorXf::Zero(joint_velocities.size());
 
         return setJointVelocities(leg_id, joint_velocities, joint_torque);
@@ -205,14 +192,14 @@ namespace starq
 
         const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
-        MatrixXf forward_jacobian;
-        if (!configs_[leg_id].dynamics->getForwardJacobian(current_joint_angles, forward_jacobian))
+        MatrixXf jacobian;
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
         {
             std::cerr << "Failed to get Jacobian." << std::endl;
             return false;
         }
 
-        const VectorXf joint_torque = forward_jacobian.transpose() * foot_force;
+        const VectorXf joint_torque = jacobian.transpose() * foot_force;
 
         return setJointTorques(leg_id, joint_torque);
     }
@@ -262,15 +249,15 @@ namespace starq
 
         const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
-        MatrixXf forward_jacobian;
-        if (!configs_[leg_id].dynamics->getForwardJacobian(current_joint_angles, forward_jacobian))
+        MatrixXf jacobian;
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
         {
             std::cerr << "Failed to get Jacobian." << std::endl;
             return false;
         }
 
         VectorXf joint_velocities = getCurrentJointVelocities(leg_id);
-        foot_velocity = forward_jacobian * joint_velocities;
+        foot_velocity = jacobian * joint_velocities;
 
         return true;
     }
@@ -293,15 +280,15 @@ namespace starq
 
         const VectorXf current_joint_angles = getCurrentJointAngles(leg_id);
 
-        MatrixXf forward_jacobian;
-        if (!configs_[leg_id].dynamics->getForwardJacobian(current_joint_angles, forward_jacobian))
+        MatrixXf jacobian;
+        if (!configs_[leg_id].dynamics->getJacobian(current_joint_angles, jacobian))
         {
             std::cerr << "Failed to get Jacobian." << std::endl;
             return false;
         }
 
         VectorXf joint_torques = getCurrentJointTorques(leg_id);
-        foot_force = forward_jacobian.transpose() * joint_torques;
+        foot_force = jacobian.transpose() * joint_torques;
 
         return true;
     }
