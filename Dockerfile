@@ -9,7 +9,8 @@ RUN apt-get update && \
         git \
         libsocketcan-dev \
         can-utils \
-        libeigen3-dev
+        libeigen3-dev \
+        gdb
 
 # Create a new user with a specific UID and GID, and set up the workspace
 RUN useradd -m -u 1000 -s /bin/bash user && \

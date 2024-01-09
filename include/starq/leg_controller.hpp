@@ -100,7 +100,6 @@ namespace starq
         bool getFootForceEstimate(const uint8_t leg_id,
                                   VectorXf &foot_force);
 
-    private:
         /// @brief Get the current joint angles for a leg.
         /// @param leg_id Leg ID.
         /// @return Vector of joint angles.
@@ -143,6 +142,7 @@ namespace starq
         bool setJointTorques(const uint8_t leg_id,
                              const VectorXf &joint_torques);
 
+    private:
         const starq::MotorController::Ptr motor_controller_;
 
         struct
