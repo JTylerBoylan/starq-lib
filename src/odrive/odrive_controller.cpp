@@ -1,6 +1,7 @@
 #include "starq/odrive/odrive_controller.hpp"
 
 #include <iostream>
+#include <cmath>
 
 namespace starq::odrive
 {
@@ -13,6 +14,18 @@ namespace starq::odrive
 
     ODriveController::~ODriveController()
     {
+    }
+
+    bool ODriveController::setGearRatio(const uint8_t motor_id, const float gear_ratio)
+    {
+        if (motor_id > MAX_MOTOR_ID)
+        {
+            std::cerr << "Invalid motor ID." << std::endl;
+            return false;
+        }
+
+        configs_[motor_id].gear_ratio = gear_ratio;
+        return true;
     }
 
     bool ODriveController::setState(const uint8_t can_id, const uint32_t state)
@@ -130,8 +143,12 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
+
+        const float pos_rev = configs_[can_id].gear_ratio * pos / (2.0f * M_PIf);
+        const float vel_ff_rev = configs_[can_id].gear_ratio * vel_ff / (2.0f * M_PIf);
+        const float torque_ff_N = torque_ff / configs_[can_id].gear_ratio;
         
-        return driver_->setPosition(can_id, pos, vel_ff, torque_ff);
+        return driver_->setPosition(can_id, pos_rev, vel_ff_rev, torque_ff_N);
     }
 
     bool ODriveController::setVelocity(const uint8_t can_id, const float vel, const float torque_ff)
@@ -141,8 +158,11 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
+
+        const float vel_rev = configs_[can_id].gear_ratio * vel / (2.0f * M_PIf);
+        const float torque_ff_N = torque_ff / configs_[can_id].gear_ratio;
         
-        return driver_->setVelocity(can_id, vel, torque_ff);
+        return driver_->setVelocity(can_id, vel_rev, torque_ff_N);
     }
 
     bool ODriveController::setTorque(const uint8_t can_id, const float torque)
@@ -152,8 +172,10 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
+
+        const float torque_N = torque / configs_[can_id].gear_ratio;
         
-        return driver_->setTorque(can_id, torque);
+        return driver_->setTorque(can_id, torque_N);
     }
 
     uint32_t ODriveController::getAxisError(const uint8_t can_id)
@@ -251,8 +273,8 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
-        return listener_->getPosEstimate(can_id);
+
+        return listener_->getPosEstimate(can_id) * (2.0f * M_PIf) / configs_[can_id].gear_ratio;
     }
 
     float ODriveController::getVelocityEstimate(const uint8_t can_id)
@@ -263,7 +285,7 @@ namespace starq::odrive
             return false;
         }
         
-        return listener_->getVelEstimate(can_id);
+        return listener_->getVelEstimate(can_id) * (2.0f * M_PIf) / configs_[can_id].gear_ratio;
     }
 
     float ODriveController::getTorqueEstimate(const uint8_t can_id)
@@ -274,7 +296,7 @@ namespace starq::odrive
             return false;
         }
         
-        return listener_->getTorqueEstimate(can_id);
+        return listener_->getTorqueEstimate(can_id) * configs_[can_id].gear_ratio;
     }
 
     void ODriveController::printInfo(const uint8_t motor_id)

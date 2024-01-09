@@ -37,6 +37,8 @@ int main(void)
     }
 
     ODriveController::Ptr odrive = std::make_shared<ODriveController>(socket);
+    odrive->setGearRatio(MOTOR_ID_0, GEAR_RATIO_1);
+    odrive->setGearRatio(MOTOR_ID_1, GEAR_RATIO_2);
 
     printf("Created ODrive controller.\n");
 
@@ -50,9 +52,7 @@ int main(void)
 
     STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(
         LEG_LINK_1_LENGTH_MM,
-        LEG_LINK_2_LENGTH_MM,
-        GEAR_RATIO_1,
-        GEAR_RATIO_2);
+        LEG_LINK_2_LENGTH_MM);
     leg->setLegDynamics(LEG_ID, fivebar_dynamics);
 
     printf("Set leg dynamics.\n");
@@ -66,7 +66,7 @@ int main(void)
     printf("Set control mode.\n");
 
     const float center_x = 0.0f;
-    const float center_y = -150.0f;
+    const float center_y = -std::sqrt(2)*100;
 
     leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
 

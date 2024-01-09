@@ -14,6 +14,11 @@ namespace starq::testing
 
         ~DummyMotorController() {}
 
+        bool setGearRatio(const uint8_t motor_id, const float gear_ratio) override
+        {
+            return true;
+        }
+
         bool setState(const uint8_t motor_id, const uint32_t state) override
         {
             return true;

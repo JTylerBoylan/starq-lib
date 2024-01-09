@@ -13,9 +13,6 @@
 #define LEG_LINK_1_LENGTH_MM 50.0f
 #define LEG_LINK_2_LENGTH_MM 150.0f
 
-#define GEAR_RATIO_1 6.0f
-#define GEAR_RATIO_2 6.0f
-
 using namespace starq;
 using namespace starq::testing;
 using namespace starq::dynamics;
@@ -35,9 +32,8 @@ int main(void)
 
     STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(
         LEG_LINK_1_LENGTH_MM,
-        LEG_LINK_2_LENGTH_MM,
-        GEAR_RATIO_1,
-        GEAR_RATIO_2);
+        LEG_LINK_2_LENGTH_MM);
+
     leg->setLegDynamics(LEG_ID, fivebar_dynamics);
     printf("Set leg dynamics.\n");
 
@@ -46,7 +42,7 @@ int main(void)
     for (float t = 0.0f; t <= 2.0f * M_PI + 0.01; t += 0.1f)
     {
         const float center_x = 0.0f;
-        const float center_y = -141.4f;
+        const float center_y = -std::sqrt(2)*100;
 
         const float y_off = 25.0f * std::sin(t);
 
@@ -57,9 +53,14 @@ int main(void)
 
         leg->setFootPosition(LEG_ID, foot_position);
 
+        VectorXf pos_estimate;
+        leg->getFootPositionEstimate(LEG_ID, pos_estimate);
+
+        printf("Foot position estimate: (%f, %f)\n", pos_estimate(0), pos_estimate(1));
+
         VectorXf joint_angles = leg->getCurrentJointAngles(LEG_ID);
 
-        printf("Joint angles: (%f, %f)\n", joint_angles(0), joint_angles(1));
+        printf("Motor positions: (%f, %f)\n", joint_angles(0), joint_angles(1));
 
         const float force = -5.0;
 

@@ -20,6 +20,12 @@ namespace starq::odrive
         /// @brief Disconnect from ODrive.
         ~ODriveController();
 
+        /// @brief Set the gear ratio
+        /// @param motor_id The ID of the motor.
+        /// @param gear_ratio The gear ratio of the motor.
+        /// @return If the gear ratio was set successfully.
+        bool setGearRatio(const uint8_t motor_id, const float gear_ratio) override;
+
         /// @brief Set the axis state.
         /// @param can_id The CAN ID of the ODrive.
         /// @param state The state to set the ODrive to.
@@ -35,22 +41,22 @@ namespace starq::odrive
 
         /// @brief Set the position.
         /// @param can_id The CAN ID of the ODrive.
-        /// @param pos The position to set the ODrive to.
-        /// @param vel_ff The velocity feedforward to set the ODrive to. (default: 0)
-        /// @param torque_ff The torque feedforward to set the ODrive to. (default: 0)
+        /// @param pos The position to set the ODrive to. [rad]
+        /// @param vel_ff The velocity feedforward to set the ODrive to. [rad/s] (default: 0)
+        /// @param torque_ff The torque feedforward to set the ODrive to. [N-m] (default: 0)
         /// @return If the command was sent successfully.
         bool setPosition(const uint8_t can_id, const float pos, const float vel_ff = 0.F, const float torque_ff = 0.F) override;
 
         /// @brief Set the velocity.
         /// @param can_id The CAN ID of the ODrive.
-        /// @param vel The velocity to set the ODrive to.
-        /// @param torque_ff The torque feedforward to set the ODrive to. (default: 0)
+        /// @param vel The velocity to set the ODrive to. [rad/s]
+        /// @param torque_ff The torque feedforward to set the ODrive to. [N-m] (default: 0)
         /// @return If the command was sent successfully.
         bool setVelocity(const uint8_t can_id, const float vel, const float torque_ff = 0.F) override;
 
         /// @brief Set the torque.
         /// @param can_id The CAN ID of the ODrive.
-        /// @param torque The torque to set the ODrive to.
+        /// @param torque The torque to set the ODrive to. [N-m]
         /// @return If the command was sent successfully.
         bool setTorque(const uint8_t can_id, const float torque) override;
 
@@ -76,17 +82,17 @@ namespace starq::odrive
 
         /// @brief Get the encoder position estimate.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The encoder position estimate.
+        /// @return The encoder position estimate in radians.
         float getPositionEstimate(const uint8_t can_id) override;
 
         /// @brief Get the encoder velocity estimate.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The encoder velocity estimate.
+        /// @return The encoder velocity estimate in radians per second.
         float getVelocityEstimate(const uint8_t can_id) override;
 
         /// @brief Get the controller torque estimate.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The controller torque estimate.
+        /// @return The controller torque estimate in Newton-meters.
         float getTorqueEstimate(const uint8_t can_id) override;
 
         /// @brief Get the axis error.
@@ -101,32 +107,32 @@ namespace starq::odrive
 
         /// @brief Get the Iq setpoint.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The Iq setpoint.
+        /// @return The Iq setpoint in Amps.
         float getIqSetpoint(const uint8_t can_id);
 
         /// @brief Get the Iq measured.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The Iq measured.
+        /// @return The Iq measured in Amps.
         float getIqMeasured(const uint8_t can_id);
 
         /// @brief Get the FET temperature.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The FET temperature.
+        /// @return The FET temperature in degrees Celsius.
         float getFETTemperature(const uint8_t can_id);
 
         /// @brief Get the motor temperature.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The motor temperature.
+        /// @return The motor temperature in degrees Celsius.
         float getMotorTemperature(const uint8_t can_id);
 
         /// @brief Get the DC bus voltage.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The DC bus voltage.
+        /// @return The DC bus voltage in Volts.
         float getBusVoltage(const uint8_t can_id);
 
         /// @brief Get the DC bus current.
         /// @param can_id The CAN ID of the ODrive.
-        /// @return The DC bus current.
+        /// @return The DC bus current in Amps.
         float getBusCurrent(const uint8_t can_id);
 
         /// @brief Print the motor info.
@@ -147,6 +153,7 @@ namespace starq::odrive
             float integrator_gain = 0.0f;
             float velocity_limit = 0.0f;
             float current_limit = 0.0f;
+            float gear_ratio = 1.0f;
         } configs_[MAX_MOTOR_ID + 1];
     };
 

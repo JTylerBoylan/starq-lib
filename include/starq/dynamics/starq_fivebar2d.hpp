@@ -11,7 +11,7 @@ namespace starq::dynamics
     public:
         using Ptr = std::shared_ptr<STARQ_FiveBar2D>;
 
-        STARQ_FiveBar2D(float L1, float L2, float GR1, float GR2);
+        STARQ_FiveBar2D(float L1, float L2);
 
         /// @brief Forward kinematics for FiveBar2D leg.
         /// @param joint_angles Joint angles.
@@ -25,15 +25,20 @@ namespace starq::dynamics
         /// @return If the inverse kinematics was successful.
         bool getInverseKinematics(const VectorXf &foot_position, VectorXf &joint_angles) override;
 
-        /// @brief Jacobian for FiveBar2D leg.
+        /// @brief Forward Jacobian for FiveBar2D leg.
         /// @param joint_angles Joint angles.
         /// @param jacobian Jacobian matrix.
         /// @return If the Jacobian matrix was successful.
-        bool getJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) override;
+        bool getForwardJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) override;
+
+        /// @brief Inverse Jacobian for FiveBar2D leg.
+        /// @param joint_angles Joint angles.
+        /// @param jacobian Jacobian matrix.
+        /// @return If the Jacobian matrix was successful.
+        bool getInverseJacobian(const VectorXf &joint_angles, MatrixXf &jacobian) override;
 
     private:
         float L1_, L2_;
-        float GR1_, GR2_;
     };
 
 }
