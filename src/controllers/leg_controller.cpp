@@ -37,7 +37,7 @@ namespace starq::controllers
         configs_[leg_id].dynamics = dynamics;
     }
 
-    bool LegController::setAxisState(const uint8_t leg_id, const uint32_t state)
+    bool LegController::setState(const uint8_t leg_id, const uint32_t state)
     {
 
         if (leg_id > MAX_LEG_ID)
@@ -49,10 +49,9 @@ namespace starq::controllers
         bool success = true;
         for (const auto &motor_id : configs_[leg_id].motor_ids)
         {
-            success &= motor_controller_->setAxisState(motor_id, state);
+            success &= motor_controller_->setState(motor_id, state);
         }
 
-        configs_[leg_id].axis_state = state;
         return success;
     }
 
@@ -71,67 +70,6 @@ namespace starq::controllers
             success &= motor_controller_->setControlMode(motor_id, control_mode, input_mode);
         }
 
-        configs_[leg_id].control_mode = control_mode;
-        configs_[leg_id].input_mode = input_mode;
-        return success;
-    }
-
-    bool LegController::setPosGain(const uint8_t leg_id, const float pos_gain)
-    {
-
-        if (leg_id > MAX_LEG_ID)
-        {
-            std::cerr << "Invalid leg ID." << std::endl;
-            return false;
-        }
-
-        bool success = true;
-        for (const auto &motor_id : configs_[leg_id].motor_ids)
-        {
-            success &= motor_controller_->setPosGain(motor_id, pos_gain);
-        }
-
-        configs_[leg_id].pos_gain = pos_gain;
-        return success;
-    }
-
-    bool LegController::setVelGains(const uint8_t leg_id, const float vel_gain, const float vel_integrator_gain)
-    {
-
-        if (leg_id > MAX_LEG_ID)
-        {
-            std::cerr << "Invalid leg ID." << std::endl;
-            return false;
-        }
-
-        bool success = true;
-        for (const auto &motor_id : configs_[leg_id].motor_ids)
-        {
-            success &= motor_controller_->setVelGains(motor_id, vel_gain, vel_integrator_gain);
-        }
-
-        configs_[leg_id].vel_gain = vel_gain;
-        configs_[leg_id].vel_integrator_gain = vel_integrator_gain;
-        return success;
-    }
-
-    bool LegController::setLimits(const uint8_t leg_id, const float vel_limit, const float current_limit)
-    {
-
-        if (leg_id > MAX_LEG_ID)
-        {
-            std::cerr << "Invalid leg ID." << std::endl;
-            return false;
-        }
-
-        bool success = true;
-        for (const auto &motor_id : configs_[leg_id].motor_ids)
-        {
-            success &= motor_controller_->setLimits(motor_id, vel_limit, current_limit);
-        }
-
-        configs_[leg_id].velocity_limit = vel_limit;
-        configs_[leg_id].current_limit = current_limit;
         return success;
     }
 

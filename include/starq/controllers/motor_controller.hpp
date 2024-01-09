@@ -8,7 +8,7 @@
 namespace starq::controllers
 {
 
-    enum AxisState
+    enum MotorState
     {
         UNDEFINED = 0x0,
         IDLE = 0x1,
@@ -38,11 +38,11 @@ namespace starq::controllers
     public:
         using Ptr = std::shared_ptr<MotorController>;
 
-        /// @brief Set the axis state.
+        /// @brief Set the motor state.
         /// @param motor_id The ID of the motor.
         /// @param state The state to set the motor to.
         /// @return If the command was sent successfully.
-        virtual bool setAxisState(const uint8_t motor_id, const uint32_t state) = 0;
+        virtual bool setState(const uint8_t motor_id, const uint32_t state) = 0;
 
         /// @brief Set the control mode.
         /// @param motor_id The ID of the motor.
@@ -50,26 +50,6 @@ namespace starq::controllers
         /// @param input_mode The input mode to set the motor to. (default: 0x1)
         /// @return If the command was sent successfully.
         virtual bool setControlMode(const uint8_t motor_id, const uint32_t control_mode, const uint32_t input_mode = 0x1) = 0;
-
-        /// @brief Set the position gain.
-        /// @param motor_id The ID of the motor.
-        /// @param pos_gain The position gain to set the motor to.
-        /// @return If the command was sent successfully.
-        virtual bool setPosGain(const uint8_t motor_id, const float pos_gain) = 0;
-
-        /// @brief Set the velocity gain.
-        /// @param motor_id The ID of the motor.
-        /// @param vel_gain The velocity gain to set the motor to.
-        /// @param vel_integrator_gain The velocity integrator gain to set the motor to.
-        /// @return If the command was sent successfully.
-        virtual bool setVelGains(const uint8_t motor_id, const float vel_gain, const float vel_integrator_gain) = 0;
-
-        /// @brief Set the velocity limit.
-        /// @param motor_id The ID of the motor.
-        /// @param velocity_limit The velocity limit to set the motor to.
-        /// @param current_limit The current limit to set the motor to.
-        /// @return If the command was sent successfully.
-        virtual bool setLimits(const uint8_t motor_id, const float velocity_limit, const float current_limit) = 0;
 
         /// @brief Set the position.
         /// @param motor_id The ID of the motor.
@@ -92,46 +72,6 @@ namespace starq::controllers
         /// @return If the command was sent successfully.
         virtual bool setTorque(const uint8_t motor_id, const float torque) = 0;
 
-        /// @brief Get the axis error.
-        /// @param motor_id The ID of the motor.
-        /// @return The axis error.
-        virtual uint32_t getAxisError(const uint8_t motor_id) = 0;
-
-        /// @brief Get the axis state.
-        /// @param motor_id The ID of the motor.
-        /// @return The axis state.
-        virtual uint8_t getAxisState(const uint8_t motor_id) = 0;
-
-        /// @brief Get the Iq setpoint.
-        /// @param motor_id The ID of the motor.
-        /// @return The Iq setpoint.
-        virtual float getIqSetpoint(const uint8_t motor_id) = 0;
-
-        /// @brief Get the Iq measured.
-        /// @param motor_id The ID of the motor.
-        /// @return The Iq measured.
-        virtual float getIqMeasured(const uint8_t motor_id) = 0;
-
-        /// @brief Get the FET temperature.
-        /// @param motor_id The ID of the motor.
-        /// @return The FET temperature.
-        virtual float getFETTemperature(const uint8_t motor_id) = 0;
-
-        /// @brief Get the motor temperature.
-        /// @param motor_id The ID of the motor.
-        /// @return The motor temperature.
-        virtual float getMotorTemperature(const uint8_t motor_id) = 0;
-
-        /// @brief Get the DC bus voltage.
-        /// @param motor_id The ID of the motor.
-        /// @return The DC bus voltage.
-        virtual float getBusVoltage(const uint8_t motor_id) = 0;
-
-        /// @brief Get the DC bus current.
-        /// @param motor_id The ID of the motor.
-        /// @return The DC bus current.
-        virtual float getBusCurrent(const uint8_t motor_id) = 0;
-
         /// @brief Get the encoder position estimate.
         /// @param motor_id The ID of the motor.
         /// @return The encoder position estimate.
@@ -146,83 +86,6 @@ namespace starq::controllers
         /// @param motor_id The ID of the motor.
         /// @return The controller torque estimate.
         virtual float getTorqueEstimate(const uint8_t motor_id) = 0;
-
-        /// @brief Get the axis state config.
-        /// @param motor_id The ID of the motor.
-        /// @return The axis state config.
-        uint32_t getAxisStateConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].axis_state;
-        }
-
-        /// @brief Get the control mode config.
-        /// @param motor_id The ID of the motor.
-        /// @return The control mode config.
-        uint32_t getControlModeConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].control_mode;
-        }
-
-        /// @brief Get the input mode config.
-        /// @param motor_id The ID of the motor.
-        /// @return The input mode config.
-        uint32_t getInputModeConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].input_mode;
-        }
-
-        /// @brief Get the position gain config.
-        /// @param motor_id The ID of the motor.
-        /// @return The position gain config.
-        float getPosGainConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].pos_gain;
-        }
-
-        /// @brief Get the velocity gain config.
-        /// @param motor_id The ID of the motor.
-        /// @return The velocity gain config.
-        float getVelGainConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].vel_gain;
-        }
-
-        /// @brief Get the velocity integrator gain config.
-        /// @param motor_id The ID of the motor.
-        /// @return The velocity integrator gain config.
-        float getIntegratorGainConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].integrator_gain;
-        }
-
-        /// @brief Get the velocity limit config.
-        /// @param motor_id The ID of the motor.
-        /// @return The velocity limit config.
-        float getVelocityLimitConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].velocity_limit;
-        }
-
-        /// @brief Get the current limit config.
-        /// @param motor_id The ID of the motor.
-        /// @return The current limit config.
-        float getCurrentLimitConfig(const uint8_t motor_id) const
-        {
-            return configs_[motor_id].current_limit;
-        }
-
-    protected:
-        struct
-        {
-            uint32_t axis_state = 0;
-            uint32_t control_mode = 0;
-            uint32_t input_mode = 0;
-            float pos_gain = 0.0f;
-            float vel_gain = 0.0f;
-            float integrator_gain = 0.0f;
-            float velocity_limit = 0.0f;
-            float current_limit = 0.0f;
-        } configs_[MAX_MOTOR_ID + 1];
     };
 
 }

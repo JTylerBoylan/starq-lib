@@ -26,7 +26,7 @@ int main(void)
 
     ODriveController::Ptr odrive = std::make_shared<ODriveController>(socket);
 
-    odrive->setAxisState(CAN_ID, AxisState::CLOSED_LOOP_CONTROL);
+    odrive->setState(CAN_ID, MotorState::CLOSED_LOOP_CONTROL);
     odrive->setControlMode(CAN_ID, ControlMode::POSITION);
     odrive->setPosition(CAN_ID, 0.0f);
     sleep(1);
@@ -44,7 +44,7 @@ int main(void)
         odrive->printInfo(CAN_ID);
     }
 
-    odrive->setAxisState(CAN_ID, AxisState::IDLE);
+    odrive->setState(CAN_ID, MotorState::IDLE);
 
     return 0;
 }

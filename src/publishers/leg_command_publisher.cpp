@@ -98,11 +98,7 @@ namespace starq::publishers
 
             if (has_command && leg_cmd.release_time <= system_clock::now().time_since_epoch().count())
             {
-                if (leg_controller_->getControlModeConfig(leg_cmd.leg_id) != leg_cmd.control_mode ||
-                    leg_controller_->getInputModeConfig(leg_cmd.leg_id) != leg_cmd.input_mode)
-                {
-                    leg_controller_->setControlMode(leg_cmd.leg_id, leg_cmd.control_mode, leg_cmd.input_mode);
-                }
+                leg_controller_->setControlMode(leg_cmd.leg_id, leg_cmd.control_mode, leg_cmd.input_mode);
 
                 bool command_success = false;
                 switch (leg_cmd.control_mode)

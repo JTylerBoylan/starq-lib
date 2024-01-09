@@ -39,11 +39,11 @@ namespace starq::controllers
         /// @param dynamics Leg dynamics.
         void setLegDynamics(const uint8_t leg_id, const starq::dynamics::LegDynamics::Ptr dynamics);
 
-        /// @brief Set the axis state for a leg.
+        /// @brief Set the state for a leg.
         /// @param leg_id ID of the leg.
-        /// @param state Axis state.
+        /// @param state State.
         /// @return If the command was sent successfully.
-        bool setAxisState(const uint8_t leg_id, const uint32_t state);
+        bool setState(const uint8_t leg_id, const uint32_t state);
 
         /// @brief Set the control mode for a leg.
         /// @param leg_id ID of the leg.
@@ -51,26 +51,6 @@ namespace starq::controllers
         /// @param input_mode Input mode. (default: 0x1)
         /// @return If the command was sent successfully.
         bool setControlMode(const uint8_t leg_id, const uint32_t control_mode, const uint32_t input_mode = 0x1);
-
-        /// @brief Set the position gain for a leg.
-        /// @param leg_id ID of the leg.
-        /// @param pos_gain Position gain.
-        /// @return If the command was sent successfully.
-        bool setPosGain(const uint8_t leg_id, const float pos_gain);
-
-        /// @brief Set the velocity gain for a leg.
-        /// @param leg_id ID of the leg.
-        /// @param vel_gain Velocity gain.
-        /// @param vel_integrator_gain Velocity integrator gain.
-        /// @return If the command was sent successfully.
-        bool setVelGains(const uint8_t leg_id, const float vel_gain, const float vel_integrator_gain);
-
-        /// @brief Set the limits for a leg.
-        /// @param leg_id ID of the leg.
-        /// @param vel_limit Velocity limit.
-        /// @param current_limit Current limit.
-        /// @return If the command was sent successfully.
-        bool setLimits(const uint8_t leg_id, const float vel_limit, const float current_limit);
 
         /// @brief Set the foot position for a leg.
         /// @param leg_id ID of the leg.
@@ -119,70 +99,6 @@ namespace starq::controllers
         /// @return If the force was retrieved successfully.
         bool getFootForceEstimate(const uint8_t leg_id,
                                   VectorXf &foot_force);
-
-        /// @brief Get the axis state config.
-        /// @param leg_id The ID of the leg.
-        /// @return The axis state config.
-        uint32_t getAxisStateConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].axis_state;
-        }
-
-        /// @brief Get the control mode config.
-        /// @param leg_id The ID of the leg.
-        /// @return The control mode config.
-        uint32_t getControlModeConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].control_mode;
-        }
-
-        /// @brief Get the input mode config.
-        /// @param leg_id The ID of the leg.
-        /// @return The input mode config.
-        uint32_t getInputModeConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].input_mode;
-        }
-
-        /// @brief Get the position gain config.
-        /// @param leg_id The ID of the leg.
-        /// @return The position gain config.
-        float getPosGainConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].pos_gain;
-        }
-
-        /// @brief Get the velocity gain config.
-        /// @param leg_id The ID of the leg.
-        /// @return The velocity gain config.
-        float getVelGainConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].vel_gain;
-        }
-
-        /// @brief Get the velocity integrator gain config.
-        /// @param leg_id The ID of the leg.
-        /// @return The velocity integrator gain config.
-        float getVelIntegratorGainConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].vel_integrator_gain;
-        }
-
-        /// @brief Get the velocity limit config.
-        /// @param leg_id The ID of the leg.
-        /// @return The velocity limit config.
-        float getVelocityLimitConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].velocity_limit;
-        }
-
-        /// @brief Get the current limit config.
-        /// @param leg_id The ID of the leg.
-        /// @return The current limit config.
-        float getCurrentLimitConfig(const uint8_t leg_id) const
-        {
-            return configs_[leg_id].current_limit;
-        }
 
     private:
         /// @brief Get the current joint angles for a leg.
@@ -233,14 +149,6 @@ namespace starq::controllers
         {
             std::vector<uint32_t> motor_ids;
             starq::dynamics::LegDynamics::Ptr dynamics;
-            uint32_t axis_state = 0;
-            uint32_t control_mode = 0;
-            uint32_t input_mode = 0;
-            float pos_gain = 0.0f;
-            float vel_gain = 0.0f;
-            float vel_integrator_gain = 0.0f;
-            float velocity_limit = 0.0f;
-            float current_limit = 0.0f;
         } configs_[MAX_LEG_ID + 1];
     };
 

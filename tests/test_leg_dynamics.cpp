@@ -57,7 +57,7 @@ int main(void)
 
     printf("Set leg dynamics.\n");
 
-    leg->setAxisState(LEG_ID, AxisState::CLOSED_LOOP_CONTROL);
+    leg->setState(LEG_ID, MotorState::CLOSED_LOOP_CONTROL);
 
     printf("Set axis state.\n");
 
@@ -85,7 +85,7 @@ int main(void)
     }
 
     leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
-    leg->setAxisState(LEG_ID, AxisState::IDLE);
+    leg->setState(LEG_ID, MotorState::IDLE);
 
     return 0;
 }
