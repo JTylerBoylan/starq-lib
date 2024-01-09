@@ -2,9 +2,9 @@
 
 #include "starq/odrive/odrive_controller.hpp"
 
+using namespace starq;
 using namespace starq::can;
 using namespace starq::odrive;
-using namespace starq::controllers;
 
 #define CAN_ID 0
 

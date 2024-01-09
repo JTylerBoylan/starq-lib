@@ -1,7 +1,7 @@
 #ifndef STARQ_PUBLISHERS__LEG_COMMAND_PUBLISHER_HPP_
 #define STARQ_PUBLISHERS__LEG_COMMAND_PUBLISHER_HPP_
 
-#include "starq/controllers/leg_controller.hpp"
+#include "starq/leg_controller.hpp"
 #include <queue>
 #include <memory>
 #include <functional>
@@ -9,9 +9,8 @@
 #include <mutex>
 #include <iostream>
 
-namespace starq::publishers
+namespace starq
 {
-    using namespace starq::controllers;
 
     /// @brief Leg command structure
     struct LegCommand

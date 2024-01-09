@@ -4,7 +4,7 @@
 #include <memory>
 #include "eigen3/Eigen/Dense"
 
-namespace starq::dynamics
+namespace starq
 {
     using namespace Eigen;
 

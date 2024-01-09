@@ -1,7 +1,7 @@
 #include <stdio.h>
 
+#include "starq/leg_controller.hpp"
 #include "starq/odrive/odrive_controller.hpp"
-#include "starq/controllers/leg_controller.hpp"
 #include "starq/dynamics/starq_fivebar2d.hpp"
 
 #define LEG_ID 0x0
@@ -15,9 +15,9 @@
 #define GEAR_RATIO_1 6.0f
 #define GEAR_RATIO_2 6.0f
 
+using namespace starq;
 using namespace starq::can;
 using namespace starq::odrive;
-using namespace starq::controllers;
 using namespace starq::dynamics;
 
 int main(void)

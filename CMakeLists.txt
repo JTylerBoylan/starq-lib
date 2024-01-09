@@ -11,8 +11,8 @@ list(APPEND CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 add_library(starq_lib SHARED)
 target_sources(starq_lib PRIVATE
+    src/leg_controller.cpp
     src/can/socket.cpp
-    src/controllers/leg_controller.cpp
     src/odrive/odrive_controller.cpp
     src/odrive/can_driver.cpp 
     src/odrive/can_listener.cpp

@@ -1,7 +1,7 @@
 #ifndef STARQ_DYNAMICS__STARQ_FIVEBAR2D_DYNAMICS_HPP_
 #define STARQ_DYNAMICS__STARQ_FIVEBAR2D_DYNAMICS_HPP_
 
-#include "starq/dynamics/leg_dynamics.hpp"
+#include "starq/leg_dynamics.hpp"
 
 namespace starq::dynamics
 {

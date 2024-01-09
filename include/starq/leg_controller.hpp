@@ -3,12 +3,12 @@
 
 #include <vector>
 
-#include "starq/controllers/motor_controller.hpp"
-#include "starq/dynamics/leg_dynamics.hpp"
+#include "starq/motor_controller.hpp"
+#include "starq/leg_dynamics.hpp"
 
 #define MAX_LEG_ID 0x3F
 
-namespace starq::controllers
+namespace starq
 {
     using namespace Eigen;
 
@@ -20,7 +20,7 @@ namespace starq::controllers
 
         /// @brief Create a leg controller.
         /// @param controller Motor controller.
-        LegController(const starq::controllers::MotorController::Ptr motor_controller);
+        LegController(const starq::MotorController::Ptr motor_controller);
 
         /// @brief Destroy the leg controller.
         ~LegController();
@@ -37,7 +37,7 @@ namespace starq::controllers
         /// @brief Set the leg dynamics for a leg.
         /// @param leg_id ID of the leg.
         /// @param dynamics Leg dynamics.
-        void setLegDynamics(const uint8_t leg_id, const starq::dynamics::LegDynamics::Ptr dynamics);
+        void setLegDynamics(const uint8_t leg_id, const starq::LegDynamics::Ptr dynamics);
 
         /// @brief Set the state for a leg.
         /// @param leg_id ID of the leg.
@@ -143,12 +143,12 @@ namespace starq::controllers
         bool setJointTorques(const uint8_t leg_id,
                              const VectorXf &joint_torques);
 
-        const starq::controllers::MotorController::Ptr motor_controller_;
+        const starq::MotorController::Ptr motor_controller_;
 
         struct
         {
             std::vector<uint32_t> motor_ids;
-            starq::dynamics::LegDynamics::Ptr dynamics;
+            starq::LegDynamics::Ptr dynamics;
         } configs_[MAX_LEG_ID + 1];
     };
 

@@ -5,7 +5,7 @@
 
 #define MAX_MOTOR_ID 0x3F
 
-namespace starq::controllers
+namespace starq
 {
 
     enum MotorState

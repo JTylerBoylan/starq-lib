@@ -1,6 +1,6 @@
-#include "starq/publishers/leg_command_publisher.hpp"
+#include "starq/leg_command_publisher.hpp"
 
-namespace starq::publishers
+namespace starq
 {
 
     LegCommandPublisher::LegCommandPublisher(LegController::Ptr leg_controller)

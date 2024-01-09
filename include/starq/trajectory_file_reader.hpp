@@ -1,9 +1,9 @@
 #ifndef STARQ_TRAJECTORIES__TRAJECTORY_FILE_READER_HPP_
 #define STARQ_TRAJECTORIES__TRAJECTORY_FILE_READER_HPP_
 
-#include "starq/publishers/leg_command_publisher.hpp"
+#include "starq/leg_command_publisher.hpp"
 
-namespace starq::trajectories
+namespace starq
 {
 
     class TrajectoryFileReader
@@ -25,10 +25,10 @@ namespace starq::trajectories
 
         /// @brief Get the trajectory.
         /// @return Vector of leg commands.
-        std::vector<starq::publishers::LegCommand> getTrajectory() { return trajectory_; }
+        std::vector<starq::LegCommand> getTrajectory() { return trajectory_; }
 
     private:
-        std::vector<starq::publishers::LegCommand> trajectory_;
+        std::vector<starq::LegCommand> trajectory_;
     };
 
 }

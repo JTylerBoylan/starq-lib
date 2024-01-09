@@ -3,12 +3,12 @@
 
 #include "starq/odrive/can_driver.hpp"
 #include "starq/odrive/can_listener.hpp"
-#include "starq/controllers/motor_controller.hpp"
+#include "starq/motor_controller.hpp"
 
 namespace starq::odrive
 {
 
-    class ODriveController : public starq::controllers::MotorController
+    class ODriveController : public starq::MotorController
     {
     public:
         using Ptr = std::shared_ptr<ODriveController>;

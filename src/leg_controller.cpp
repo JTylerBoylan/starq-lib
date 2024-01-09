@@ -1,10 +1,10 @@
-#include "starq/controllers/leg_controller.hpp"
+#include "starq/leg_controller.hpp"
 #include <iostream>
 
-namespace starq::controllers
+namespace starq
 {
 
-    LegController::LegController(starq::controllers::MotorController::Ptr motor_controller)
+    LegController::LegController(starq::MotorController::Ptr motor_controller)
         : motor_controller_(motor_controller)
     {
     }
@@ -25,7 +25,7 @@ namespace starq::controllers
         configs_[leg_id].motor_ids = motor_ids;
     }
 
-    void LegController::setLegDynamics(const uint8_t leg_id, const starq::dynamics::LegDynamics::Ptr dynamics)
+    void LegController::setLegDynamics(const uint8_t leg_id, const starq::LegDynamics::Ptr dynamics)
     {
 
         if (leg_id > MAX_LEG_ID)
