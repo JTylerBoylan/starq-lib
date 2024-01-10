@@ -78,7 +78,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         if (configs_[can_id].pos_gain == pos_gain)
             return true;
 
@@ -99,7 +99,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         if (configs_[can_id].vel_gain == vel_gain && configs_[can_id].integrator_gain == integrator_gain)
             return true;
 
@@ -121,7 +121,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         if (configs_[can_id].velocity_limit == velocity_limit && configs_[can_id].current_limit == current_limit)
             return true;
 
@@ -144,10 +144,11 @@ namespace starq::odrive
             return false;
         }
 
+        // Convert from radians to revolutions and apply gear ratio
         const float pos_rev = configs_[can_id].gear_ratio * pos / (2.0f * M_PIf);
         const float vel_ff_rev = configs_[can_id].gear_ratio * vel_ff / (2.0f * M_PIf);
         const float torque_ff_N = torque_ff / configs_[can_id].gear_ratio;
-        
+
         return driver_->setPosition(can_id, pos_rev, vel_ff_rev, torque_ff_N);
     }
 
@@ -159,9 +160,10 @@ namespace starq::odrive
             return false;
         }
 
+        // Convert from radians to revolutions and apply gear ratio
         const float vel_rev = configs_[can_id].gear_ratio * vel / (2.0f * M_PIf);
         const float torque_ff_N = torque_ff / configs_[can_id].gear_ratio;
-        
+
         return driver_->setVelocity(can_id, vel_rev, torque_ff_N);
     }
 
@@ -173,8 +175,9 @@ namespace starq::odrive
             return false;
         }
 
+        // Apply gear ratio
         const float torque_N = torque / configs_[can_id].gear_ratio;
-        
+
         return driver_->setTorque(can_id, torque_N);
     }
 
@@ -185,7 +188,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getAxisError(can_id);
     }
 
@@ -196,7 +199,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getAxisState(can_id);
     }
 
@@ -207,7 +210,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getIqSetpoint(can_id);
     }
 
@@ -218,7 +221,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getIqMeasured(can_id);
     }
 
@@ -229,7 +232,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getFETTemperature(can_id);
     }
 
@@ -240,7 +243,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getMotorTemperature(can_id);
     }
 
@@ -251,7 +254,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getBusVoltage(can_id);
     }
 
@@ -262,7 +265,7 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
         return listener_->getBusCurrent(can_id);
     }
 
@@ -274,6 +277,7 @@ namespace starq::odrive
             return false;
         }
 
+        // Convert from revolutions to radians and apply gear ratio
         return listener_->getPosEstimate(can_id) * (2.0f * M_PIf) / configs_[can_id].gear_ratio;
     }
 
@@ -284,7 +288,8 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
+        // Convert from revolutions to radians and apply gear ratio
         return listener_->getVelEstimate(can_id) * (2.0f * M_PIf) / configs_[can_id].gear_ratio;
     }
 
@@ -295,7 +300,8 @@ namespace starq::odrive
             std::cerr << "Invalid CAN ID." << std::endl;
             return false;
         }
-        
+
+        // Apply gear ratio
         return listener_->getTorqueEstimate(can_id) * configs_[can_id].gear_ratio;
     }
 
