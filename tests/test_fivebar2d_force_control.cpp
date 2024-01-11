@@ -72,13 +72,15 @@ int main(void)
 
     printf("Set foot position to (%f, %f)\n", center_x, center_y);
 
+    sleep(1);
+
     printf("\n");
 
     leg->setControlMode(LEG_ID, ControlMode::TORQUE);
 
     printf("Set to force control mode.\n");
 
-    const float force = -5.0f;
+    const float force = 10.0f;
     printf("Appling constant downward force of %f N for 10 seconds.\n", force);
 
     leg->setFootForce(LEG_ID, Vector2f(0.0f, force));
@@ -96,6 +98,8 @@ int main(void)
     printf("Set foot position to (%f, %f)\n", center_x, center_y);
 
     leg->setState(LEG_ID, MotorState::IDLE);
+
+    sleep(1);
 
     printf("Set axis state to idle.\n");
 
