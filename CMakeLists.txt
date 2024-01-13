@@ -54,7 +54,7 @@ configure_file(cmake/starqConfig.cmake.in starqConfig.cmake @ONLY)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/starqConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/starqConfigVersion.cmake"
-        DESTINATION lib/cmake/starq_lib
+        DESTINATION lib/cmake/starq
 )
 
 install(DIRECTORY include/ DESTINATION include)
