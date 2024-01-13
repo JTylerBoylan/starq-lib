@@ -145,8 +145,8 @@ namespace starq::odrive
         }
 
         // Convert from radians to revolutions and apply gear ratio
-        const float pos_rev = configs_[can_id].gear_ratio * pos / (2.0f * M_PIf);
-        const float vel_ff_rev = configs_[can_id].gear_ratio * vel_ff / (2.0f * M_PIf);
+        const float pos_rev = configs_[can_id].gear_ratio * pos / (2.0f * M_PI);
+        const float vel_ff_rev = configs_[can_id].gear_ratio * vel_ff / (2.0f * M_PI);
         const float torque_ff_N = torque_ff / configs_[can_id].gear_ratio;
 
         return driver_->setPosition(can_id, pos_rev, vel_ff_rev, torque_ff_N);
@@ -161,7 +161,7 @@ namespace starq::odrive
         }
 
         // Convert from radians to revolutions and apply gear ratio
-        const float vel_rev = configs_[can_id].gear_ratio * vel / (2.0f * M_PIf);
+        const float vel_rev = configs_[can_id].gear_ratio * vel / (2.0f * M_PI);
         const float torque_ff_N = torque_ff / configs_[can_id].gear_ratio;
 
         return driver_->setVelocity(can_id, vel_rev, torque_ff_N);
@@ -278,7 +278,7 @@ namespace starq::odrive
         }
 
         // Convert from revolutions to radians and apply gear ratio
-        return listener_->getPosEstimate(can_id) * (2.0f * M_PIf) / configs_[can_id].gear_ratio;
+        return listener_->getPosEstimate(can_id) * (2.0f * M_PI) / configs_[can_id].gear_ratio;
     }
 
     float ODriveController::getVelocityEstimate(const uint8_t can_id)
@@ -290,7 +290,7 @@ namespace starq::odrive
         }
 
         // Convert from revolutions to radians and apply gear ratio
-        return listener_->getVelEstimate(can_id) * (2.0f * M_PIf) / configs_[can_id].gear_ratio;
+        return listener_->getVelEstimate(can_id) * (2.0f * M_PI) / configs_[can_id].gear_ratio;
     }
 
     float ODriveController::getTorqueEstimate(const uint8_t can_id)
