@@ -20,8 +20,8 @@ namespace starq
 
     void LegCommandPublisher::push(LegCommand leg_cmd)
     {
-        leg_cmd.stamp();
         std::lock_guard<std::mutex> lock(mutex_);
+        leg_cmd.stamp();
         leg_command_queue_.push(leg_cmd);
     }
 
