@@ -31,8 +31,8 @@ getForwardJacobian = matlabFunction(forward_jacobian);
 L1 = 0.05;
 L2 = 0.15;
 
-thA = -0.4402;
-thB = -0.2002;
+thA = 0;
+thB = 0;
 
 Jf_00 = getForwardJacobian(L1, L2, thA, thB)
 

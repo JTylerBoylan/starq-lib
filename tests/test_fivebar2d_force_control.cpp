@@ -66,7 +66,7 @@ int main(void)
     printf("Set to position control mode.\n");
 
     const float center_x = 0.0f;
-    const float center_y = -std::sqrt(2)*100;
+    const float center_y = -std::sqrt(2) * 100;
 
     leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
 
@@ -97,9 +97,9 @@ int main(void)
 
     printf("Set foot position to (%f, %f)\n", center_x, center_y);
 
-    leg->setState(LEG_ID, MotorState::IDLE);
-
     sleep(1);
+
+    leg->setState(LEG_ID, MotorState::IDLE);
 
     printf("Set axis state to idle.\n");
 

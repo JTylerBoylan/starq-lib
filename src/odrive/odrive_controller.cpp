@@ -14,6 +14,10 @@ namespace starq::odrive
 
     ODriveController::~ODriveController()
     {
+        for (uint8_t i = 0; i < MAX_MOTOR_ID; i++)
+        {
+            driver_->setAxisState(i, MotorState::IDLE);
+        }
     }
 
     bool ODriveController::setGearRatio(const uint8_t motor_id, const float gear_ratio)

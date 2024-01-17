@@ -72,7 +72,8 @@ namespace starq::dynamics
         const float dYdA = (L2_M * std::sin(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::cos(thetaA_2 + thetaB_2)) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2 * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2 * L2_M * std::sqrt(-(std::pow(L1_M, 2) - 2 * std::pow(L2_M, 2) + std::pow(L1_M, 2) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2))) - 0.5f)) / std::cos(thetaA_2 + thetaB_2) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::pow(std::cos(thetaA_2 + thetaB_2), 2));
         const float dYdB = -(L2_M * std::sin(thetaA_2 - thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::cos(thetaA_2 + thetaB_2)) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M)) * ((M_SQRT2 * L1_M * std::sin(thetaA_2 + thetaB_2)) / (2 * L2_M * std::sqrt(-(std::pow(L1_M, 2) - 2 * std::pow(L2_M, 2) + std::pow(L1_M, 2) * std::cos(thetaA + thetaB)) / std::pow(L2_M, 2))) - 0.5f)) / std::cos(thetaA_2 + thetaB_2) - (L2_M * std::cos(thetaA_2 - thetaB_2) * std::sin(thetaA_2 + thetaB_2) * std::cos(thetaA_2 + thetaB_2 + std::asin((L1_M * std::cos(thetaA_2 + thetaB_2)) / L2_M))) / (2 * std::pow(std::cos(thetaA_2 + thetaB_2), 2));
 
-        jacobian = Matrix2f(dXdA, dXdB, dYdA, dYdB);
+        jacobian = Matrix2f();
+        jacobian << dXdA, dXdB, dYdA, dYdB;
 
         return true;
     }
