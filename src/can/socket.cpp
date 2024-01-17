@@ -62,12 +62,6 @@ namespace starq::can
             return false;
         }
 
-        if (can_id > MAX_CAN_ID)
-        {
-            std::cerr << "CAN ID is too large." << std::endl;
-            return false;
-        }
-
         if (size > CAN_MAX_DLEN)
         {
             std::cerr << "CAN frame data size is too large." << std::endl;

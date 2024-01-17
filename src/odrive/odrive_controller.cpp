@@ -16,7 +16,7 @@ namespace starq::odrive
     {
         for (uint8_t i = 0; i < MAX_MOTOR_ID; i++)
         {
-            driver_->setAxisState(i, MotorState::IDLE);
+            this->setState(i, MotorState::IDLE);
         }
     }
 

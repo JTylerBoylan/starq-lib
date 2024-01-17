@@ -61,43 +61,27 @@ int main(void)
 
     printf("Set axis state to closed loop control.\n");
 
-    leg->setControlMode(LEG_ID, ControlMode::POSITION);
-
-    printf("Set to position control mode.\n");
-
-    const float center_x = 0.0f;
-    const float center_y = -std::sqrt(2) * 100;
-
-    leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
-
-    printf("Set foot position to (%f, %f)\n", center_x, center_y);
-
-    sleep(1);
-
-    printf("\n");
-
     leg->setControlMode(LEG_ID, ControlMode::TORQUE);
 
     printf("Set to force control mode.\n");
 
-    const float force = 10.0f;
-    printf("Appling constant downward force of %f N for 10 seconds.\n", force);
+    const float force_x = 0.0f;
+    const float force_y = -10.0f;
+    printf("Applying Force: %f, %f\n", force_x, force_y);
 
-    leg->setFootForce(LEG_ID, Vector2f(0.0f, force));
+    const VectorXf current_joint_angles = leg->getCurrentJointAngles(LEG_ID);
+
+    MatrixXf jacobian;
+    fivebar_dynamics->getJacobian(current_joint_angles, jacobian);
+    const VectorXf joint_torque = jacobian.transpose() * Vector2f(force_x, force_y);
+
+    printf("Joint torque: %f, %f\n", joint_torque(0), joint_torque(1));
+
+    leg->setFootForce(LEG_ID, Vector2f(force_x, force_y));
 
     sleep(10);
 
     printf("\n");
-
-    leg->setControlMode(LEG_ID, ControlMode::POSITION);
-
-    printf("Set to position control mode.\n");
-
-    leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
-
-    printf("Set foot position to (%f, %f)\n", center_x, center_y);
-
-    sleep(1);
 
     leg->setState(LEG_ID, MotorState::IDLE);
 

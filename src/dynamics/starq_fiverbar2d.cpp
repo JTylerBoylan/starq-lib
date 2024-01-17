@@ -16,11 +16,11 @@ namespace starq::dynamics
         const float thetaA = joint_angles(0);
         const float thetaB = joint_angles(1);
 
-        const float alpha = 0.5f * (M_PI + thetaA + thetaB);
+        const float alpha = 0.5f * (M_PI - thetaA - thetaB);
         const float gamma = std::asin(L1_ * std::sin(alpha) / L2_);
         const float phi = M_PI - alpha - gamma;
 
-        const float theta = thetaA - alpha;
+        const float theta = thetaA + alpha;
         const float R = L2_ * std::sin(phi) / std::sin(alpha);
 
         const float X = R * std::cos(theta);
@@ -40,13 +40,13 @@ namespace starq::dynamics
         const float X = foot_position(0);
         const float Y = foot_position(1);
 
-        const float theta0 = std::atan2(Y, X);
-        const float theta1 = std::atan2(Y, -X);
+        const float theta0 = std::atan2(-Y, X);
+        const float theta1 = std::atan2(-Y, -X);
         const float R = std::sqrt(X * X + Y * Y);
         const float alpha = std::acos((R * R + L1_ * L1_ - L2_ * L2_) / (2.0f * R * L1_));
 
-        const float thetaA = theta0 + alpha;
-        const float thetaB = theta1 + alpha;
+        const float thetaA = theta0 - alpha;
+        const float thetaB = theta1 - alpha;
 
         joint_angles = Vector2f(thetaA, thetaB);
 

@@ -42,7 +42,7 @@ int main(void)
 
     printf("Created ODrive controller.\n");
 
-    LegController::Ptr leg = std::make_shared<LegController>(odrive);
+    starq::LegController::Ptr leg = std::make_shared<LegController>(odrive);
 
     printf("Created leg controller.\n");
 
@@ -81,7 +81,11 @@ int main(void)
         printf("Setting foot position to (%f, %f)\n", foot_position(0), foot_position(1));
 
         leg->setFootPosition(LEG_ID, foot_position);
+
         usleep(5000);
+
+        const VectorXf joint_angles = leg->getCurrentJointAngles(LEG_ID);
+        printf("Joint angles: (%f, %f)\n", joint_angles(0), joint_angles(1));
     }
 
     leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
