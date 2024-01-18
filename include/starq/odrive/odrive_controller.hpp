@@ -147,7 +147,7 @@ namespace starq::odrive
         /// @brief Get the error name.
         /// @param axis_error The axis error.
         /// @return The error name.
-        std::string getErrorName(const uint32_t axis_error);
+        static std::string getErrorName(const uint32_t axis_error);
 
     private:
         ODriveCANDriver::Ptr driver_;

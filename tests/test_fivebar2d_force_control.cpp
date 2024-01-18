@@ -79,10 +79,13 @@ int main(void)
 
     printf("Joint torque: %f, %f\n", joint_torque(0), joint_torque(1));
 
-    if (!leg->setFootForce(LEG_ID, Vector2f(force_x, force_y)))
-        return 1;
-
-    sleep(10);
+    const float duration = 10.0; // seconds
+    const float frequency = 100.0; // Hz
+    for (float t = 0.0; t < duration; t += 1.0f/frequency) {
+        if (!leg->setFootForce(LEG_ID, Vector2f(force_x, force_y)))
+            return 1;
+        usleep(1E6/frequency);
+    }
 
     printf("\n");
 

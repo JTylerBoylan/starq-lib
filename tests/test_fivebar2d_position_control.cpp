@@ -73,16 +73,17 @@ int main(void)
     printf("Starting leg movement in sine wave.\n");
     for (float t = 0.0f; t <= 2.0f * M_PI + 0.01; t += 0.01f)
     {
+        const float x_off = 25.0f * std::cos(t);
         const float y_off = 25.0f * std::sin(t);
 
         VectorXf foot_position(2);
-        foot_position << 0, center_y + y_off;
+        foot_position << center_x + x_off, center_y + y_off;
 
         printf("Setting foot position to (%f, %f)\n", foot_position(0), foot_position(1));
         if (!leg->setFootPosition(LEG_ID, foot_position))
             return 1;
 
-        usleep(5000);
+        usleep(2500);
 
         const VectorXf joint_angles = leg->getCurrentJointAngles(LEG_ID);
         printf("Joint angles: (%f, %f)\n", joint_angles(0), joint_angles(1));
