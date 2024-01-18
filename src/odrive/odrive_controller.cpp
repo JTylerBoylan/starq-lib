@@ -43,7 +43,7 @@ namespace starq::odrive
         uint32_t axis_error = listener_->getAxisError(can_id);
         if (axis_error != 0x0)
         {
-            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -71,7 +71,7 @@ namespace starq::odrive
         uint32_t axis_error = listener_->getAxisError(can_id);
         if (axis_error != 0x0)
         {
-            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -100,7 +100,7 @@ namespace starq::odrive
         uint32_t axis_error = listener_->getAxisError(can_id);
         if (axis_error != 0x0)
         {
-            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -128,7 +128,7 @@ namespace starq::odrive
         uint32_t axis_error = listener_->getAxisError(can_id);
         if (axis_error != 0x0)
         {
-            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -157,7 +157,7 @@ namespace starq::odrive
         uint32_t axis_error = listener_->getAxisError(can_id);
         if (axis_error != 0x0)
         {
-            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -197,7 +197,7 @@ namespace starq::odrive
         uint32_t axis_error = listener_->getAxisError(can_id);
         if (axis_error != 0x0)
         {
-            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -220,7 +220,7 @@ namespace starq::odrive
         uint32_t axis_error = listener_->getAxisError(can_id);
         if (axis_error != 0x0)
         {
-            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 

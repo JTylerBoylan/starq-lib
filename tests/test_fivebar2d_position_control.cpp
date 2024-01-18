@@ -70,11 +70,14 @@ int main(void)
         return 1;
     printf("Centered foot position.\n");
 
+    const int revolutions = 10;
+    const float radius = 25.0f;
+
     printf("Starting leg movement in sine wave.\n");
-    for (float t = 0.0f; t <= 2.0f * M_PI + 0.01; t += 0.01f)
+    for (float t = 0.0f; t <= revolutions * 2.0f * M_PI + 0.01; t += 0.01f)
     {
-        const float x_off = 25.0f * std::cos(t);
-        const float y_off = 25.0f * std::sin(t);
+        const float x_off = radius * std::cos(t);
+        const float y_off = radius * std::sin(t);
 
         VectorXf foot_position(2);
         foot_position << center_x + x_off, center_y + y_off;
