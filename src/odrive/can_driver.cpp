@@ -143,4 +143,18 @@ namespace starq::odrive
         return true;
     }
 
+    bool ODriveCANDriver::clearErrors(const uint8_t can_id)
+    {
+        const int cmd_id = 0x018;
+        const uint32_t arb_id = getArbitrationID(can_id, cmd_id);
+
+        uint8_t data[4];
+        if (!socket_->send(arb_id, data, 4))
+        {
+            std::cerr << "Could not clear errors." << std::endl;
+            return false;
+        }
+        return true;
+    }
+
 }

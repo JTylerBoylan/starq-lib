@@ -84,4 +84,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     target_include_directories(test_fivebar2d_dummy PUBLIC include)
     target_link_libraries(test_fivebar2d_dummy PUBLIC stdc++ stdc++fs m starq pthread)
 
+    add_executable(test_clear_errors tests/test_clear_errors.cpp)
+    target_include_directories(test_clear_errors PUBLIC include)
+    target_link_libraries(test_clear_errors PUBLIC stdc++ stdc++fs m starq pthread)
+
 endif()

@@ -80,6 +80,11 @@ namespace starq::odrive
         /// @return If the command was sent successfully.
         bool setLimits(const uint8_t can_id, const float velocity_limit, const float current_limit);
 
+        /// @brief Clear errors.
+        /// @param can_id The CAN ID of the ODrive.
+        /// @return If the command was sent successfully.
+        bool clearErrors(const uint8_t can_id);
+
         /// @brief Get the encoder position estimate.
         /// @param can_id The CAN ID of the ODrive.
         /// @return The encoder position estimate in radians.
@@ -138,6 +143,11 @@ namespace starq::odrive
         /// @brief Print the motor info.
         /// @param motor_id The ID of the motor.
         void printInfo(const uint8_t motor_id);
+
+        /// @brief Get the error name.
+        /// @param axis_error The axis error.
+        /// @return The error name.
+        std::string getErrorName(const uint32_t axis_error);
 
     private:
         ODriveCANDriver::Ptr driver_;

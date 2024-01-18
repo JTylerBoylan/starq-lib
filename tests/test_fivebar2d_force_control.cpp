@@ -57,11 +57,13 @@ int main(void)
 
     printf("Set leg dynamics.\n");
 
-    leg->setState(LEG_ID, MotorState::CLOSED_LOOP_CONTROL);
+    if (!leg->setState(LEG_ID, MotorState::CLOSED_LOOP_CONTROL))
+        return 1;
 
     printf("Set axis state to closed loop control.\n");
 
-    leg->setControlMode(LEG_ID, ControlMode::TORQUE);
+    if (!leg->setControlMode(LEG_ID, ControlMode::TORQUE))
+        return 1;
 
     printf("Set to force control mode.\n");
 
@@ -77,17 +79,18 @@ int main(void)
 
     printf("Joint torque: %f, %f\n", joint_torque(0), joint_torque(1));
 
-    leg->setFootForce(LEG_ID, Vector2f(force_x, force_y));
+    if (!leg->setFootForce(LEG_ID, Vector2f(force_x, force_y)))
+        return 1;
 
     sleep(10);
 
     printf("\n");
 
-    leg->setState(LEG_ID, MotorState::IDLE);
+    if (!leg->setState(LEG_ID, MotorState::IDLE))
+        return 1;
 
     printf("Set axis state to idle.\n");
 
     printf("Done.\n");
-
     return 0;
 }

@@ -72,6 +72,11 @@ namespace starq::odrive
         /// @return If the command was sent successfully.
         bool setTorque(const uint8_t can_id, const float torque);
 
+        /// @brief Clear errors.
+        /// @param can_id CAN ID of the axis.
+        /// @return If the command was sent successfully.
+        bool clearErrors(const uint8_t can_id);
+
     private:
 
         /// @brief Get the arbitration ID.

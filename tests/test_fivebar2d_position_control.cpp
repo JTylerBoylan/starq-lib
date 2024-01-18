@@ -37,38 +37,38 @@ int main(void)
     }
 
     ODriveController::Ptr odrive = std::make_shared<ODriveController>(socket);
-    odrive->setGearRatio(MOTOR_ID_0, GEAR_RATIO_1);
-    odrive->setGearRatio(MOTOR_ID_1, GEAR_RATIO_2);
-
     printf("Created ODrive controller.\n");
 
-    starq::LegController::Ptr leg = std::make_shared<LegController>(odrive);
+    odrive->setGearRatio(MOTOR_ID_0, GEAR_RATIO_1);
+    odrive->setGearRatio(MOTOR_ID_1, GEAR_RATIO_2);
+    printf("Set ODrive gear ratios.\n");
 
+    starq::LegController::Ptr leg = std::make_shared<LegController>(odrive);
     printf("Created leg controller.\n");
 
     leg->setMotorIDs(LEG_ID, {MOTOR_ID_0, MOTOR_ID_1});
-
     printf("Set motor IDs.\n");
 
     STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(
         LEG_LINK_1_LENGTH_MM,
         LEG_LINK_2_LENGTH_MM);
     leg->setLegDynamics(LEG_ID, fivebar_dynamics);
-
     printf("Set leg dynamics.\n");
 
-    leg->setState(LEG_ID, MotorState::CLOSED_LOOP_CONTROL);
-
+    if (!leg->setState(LEG_ID, MotorState::CLOSED_LOOP_CONTROL))
+        return 1;
     printf("Set axis state.\n");
 
-    leg->setControlMode(LEG_ID, ControlMode::POSITION);
-
+    if (!leg->setControlMode(LEG_ID, ControlMode::POSITION))
+        return 1;
     printf("Set control mode.\n");
 
     const float center_x = 0.0f;
-    const float center_y = -std::sqrt(2)*100;
+    const float center_y = -std::sqrt(2) * 100;
 
-    leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
+    if (!leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y)))
+        return 1;
+    printf("Centered foot position.\n");
 
     printf("Starting leg movement in sine wave.\n");
     for (float t = 0.0f; t <= 2.0f * M_PI + 0.01; t += 0.01f)
@@ -79,8 +79,8 @@ int main(void)
         foot_position << 0, center_y + y_off;
 
         printf("Setting foot position to (%f, %f)\n", foot_position(0), foot_position(1));
-
-        leg->setFootPosition(LEG_ID, foot_position);
+        if (!leg->setFootPosition(LEG_ID, foot_position))
+            return 1;
 
         usleep(5000);
 
@@ -88,8 +88,14 @@ int main(void)
         printf("Joint angles: (%f, %f)\n", joint_angles(0), joint_angles(1));
     }
 
-    leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y));
-    leg->setState(LEG_ID, MotorState::IDLE);
+    if (!leg->setFootPosition(LEG_ID, Vector2f(center_x, center_y)))
+        return 1;
+    printf("Centered foot position.\n");
 
+    if (!leg->setState(LEG_ID, MotorState::IDLE))
+        return 1;
+    printf("Set axis state to idle.\n");
+
+    printf("Done.\n");
     return 0;
 }

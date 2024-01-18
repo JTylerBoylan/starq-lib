@@ -40,6 +40,13 @@ namespace starq::odrive
             return false;
         }
 
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            return false;
+        }
+
         if (configs_[can_id].axis_state == state)
             return true;
 
@@ -58,6 +65,13 @@ namespace starq::odrive
         if (can_id > MAX_MOTOR_ID)
         {
             std::cerr << "Invalid CAN ID." << std::endl;
+            return false;
+        }
+
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -83,6 +97,13 @@ namespace starq::odrive
             return false;
         }
 
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            return false;
+        }
+
         if (configs_[can_id].pos_gain == pos_gain)
             return true;
 
@@ -101,6 +122,13 @@ namespace starq::odrive
         if (can_id > MAX_MOTOR_ID)
         {
             std::cerr << "Invalid CAN ID." << std::endl;
+            return false;
+        }
+
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -126,6 +154,13 @@ namespace starq::odrive
             return false;
         }
 
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            return false;
+        }
+
         if (configs_[can_id].velocity_limit == velocity_limit && configs_[can_id].current_limit == current_limit)
             return true;
 
@@ -140,11 +175,29 @@ namespace starq::odrive
         return true;
     }
 
+    bool ODriveController::clearErrors(const uint8_t can_id)
+    {
+        if (can_id > MAX_MOTOR_ID)
+        {
+            std::cerr << "Invalid CAN ID." << std::endl;
+            return false;
+        }
+
+        return driver_->clearErrors(can_id);
+    }
+
     bool ODriveController::setPosition(const uint8_t can_id, const float pos, const float vel_ff, const float torque_ff)
     {
         if (can_id > MAX_MOTOR_ID)
         {
             std::cerr << "Invalid CAN ID." << std::endl;
+            return false;
+        }
+
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -164,6 +217,13 @@ namespace starq::odrive
             return false;
         }
 
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << "(" << getErrorName(axis_error) << ")" << std::endl;
+            return false;
+        }
+
         // Convert from radians to revolutions and apply gear ratio
         const float vel_rev = configs_[can_id].gear_ratio * vel / (2.0f * M_PI);
         const float torque_ff_N = torque_ff / configs_[can_id].gear_ratio;
@@ -176,6 +236,13 @@ namespace starq::odrive
         if (can_id > MAX_MOTOR_ID)
         {
             std::cerr << "Invalid CAN ID." << std::endl;
+            return false;
+        }
+
+        uint32_t axis_error = listener_->getAxisError(can_id);
+        if (axis_error != 0x0)
+        {
+            std::cerr << "Motor Error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
             return false;
         }
 
@@ -312,7 +379,9 @@ namespace starq::odrive
     void ODriveController::printInfo(const uint8_t motor_id)
     {
         std::cout << "Motor " << (int)motor_id << " info:" << std::endl;
-        std::cout << "  Axis error: " << getAxisError(motor_id) << std::endl;
+        
+        const uint32_t axis_error = getAxisError(motor_id);
+        std::cout << "  Axis error: " << axis_error << " (" << getErrorName(axis_error) << ")" << std::endl;
         std::cout << "  Axis state: " << (int)getAxisState(motor_id) << std::endl;
         std::cout << "  Iq setpoint: " << getIqSetpoint(motor_id) << std::endl;
         std::cout << "  Iq measured: " << getIqMeasured(motor_id) << std::endl;
@@ -323,6 +392,61 @@ namespace starq::odrive
         std::cout << "  Position estimate: " << getPositionEstimate(motor_id) << std::endl;
         std::cout << "  Velocity estimate: " << getVelocityEstimate(motor_id) << std::endl;
         std::cout << "  Torque estimate: " << getTorqueEstimate(motor_id) << std::endl;
+    }
+
+    std::string ODriveController::getErrorName(const uint32_t axis_error)
+    {
+        switch (axis_error)
+        {
+        case 0x0:
+            return "NONE";
+        case 0x1:
+            return "INITIALIZING";
+        case 0x2:
+            return "TIMING_ERROR";
+        case 0x4:
+            return "BRAKE_RESISTOR_DISARMED";
+        case 0x8:
+            return "MISSING_ESTIMATE";
+        case 0x10:
+            return "BAD_CONFIG";
+        case 0x20:
+            return "DRV_FAULT";
+        case 0x40:
+            return "MISSING_INPUT";
+        case 0x100:
+            return "DC_BUS_OVER_VOLTAGE";
+        case 0x200:
+            return "DC_BUS_UNDER_VOLTAGE";
+        case 0x400:
+            return "DC_BUS_OVER_CURRENT";
+        case 0x800:
+            return "DC_BUS_OVER_REGEN_CURRENT";
+        case 0x1000:
+            return "CURRENT_LIMIT_VIOLATION";
+        case 0x2000:
+            return "MOTOR_OVER_TEMP";
+        case 0x4000:
+            return "INVERTER_OVER_TEMP";
+        case 0x8000:
+            return "VELOCITY_LIMIT_VIOLATION";
+        case 0x10000:
+            return "POSITION_LIMIT_VIOLATION";
+        case 0x1000000:
+            return "WATCHDOG_TIMER_EXPIRED";
+        case 0x2000000:
+            return "ESTOP_REQUESTED";
+        case 0x4000000:
+            return "SPINOUT_DETECTED";
+        case 0x8000000:
+            return "BRAKE_RESISTOR_DISARMED";
+        case 0x10000000:
+            return "THERMISTOR_DISCONNECTED";
+        case 0x40000000:
+            return "CALIBRATION_ERROR";
+        default:
+            return "MULTIPLE_ERRORS";
+        };
     }
 
 }
