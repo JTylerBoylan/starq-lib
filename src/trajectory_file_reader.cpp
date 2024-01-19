@@ -34,18 +34,25 @@ namespace starq
         {
             std::istringstream iss(line);
 
+            int leg_id;
+
             LegCommand command;
+            command.target_position = Vector2f::Zero();
+            command.target_velocity = Vector2f::Zero();
+            command.target_force = Vector2f::Zero();
             if (!(iss >>
                   command.delay_in_seconds >>
-                  command.leg_id >>
+                  leg_id >>
                   command.control_mode >> command.input_mode >>
-                  command.target_position.x() >> command.target_position.y() >> command.target_position.z() >>
-                  command.target_velocity.x() >> command.target_velocity.y() >> command.target_velocity.z() >>
-                  command.target_force.x() >> command.target_force.y() >> command.target_force.z()))
+                  command.target_position.x() >> command.target_position.y() >>
+                  command.target_velocity.x() >> command.target_velocity.y() >>
+                  command.target_force.x() >> command.target_force.y()))
             {
                 std::cerr << "Error reading line " << line << std::endl;
                 return false;
             }
+
+            command.leg_id = leg_id;
 
             trajectory_.push_back(command);
         }

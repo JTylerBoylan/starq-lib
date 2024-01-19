@@ -9,8 +9,8 @@
 #define MOTOR_ID_0 0x0
 #define MOTOR_ID_1 0x1
 
-#define LEG_LINK_1_LENGTH_MM 50.0f
-#define LEG_LINK_2_LENGTH_MM 150.0f
+#define LEG_LINK_1_LENGTH_M 0.05f
+#define LEG_LINK_2_LENGTH_M 0.150f
 
 #define GEAR_RATIO_1 6.0f
 #define GEAR_RATIO_2 6.0f
@@ -51,8 +51,8 @@ int main(void)
     printf("Set motor IDs.\n");
 
     STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(
-        LEG_LINK_1_LENGTH_MM,
-        LEG_LINK_2_LENGTH_MM);
+        LEG_LINK_1_LENGTH_M,
+        LEG_LINK_2_LENGTH_M);
     leg->setLegDynamics(LEG_ID, fivebar_dynamics);
 
     printf("Set leg dynamics.\n");

@@ -10,8 +10,8 @@
 #define MOTOR_ID_0 0x0
 #define MOTOR_ID_1 0x1
 
-#define LEG_LINK_1_LENGTH_MM 50.0f
-#define LEG_LINK_2_LENGTH_MM 150.0f
+#define LEG_LINK_1_LENGTH_M 0.05f
+#define LEG_LINK_2_LENGTH_M 0.150f
 
 using namespace starq;
 using namespace starq::testing;
@@ -31,8 +31,8 @@ int main(void)
     printf("Set motor IDs.\n");
 
     STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(
-        LEG_LINK_1_LENGTH_MM,
-        LEG_LINK_2_LENGTH_MM);
+        LEG_LINK_1_LENGTH_M,
+        LEG_LINK_2_LENGTH_M);
 
     leg->setLegDynamics(LEG_ID, fivebar_dynamics);
     printf("Set leg dynamics.\n");
@@ -42,9 +42,9 @@ int main(void)
     for (float t = 0.0f; t <= 2.0f * M_PI + 0.01; t += 0.1f)
     {
         const float center_x = 0.0f;
-        const float center_y = -std::sqrt(2)*100;
+        const float center_y = -std::sqrt(2)*0.1;
 
-        const float y_off = 25.0f * std::sin(t);
+        const float y_off = 0.025f * std::sin(t);
 
         VectorXf foot_position(2);
         foot_position << 0, center_y + y_off;

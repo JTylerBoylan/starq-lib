@@ -14,11 +14,13 @@ list(APPEND CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 add_library(starq SHARED)
 target_sources(starq PRIVATE
     src/leg_controller.cpp
+    src/leg_command_publisher.cpp
+    src/trajectory_file_reader.cpp
     src/can/socket.cpp
     src/odrive/odrive_controller.cpp
     src/odrive/can_driver.cpp 
     src/odrive/can_listener.cpp
-    src/dynamics/starq_fiverbar2d.cpp
+    src/dynamics/starq_fivebar2d.cpp
 )
 target_include_directories(starq PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -87,5 +89,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     add_executable(test_clear_errors tests/test_clear_errors.cpp)
     target_include_directories(test_clear_errors PUBLIC include)
     target_link_libraries(test_clear_errors PUBLIC stdc++ stdc++fs m starq pthread)
+
+    add_executable(test_command_publisher_dummy tests/test_command_publisher_dummy.cpp)
+    target_include_directories(test_command_publisher_dummy PUBLIC include)
+    target_link_libraries(test_command_publisher_dummy PUBLIC stdc++ stdc++fs m starq pthread)
 
 endif()

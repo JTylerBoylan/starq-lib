@@ -28,7 +28,7 @@ namespace starq
         /// @brief Stamp the release time of the leg command.
         void stamp()
         {
-            release_time = std::chrono::system_clock::now().time_since_epoch().count() + delay_in_seconds * 1000;
+            release_time = (std::chrono::system_clock::now().time_since_epoch() + std::chrono::milliseconds((int)(delay_in_seconds * 1000))).count();
         }  
     };
 

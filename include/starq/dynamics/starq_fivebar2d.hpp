@@ -12,8 +12,8 @@ namespace starq::dynamics
         using Ptr = std::shared_ptr<STARQ_FiveBar2D>;
 
         /// @brief Constructor for FiveBar2D leg.
-        /// @param L1 Length of the first link in millimeters.
-        /// @param L2 Length of the second link in millimeters.
+        /// @param L1 Length of the first link in meters
+        /// @param L2 Length of the second link in meters
         STARQ_FiveBar2D(float L1, float L2);
 
         /// @brief Forward kinematics for FiveBar2D leg.
