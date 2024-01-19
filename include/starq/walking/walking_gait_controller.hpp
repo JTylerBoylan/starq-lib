@@ -37,9 +37,17 @@ namespace starq::walking
         /// @param angular_speed Angular velocity of the walk.
         void setVelocity(const Vector3f &linear_speed, const Vector3f &angular_speed) override;
 
-        /// @brief Set the sleep duration.
-        /// @param sleep_duration_us Sleep duration in microseconds.
-        void setSleepDuration(const time_t sleep_duration_us) { sleep_duration_us_ = sleep_duration_us; }
+        /// @brief Set the stride length.
+        /// @param stride_length Stride length in meters.
+        void setStrideLength(const float stride_length) { stride_length_ = stride_length; }
+
+        /// @brief Set the number of nodes per stride.
+        /// @param nodes_per_stride Number of nodes per stride.
+        void setNodesPerStride(const int nodes_per_stride) { nodes_per_stride_ = nodes_per_stride; }
+
+        /// @brief Set the number of lookahead strides.
+        /// @param lookahead_strides Number of lookahead strides.
+        void setLookaheadStrides(const int lookahead_strides) { lookahead_strides_ = lookahead_strides; }
 
     private:
         /// @brief Run the gait.
@@ -47,7 +55,10 @@ namespace starq::walking
 
         bool running_;
         std::mutex mutex_;
-        time_t sleep_duration_us_;
+
+        float stride_length_;
+        int nodes_per_stride_;
+        int lookahead_strides_;
 
         Eigen::Vector3f desired_linear_speed_;
         Eigen::Vector3f desired_angular_speed_;
