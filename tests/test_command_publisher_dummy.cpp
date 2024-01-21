@@ -60,7 +60,7 @@ int main(void)
     TrajectoryFileReader::Ptr reader = std::make_shared<TrajectoryFileReader>();
     printf("Created trajectory file reader.\n");
 
-    reader->load("/app/trajectories/square.txt");
+    reader->load2D("/app/trajectories/square.txt");
     printf("Loaded trajectory.\n");
 
     std::vector<LegCommand> trajectory = reader->getTrajectory();

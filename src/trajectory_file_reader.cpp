@@ -16,7 +16,7 @@ namespace starq
     {
     }
 
-    bool TrajectoryFileReader::load(const std::string &file_path)
+    bool TrajectoryFileReader::load2D(const std::string &file_path)
     {
 
         trajectory_.clear();

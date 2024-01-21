@@ -11,7 +11,7 @@ namespace starq::walking
           nodes_per_stride_(5),
           lookahead_strides_(4)
     {
-        if (!trajectory_file_reader_->load("/app/trajectories/walk.txt"))
+        if (!trajectory_file_reader_->load2D("/app/trajectories/walk.txt"))
         {
             std::cerr << "Failed to load walking trajectory file." << std::endl;
         }

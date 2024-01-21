@@ -21,7 +21,7 @@ namespace starq
         /// @brief Load a trajectory from a file.
         /// @param file_path Path to the file.
         /// @return True if the trajectory was loaded successfully, false otherwise.
-        bool load(const std::string &file_path);
+        bool load2D(const std::string &file_path);
 
         /// @brief Get the trajectory.
         /// @return Vector of leg commands.
