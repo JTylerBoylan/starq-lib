@@ -41,7 +41,6 @@ namespace starq
             command.target_velocity = Vector2f::Zero();
             command.target_force = Vector2f::Zero();
             if (!(iss >>
-                  command.delay_in_seconds >>
                   leg_id >>
                   command.control_mode >> command.input_mode >>
                   command.target_position.x() >> command.target_position.y() >>

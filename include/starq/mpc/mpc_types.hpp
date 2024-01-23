@@ -1,10 +1,15 @@
-#ifndef STARQ_WALKING__WALKING_TYPES_HPP_
-#define STARQ_WALKING__WALKING_TYPES_HPP_
+#ifndef STARQ_MPC__MPC_TYPES_HPP_
+#define STARQ_MPC__MPC_TYPES_HPP_
 
+#include <vector>
 #include "eigen3/Eigen/Dense"
 
-namespace starq::walking
+#define NUMBER_OF_LEGS 4
+
+namespace starq::mpc
 {
+
+    using namespace Eigen;
 
     struct LegState
     {
@@ -12,7 +17,9 @@ namespace starq::walking
         Eigen::Vector3f position;
     };
 
-    using StrideTrajectory = std::vector<LegState>;
+    using StrideState = std::array<LegState, NUMBER_OF_LEGS>;
+
+    using StrideTrajectory = std::vector<StrideState>;
 
     struct CenterOfMassState
     {
@@ -23,6 +30,8 @@ namespace starq::walking
     };
 
     using CenterOfMassTrajectory = std::vector<CenterOfMassState>;
+
+    using LegForces = std::array<Vector3f, NUMBER_OF_LEGS>;
 
 }
 

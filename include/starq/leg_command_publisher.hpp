@@ -2,12 +2,10 @@
 #define STARQ__LEG_COMMAND_PUBLISHER_HPP_
 
 #include "starq/leg_controller.hpp"
-#include <queue>
 #include <memory>
-#include <functional>
 #include <thread>
 #include <mutex>
-#include <iostream>
+#include <unordered_map>
 
 namespace starq
 {
@@ -15,21 +13,12 @@ namespace starq
     /// @brief Leg command structure
     struct LegCommand
     {
-        double delay_in_seconds = 0.0;
         uint8_t leg_id = 0;
         uint32_t control_mode = 0;
         uint32_t input_mode = 0x1;
         VectorXf target_position = VectorXf();
         VectorXf target_velocity = VectorXf();
         VectorXf target_force = VectorXf();
-
-        time_t release_time = 0L;
-
-        /// @brief Stamp the release time of the leg command.
-        void stamp()
-        {
-            release_time = (std::chrono::system_clock::now().time_since_epoch() + std::chrono::milliseconds((int)(delay_in_seconds * 1000))).count();
-        }  
     };
 
     class LegCommandPublisher
@@ -44,15 +33,11 @@ namespace starq
         /// @brief Destroy the Leg Command Publisher object
         ~LegCommandPublisher();
 
-        /// @brief Add a leg command to the queue.
-        /// @param leg_cmd Command to add to the queue.
-        void push(LegCommand leg_cmd);
+        /// @brief Send a leg command to the leg controller.
+        /// @param leg_command Leg command to send.
+        void sendCommand(const LegCommand &leg_command);
 
-        /// @brief Add a vector of leg commands to the queue.
-        /// @param trajectory Vector of leg commands to add to the queue.
-        void push(std::vector<LegCommand> trajectory);
-
-        /// @brief Clear the leg command queue.
+        /// @brief Clear the leg command publisher.
         void clear();
 
         /// @brief Get the leg controller.
@@ -79,21 +64,12 @@ namespace starq
         /// @brief Run the leg command publisher. (threaded)
         void run();
 
-        /// @brief Sort leg commands by release time.
-        struct CompareLegCommand
-        {
-            bool operator()(const LegCommand &lhs, const LegCommand &rhs) const
-            {
-                return lhs.release_time > rhs.release_time;
-            }
-        };
-
         LegController::Ptr leg_controller_;
         bool running_;
         bool stop_on_fail_;
         time_t sleep_duration_us_;
-        std::priority_queue<LegCommand, std::vector<LegCommand>, CompareLegCommand> leg_command_queue_;
         std::mutex mutex_;
+        std::unordered_map<uint8_t, LegCommand> leg_command_map_;
     };
 }
 

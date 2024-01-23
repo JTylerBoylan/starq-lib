@@ -50,25 +50,11 @@ int main(void)
     cmd.target_position = Vector2f(center_x, center_y);
     cmd.target_velocity = VectorXf::Zero(2);
     cmd.target_force = VectorXf::Zero(2);
-    cmd.delay_in_seconds = 0.0;
 
-    publisher->push(cmd);
+    publisher->sendCommand(cmd);
     printf("Pushed leg command.\n");
 
-    usleep(10000);
-
-    TrajectoryFileReader::Ptr reader = std::make_shared<TrajectoryFileReader>();
-    printf("Created trajectory file reader.\n");
-
-    reader->load2D("/app/trajectories/square.txt");
-    printf("Loaded trajectory.\n");
-
-    std::vector<LegCommand> trajectory = reader->getTrajectory();
-
-    publisher->push(trajectory);
-    printf("Pushed trajectory.\n");
-
-    usleep(2E6);
+    usleep(1000000);
 
     printf("Done.\n");
 

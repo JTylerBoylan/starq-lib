@@ -1,5 +1,7 @@
 #include "starq/leg_command_publisher.hpp"
 
+#include <iostream>
+
 namespace starq
 {
 
@@ -7,7 +9,7 @@ namespace starq
         : leg_controller_(leg_controller),
           running_(false),
           stop_on_fail_(true),
-          sleep_duration_us_(1000)
+          sleep_duration_us_(5000)
     {
         start();
     }
@@ -18,30 +20,16 @@ namespace starq
             stop();
     }
 
-    void LegCommandPublisher::push(LegCommand leg_cmd)
+    void LegCommandPublisher::sendCommand(const LegCommand &leg_command)
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        leg_cmd.stamp();
-        leg_command_queue_.push(leg_cmd);
-    }
-
-    void LegCommandPublisher::push(std::vector<LegCommand> trajectory)
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        for (auto &leg_cmd : trajectory)
-        {
-            leg_cmd.stamp();
-            leg_command_queue_.push(leg_cmd);
-        }
+        leg_command_map_[leg_command.leg_id] = leg_command;
     }
 
     void LegCommandPublisher::clear()
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        while (!leg_command_queue_.empty())
-        {
-            leg_command_queue_.pop();
-        }
+        leg_command_map_.clear();
     }
 
     bool LegCommandPublisher::start()
@@ -85,19 +73,15 @@ namespace starq
                     break;
             }
 
-            bool has_command = false;
-            LegCommand leg_cmd;
+            for (auto iter = leg_command_map_.begin(); iter != leg_command_map_.end(); ++iter)
             {
-                std::lock_guard<std::mutex> lock(mutex_);
-                if (!leg_command_queue_.empty())
-                {
-                    leg_cmd = leg_command_queue_.top();
-                    has_command = true;
-                }
-            }
 
-            if (has_command && leg_cmd.release_time <= system_clock::now().time_since_epoch().count())
-            {
+                LegCommand leg_cmd;
+                {
+                    std::lock_guard<std::mutex> lock(mutex_);
+                    leg_cmd = iter->second;
+                }
+
                 leg_controller_->setControlMode(leg_cmd.leg_id, leg_cmd.control_mode, leg_cmd.input_mode);
 
                 bool command_success = false;
@@ -118,11 +102,6 @@ namespace starq
                     command_success = leg_controller_->setFootForce(leg_cmd.leg_id,
                                                                     leg_cmd.target_force);
                     break;
-                }
-
-                {
-                    std::lock_guard<std::mutex> lock(mutex_);
-                    leg_command_queue_.pop();
                 }
 
                 if (!command_success)
