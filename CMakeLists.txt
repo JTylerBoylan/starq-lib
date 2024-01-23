@@ -59,6 +59,11 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/starqConfig.cmake"
 
 install(DIRECTORY include/ DESTINATION include)
 
+add_executable(example_control examples/example_control.cpp)
+target_include_directories(example_control PUBLIC include)
+target_link_libraries(example_control PUBLIC stdc++ stdc++fs m starq pthread)
+
+
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
     include(CTest)
