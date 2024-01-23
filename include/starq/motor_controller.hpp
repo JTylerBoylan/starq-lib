@@ -39,59 +39,50 @@ namespace starq
         using Ptr = std::shared_ptr<MotorController>;
 
         /// @brief Set the gear ratio
-        /// @param motor_id The ID of the motor.
         /// @param gear_ratio The gear ratio to set the motor to.
         /// @return If the gear ratio was set successfully.
-        virtual bool setGearRatio(const uint8_t motor_id, const float gear_ratio) = 0;
+        virtual bool setGearRatio(const float gear_ratio) = 0;
 
         /// @brief Set the motor state.
-        /// @param motor_id The ID of the motor.
         /// @param state The state to set the motor to.
         /// @return If the command was sent successfully.
-        virtual bool setState(const uint8_t motor_id, const uint32_t state) = 0;
+        virtual bool setState(const uint32_t state) = 0;
 
         /// @brief Set the control mode.
-        /// @param motor_id The ID of the motor.
         /// @param control_mode The control mode to set the motor to.
         /// @param input_mode The input mode to set the motor to. (default: 0x1)
         /// @return If the command was sent successfully.
-        virtual bool setControlMode(const uint8_t motor_id, const uint32_t control_mode, const uint32_t input_mode = 0x1) = 0;
+        virtual bool setControlMode(const uint32_t control_mode, const uint32_t input_mode = 0x1) = 0;
 
         /// @brief Set the position.
-        /// @param motor_id The ID of the motor.
         /// @param pos The position to set the motor to. [rad]
         /// @param vel_ff The velocity feedforward to set the motor to. [rad/s] (default: 0)
         /// @param torque_ff The torque feedforward to set the motor to. [N-m] (default: 0)
         /// @return If the command was sent successfully.
-        virtual bool setPosition(const uint8_t motor_id, const float pos, const float vel_ff = 0.F, const float torque_ff = 0.F) = 0;
+        virtual bool setPosition(const float pos, const float vel_ff = 0.F, const float torque_ff = 0.F) = 0;
 
         /// @brief Set the velocity.
-        /// @param motor_id The ID of the motor.
         /// @param vel The velocity to set the motor to. [rad/s]
         /// @param torque_ff The torque feedforward to set the motor to. [N-m] (default: 0)
         /// @return If the command was sent successfully.
-        virtual bool setVelocity(const uint8_t motor_id, const float vel, const float torque_ff = 0.F) = 0;
+        virtual bool setVelocity(const float vel, const float torque_ff = 0.F) = 0;
 
         /// @brief Set the torque.
-        /// @param motor_id The ID of the motor.
         /// @param torque The torque to set the motor to. [N-m]
         /// @return If the command was sent successfully.
-        virtual bool setTorque(const uint8_t motor_id, const float torque) = 0;
+        virtual bool setTorque(const float torque) = 0;
 
         /// @brief Get the encoder position estimate.
-        /// @param motor_id The ID of the motor.
         /// @return The encoder position estimate in radians.
-        virtual float getPositionEstimate(const uint8_t motor_id) = 0;
+        virtual float getPositionEstimate() = 0;
 
         /// @brief Get the encoder velocity estimate.
-        /// @param motor_id The ID of the motor.
         /// @return The encoder velocity estimate in radians per second.
-        virtual float getVelocityEstimate(const uint8_t motor_id) = 0;
+        virtual float getVelocityEstimate() = 0;
 
         /// @brief Get the controller torque estimate.
-        /// @param motor_id The ID of the motor.
         /// @return The controller torque estimate in Newton-meters.
-        virtual float getTorqueEstimate(const uint8_t motor_id) = 0;
+        virtual float getTorqueEstimate() = 0;
     };
 
 }

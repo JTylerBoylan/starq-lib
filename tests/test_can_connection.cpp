@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "starq/can/socket.hpp"
+#include "starq/can/can_socket.hpp"
 
 #define NUM_FRAMES 10
 

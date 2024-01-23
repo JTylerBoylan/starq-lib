@@ -27,8 +27,8 @@ namespace starq
         using Ptr = std::shared_ptr<LegCommandPublisher>;
 
         /// @brief Construct a new Leg Command Publisher object
-        /// @param leg_controller Leg controller to publish commands to.
-        LegCommandPublisher(LegController::Ptr leg_controller);
+        /// @param leg_controllers Leg controllers to publish commands to.
+        LegCommandPublisher(const std::vector<LegController::Ptr> leg_controllers);
 
         /// @brief Destroy the Leg Command Publisher object
         ~LegCommandPublisher();
@@ -39,10 +39,6 @@ namespace starq
 
         /// @brief Clear the leg command publisher.
         void clear();
-
-        /// @brief Get the leg controller.
-        /// @return Leg controller.
-        LegController::Ptr getLegController() { return leg_controller_; }
 
         /// @brief Set the stop on fail flag.
         /// @param stop_on_fail Stop on fail flag.
@@ -64,12 +60,14 @@ namespace starq
         /// @brief Run the leg command publisher. (threaded)
         void run();
 
-        LegController::Ptr leg_controller_;
-        bool running_;
+        std::vector<LegController::Ptr> leg_controllers_;
+        std::unordered_map<uint8_t, LegCommand> leg_command_map_;
+
         bool stop_on_fail_;
         time_t sleep_duration_us_;
+
+        bool running_;
         std::mutex mutex_;
-        std::unordered_map<uint8_t, LegCommand> leg_command_map_;
     };
 }
 

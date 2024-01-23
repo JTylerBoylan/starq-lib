@@ -5,8 +5,8 @@
 namespace starq
 {
 
-    LegCommandPublisher::LegCommandPublisher(LegController::Ptr leg_controller)
-        : leg_controller_(leg_controller),
+    LegCommandPublisher::LegCommandPublisher(const std::vector<LegController::Ptr> leg_controllers)
+        : leg_controllers_(leg_controllers),
           running_(false),
           stop_on_fail_(true),
           sleep_duration_us_(5000)
@@ -23,6 +23,13 @@ namespace starq
     void LegCommandPublisher::sendCommand(const LegCommand &leg_command)
     {
         std::lock_guard<std::mutex> lock(mutex_);
+
+        if (leg_command.leg_id >= leg_controllers_.size())
+        {
+            std::cerr << "Leg ID out of range." << std::endl;
+            return;
+        }
+
         leg_command_map_[leg_command.leg_id] = leg_command;
     }
 
@@ -34,7 +41,6 @@ namespace starq
 
     bool LegCommandPublisher::start()
     {
-        std::lock_guard<std::mutex> lock(mutex_);
 
         if (running_)
         {
@@ -42,6 +48,7 @@ namespace starq
             return false;
         }
 
+        clear();
         running_ = true;
         std::thread(&LegCommandPublisher::run, this).detach();
         return true;
@@ -49,7 +56,6 @@ namespace starq
 
     bool LegCommandPublisher::stop()
     {
-        std::lock_guard<std::mutex> lock(mutex_);
 
         if (!running_)
         {
@@ -73,8 +79,11 @@ namespace starq
                     break;
             }
 
-            for (auto iter = leg_command_map_.begin(); iter != leg_command_map_.end(); ++iter)
+            bool command_success = true;
+            for (auto iter = leg_command_map_.begin(); iter != leg_command_map_.end() && command_success; ++iter)
             {
+
+                LegController::Ptr leg_controller = leg_controllers_[iter->first];
 
                 LegCommand leg_cmd;
                 {
@@ -82,38 +91,38 @@ namespace starq
                     leg_cmd = iter->second;
                 }
 
-                leg_controller_->setControlMode(leg_cmd.leg_id, leg_cmd.control_mode, leg_cmd.input_mode);
-
-                bool command_success = false;
-                switch (leg_cmd.control_mode)
+                if (!leg_controller->setControlMode(leg_cmd.control_mode, leg_cmd.input_mode))
                 {
-                case ControlMode::POSITION:
-                    command_success = leg_controller_->setFootPosition(leg_cmd.leg_id,
-                                                                       leg_cmd.target_position,
-                                                                       leg_cmd.target_velocity,
-                                                                       leg_cmd.target_force);
-                    break;
-                case ControlMode::VELOCITY:
-                    command_success = leg_controller_->setFootVelocity(leg_cmd.leg_id,
-                                                                       leg_cmd.target_velocity,
-                                                                       leg_cmd.target_force);
-                    break;
-                case ControlMode::TORQUE:
-                    command_success = leg_controller_->setFootForce(leg_cmd.leg_id,
-                                                                    leg_cmd.target_force);
+                    command_success = false;
                     break;
                 }
 
-                if (!command_success)
+                switch (leg_cmd.control_mode)
                 {
-                    std::cerr << "Failed to send leg command." << std::endl;
+                case ControlMode::POSITION:
+                    command_success = leg_controller->setFootPosition(leg_cmd.target_position,
+                                                                      leg_cmd.target_velocity,
+                                                                      leg_cmd.target_force);
+                    break;
+                case ControlMode::VELOCITY:
+                    command_success = leg_controller->setFootVelocity(leg_cmd.target_velocity,
+                                                                      leg_cmd.target_force);
+                    break;
+                case ControlMode::TORQUE:
+                    command_success = leg_controller->setFootForce(leg_cmd.target_force);
+                    break;
+                }
+            }
 
-                    if (stop_on_fail_)
+            if (!command_success)
+            {
+                std::cerr << "Failed to send leg command." << std::endl;
+
+                if (stop_on_fail_)
+                {
+                    if (!stop())
                     {
-                        if (!stop())
-                        {
-                            std::cerr << "Failed to stop leg command publisher." << std::endl;
-                        }
+                        std::cerr << "Failed to stop leg command publisher." << std::endl;
                     }
                 }
             }

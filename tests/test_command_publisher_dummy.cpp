@@ -22,23 +22,18 @@ int main(void)
 {
     printf("Hello, world!\n");
 
-    DummyMotorController::Ptr dummy = std::make_shared<DummyMotorController>();
-    printf("Created ODrive controller.\n");
+    DummyMotorController::Ptr dummy_A = std::make_shared<DummyMotorController>(0);
+    DummyMotorController::Ptr dummy_B = std::make_shared<DummyMotorController>(1);
+    printf("Created ODrive controllers.\n");
 
-    LegController::Ptr leg = std::make_shared<LegController>(dummy);
+    STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(LEG_LINK_1_LENGTH_M,
+                                                                              LEG_LINK_2_LENGTH_M);
+
+    LegController::Ptr leg_FL = std::make_shared<LegController>(fivebar_dynamics,
+                                                                std::vector<MotorController::Ptr>{dummy_A, dummy_B});
     printf("Created leg controller.\n");
 
-    leg->setMotorIDs(LEG_ID, {MOTOR_ID_0, MOTOR_ID_1});
-    printf("Set motor IDs.\n");
-
-    STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(
-        LEG_LINK_1_LENGTH_M,
-        LEG_LINK_2_LENGTH_M);
-
-    leg->setLegDynamics(LEG_ID, fivebar_dynamics);
-    printf("Set leg dynamics.\n");
-
-    LegCommandPublisher::Ptr publisher = std::make_shared<LegCommandPublisher>(leg);
+    LegCommandPublisher::Ptr publisher = std::make_shared<LegCommandPublisher>(std::vector<LegController::Ptr>{leg_FL});
     printf("Created leg command publisher.\n");
 
     const float center_x = 0.0;

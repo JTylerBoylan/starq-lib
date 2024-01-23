@@ -13,14 +13,12 @@ list(APPEND CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 add_library(starq SHARED)
 target_sources(starq PRIVATE
+    src/can/can_socket.cpp
+    src/odrive/odrive_socket.cpp
+    src/odrive/odrive_controller.cpp
+    src/dynamics/starq_fivebar2d.cpp
     src/leg_controller.cpp
     src/leg_command_publisher.cpp
-    src/trajectory_file_reader.cpp
-    src/can/socket.cpp
-    src/odrive/odrive_controller.cpp
-    src/odrive/can_driver.cpp 
-    src/odrive/can_listener.cpp
-    src/dynamics/starq_fivebar2d.cpp
 )
 target_include_directories(starq PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

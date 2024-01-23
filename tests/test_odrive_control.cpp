@@ -12,9 +12,9 @@ int main(void)
 {
     printf("Hello world!\n");
 
-    CANSocket::Ptr socket = std::make_shared<CANSocket>("can0");
+    CANSocket::Ptr can_socket = std::make_shared<CANSocket>("can0");
 
-    if (socket->connect())
+    if (can_socket->connect())
     {
         printf("Connected to CAN interface.\n");
     }
@@ -24,37 +24,39 @@ int main(void)
         return 1;
     }
 
-    ODriveController::Ptr odrive = std::make_shared<ODriveController>(socket);
+    ODriveSocket::Ptr odrive_socket = std::make_shared<ODriveSocket>(can_socket);
 
-    if (!odrive->setState(CAN_ID, MotorState::CLOSED_LOOP_CONTROL))
+    ODriveController::Ptr odrive = std::make_shared<ODriveController>(odrive_socket, CAN_ID);
+
+    if (!odrive->setState(MotorState::CLOSED_LOOP_CONTROL))
         return 1;
     printf("Set axis state to closed loop control.\n");
 
-    if (!odrive->setControlMode(CAN_ID, ControlMode::POSITION))
+    if (!odrive->setControlMode(ControlMode::POSITION))
         return 1;
     printf("Set control mode to position control.\n");
 
-    if (!odrive->setPosition(CAN_ID, 0.0f))
+    if (!odrive->setPosition(0.0f))
         return 1;
     printf("Set position to 0.\n");
 
     sleep(1);
     printf("--------------------\n");
-    odrive->printInfo(CAN_ID);
+    odrive->printInfo();
 
     const float position_increment = 0.2;
     for (float p = 0.0f; p <= 1.0f; p += position_increment)
     {
         printf("--------------------\n");
         printf("Setting position to %f\n", p);
-        if (!odrive->setPosition(CAN_ID, p))
+        if (!odrive->setPosition(p))
             return 1;
         sleep(1);
         printf("--------------------\n");
-        odrive->printInfo(CAN_ID);
+        odrive->printInfo();
     }
 
-    if (!odrive->setState(CAN_ID, MotorState::IDLE))
+    if (!odrive->setState(MotorState::IDLE))
         return 1;
     printf("Set axis state to idle.\n");
 

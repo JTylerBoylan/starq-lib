@@ -10,9 +10,9 @@ int main(void)
 {
     printf("Hello world!\n");
 
-    CANSocket::Ptr socket = std::make_shared<CANSocket>("can0");
+    CANSocket::Ptr can_socket = std::make_shared<CANSocket>("can0");
 
-    if (socket->connect())
+    if (can_socket->connect())
     {
         printf("Connected to CAN interface.\n");
     }
@@ -22,11 +22,13 @@ int main(void)
         return 1;
     }
 
-    ODriveController::Ptr odrive = std::make_shared<ODriveController>(socket);
+    ODriveSocket::Ptr odrive_socket = std::make_shared<ODriveSocket>(can_socket);
 
     for (uint8_t i = 0; i < MAX_MOTOR_ID; i++)
     {
-        if (!odrive->clearErrors(i))
+        ODriveController::Ptr odrive = std::make_shared<ODriveController>(odrive_socket, i);
+
+        if (!odrive->clearErrors())
         {
             printf("Failed to clear errors for axis %d.\n", i);
             return 1;

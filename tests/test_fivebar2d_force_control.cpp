@@ -4,16 +4,11 @@
 #include "starq/odrive/odrive_controller.hpp"
 #include "starq/dynamics/starq_fivebar2d.hpp"
 
-#define LEG_ID 0x0
-
-#define MOTOR_ID_0 0x0
-#define MOTOR_ID_1 0x1
-
 #define LEG_LINK_1_LENGTH_M 0.05f
 #define LEG_LINK_2_LENGTH_M 0.150f
 
-#define GEAR_RATIO_1 6.0f
-#define GEAR_RATIO_2 6.0f
+#define GEAR_RATIO_A 6.0f
+#define GEAR_RATIO_B 6.0f
 
 using namespace starq;
 using namespace starq::can;
@@ -24,9 +19,9 @@ int main(void)
 {
     printf("Hello world!\n");
 
-    CANSocket::Ptr socket = std::make_shared<CANSocket>("can0");
+    CANSocket::Ptr can_socket = std::make_shared<CANSocket>("can0");
 
-    if (socket->connect())
+    if (can_socket->connect())
     {
         printf("Connected to CAN interface.\n");
     }
@@ -36,33 +31,29 @@ int main(void)
         return 1;
     }
 
-    ODriveController::Ptr odrive = std::make_shared<ODriveController>(socket);
-    odrive->setGearRatio(MOTOR_ID_0, GEAR_RATIO_1);
-    odrive->setGearRatio(MOTOR_ID_1, GEAR_RATIO_2);
+    ODriveSocket::Ptr odrive_socket = std::make_shared<ODriveSocket>(can_socket);
 
-    printf("Created ODrive controller.\n");
+    ODriveController::Ptr odrive_A = std::make_shared<ODriveController>(odrive_socket, 0);
+    ODriveController::Ptr odrive_B = std::make_shared<ODriveController>(odrive_socket, 1);
+    printf("Created ODrive controllers.\n");
 
-    LegController::Ptr leg = std::make_shared<LegController>(odrive);
+    odrive_A->setGearRatio(GEAR_RATIO_A);
+    odrive_B->setGearRatio(GEAR_RATIO_B);
+    printf("Set gear ratios.\n");
 
+    STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(LEG_LINK_1_LENGTH_M,
+                                                                              LEG_LINK_2_LENGTH_M);
+
+    LegController::Ptr leg = std::make_shared<LegController>(fivebar_dynamics,
+                                                             std::vector<MotorController::Ptr>{odrive_A, odrive_B});
     printf("Created leg controller.\n");
 
-    leg->setMotorIDs(LEG_ID, {MOTOR_ID_0, MOTOR_ID_1});
-
-    printf("Set motor IDs.\n");
-
-    STARQ_FiveBar2D::Ptr fivebar_dynamics = std::make_shared<STARQ_FiveBar2D>(
-        LEG_LINK_1_LENGTH_M,
-        LEG_LINK_2_LENGTH_M);
-    leg->setLegDynamics(LEG_ID, fivebar_dynamics);
-
-    printf("Set leg dynamics.\n");
-
-    if (!leg->setState(LEG_ID, MotorState::CLOSED_LOOP_CONTROL))
+    if (!leg->setState(MotorState::CLOSED_LOOP_CONTROL))
         return 1;
 
     printf("Set axis state to closed loop control.\n");
 
-    if (!leg->setControlMode(LEG_ID, ControlMode::TORQUE))
+    if (!leg->setControlMode(ControlMode::TORQUE))
         return 1;
 
     printf("Set to force control mode.\n");
@@ -71,7 +62,7 @@ int main(void)
     const float force_y = -10.0f;
     printf("Applying Force: %f, %f\n", force_x, force_y);
 
-    const VectorXf current_joint_angles = leg->getCurrentJointAngles(LEG_ID);
+    const VectorXf current_joint_angles = leg->getCurrentJointAngles();
 
     MatrixXf jacobian;
     fivebar_dynamics->getJacobian(current_joint_angles, jacobian);
@@ -79,17 +70,18 @@ int main(void)
 
     printf("Joint torque: %f, %f\n", joint_torque(0), joint_torque(1));
 
-    const float duration = 10.0; // seconds
+    const float duration = 10.0;   // seconds
     const float frequency = 100.0; // Hz
-    for (float t = 0.0; t < duration; t += 1.0f/frequency) {
-        if (!leg->setFootForce(LEG_ID, Vector2f(force_x, force_y)))
+    for (float t = 0.0; t < duration; t += 1.0f / frequency)
+    {
+        if (!leg->setFootForce(Vector2f(force_x, force_y)))
             return 1;
-        usleep(1E6/frequency);
+        usleep(1E6 / frequency);
     }
 
     printf("\n");
 
-    if (!leg->setState(LEG_ID, MotorState::IDLE))
+    if (!leg->setState(MotorState::IDLE))
         return 1;
 
     printf("Set axis state to idle.\n");
