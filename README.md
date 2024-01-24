@@ -116,5 +116,18 @@ int main()
 * Source: `~/starq-lib/src/can/can_socket.hpp`
 * Functions:
 ```
+// Connect to a CAN interface.
+CANSocket(const std::string &interface);
 
+// Disconnect from the CAN interface.
+~CANSocket();
+
+// Initialize the CAN interface.
+bool connect();
+
+// Send a CAN frame.
+bool send(const uint8_t can_id, const uint8_t *data, const uint8_t size);
+
+// Receive a CAN frame.
+ssize_t receive(struct can_frame &frame);
 ```
