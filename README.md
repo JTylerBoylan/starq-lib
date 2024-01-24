@@ -114,36 +114,7 @@ int main()
 
 * Read and write frames to a CAN interface
 * Source: `~/starq-lib/src/can/can_socket.hpp`
-* Usage:
+* Functions:
 ```
-#include <stdio.h>
 
-#include "starq/can/can_socket.hpp"
-
-using namespace starq::can;
-
-int main()
-{
-    printf("Hello World!\n");
-
-    // Connect to CAN Interface
-    CANSocket::Ptr can_socket = std::make_shared<CANSocket>("can0");
-    if (!can_socket->connect())
-    {
-        printf("Failed to connect to CAN interface.\n");
-        return 1;
-    }
-
-    // Receive a CAN Frame
-    struct can_frame frame;
-    can_socket->receive(frame);
-    printf("CAN Recieved: ID: %d, Size: %d\n", frame.can_id, frame.can_dlc);
-
-    // Send a CAN Frame
-    uint8_t can_id = 0;
-    uint8_t data[8] = {'A', 'B', 'C', 'D', 'E', 'F', 'G'};
-    can_socket->send(can_id, data, 8);
-
-    return 0;
-}
 ```
