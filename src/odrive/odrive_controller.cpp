@@ -8,7 +8,7 @@ namespace starq::odrive
 
     ODriveController::ODriveController(const ODriveSocket::Ptr socket, const uint8_t can_id)
         : socket_(socket),
-          can_id_(can_id_)
+          can_id_(can_id)
     {
     }
 

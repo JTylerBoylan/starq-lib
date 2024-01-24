@@ -59,7 +59,7 @@ int main(void)
     printf("Set to force control mode.\n");
 
     const float force_x = 0.0f;
-    const float force_y = -10.0f;
+    const float force_y = -20.0f;
     printf("Applying Force: %f, %f\n", force_x, force_y);
 
     const VectorXf current_joint_angles = leg->getCurrentJointAngles();

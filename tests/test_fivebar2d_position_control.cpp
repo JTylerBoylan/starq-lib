@@ -89,6 +89,8 @@ int main(void)
         return 1;
     printf("Centered foot position.\n");
 
+    sleep(1);
+
     if (!leg->setState(AxisState::IDLE))
         return 1;
     printf("Set axis state to idle.\n");
