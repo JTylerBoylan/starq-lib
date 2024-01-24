@@ -7,6 +7,7 @@
 namespace starq::odrive
 {
 
+    /// @brief  Send ODrive commands and get ODrive information
     class ODriveController : public starq::MotorController
     {
     public:

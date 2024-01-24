@@ -8,7 +8,7 @@
 namespace starq
 {
 
-    enum MotorState
+    enum AxisState
     {
         UNDEFINED = 0x0,
         IDLE = 0x1,
@@ -33,6 +33,7 @@ namespace starq
         TORQUE_RAMP = 0x6
     };
 
+    /// @brief Abstract class to send motor commands and get motor information
     class MotorController
     {
     public:

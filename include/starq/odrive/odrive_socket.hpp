@@ -9,6 +9,7 @@
 namespace starq::odrive
 {
 
+    /// @brief Send ODrive commands and listen for ODrive information over CAN bus
     class ODriveSocket
     {
     public:

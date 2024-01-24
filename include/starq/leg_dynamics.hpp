@@ -8,6 +8,7 @@ namespace starq
 {
     using namespace Eigen;
 
+    /// @brief Abstract class for different leg dynamic types
     class LegDynamics
     {
     public:

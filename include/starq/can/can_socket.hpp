@@ -18,6 +18,7 @@
 
 namespace starq::can
 {
+    /// @brief Connect to a CAN interface
     class CANSocket
     {
     public:
@@ -46,7 +47,7 @@ namespace starq::can
         ssize_t receive(struct can_frame &frame);
 
     private:
-        std::string interface_;
+        const std::string interface_;
         int socket_;
     };
 

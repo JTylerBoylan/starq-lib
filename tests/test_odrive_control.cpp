@@ -28,7 +28,7 @@ int main(void)
 
     ODriveController::Ptr odrive = std::make_shared<ODriveController>(odrive_socket, CAN_ID);
 
-    if (!odrive->setState(MotorState::CLOSED_LOOP_CONTROL))
+    if (!odrive->setState(AxisState::CLOSED_LOOP_CONTROL))
         return 1;
     printf("Set axis state to closed loop control.\n");
 
@@ -56,7 +56,7 @@ int main(void)
         odrive->printInfo();
     }
 
-    if (!odrive->setState(MotorState::IDLE))
+    if (!odrive->setState(AxisState::IDLE))
         return 1;
     printf("Set axis state to idle.\n");
 

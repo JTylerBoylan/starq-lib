@@ -14,7 +14,7 @@ namespace starq::odrive
 
     ODriveController::~ODriveController()
     {
-        this->setState(MotorState::IDLE);
+        this->setState(AxisState::IDLE);
     }
 
     bool ODriveController::setGearRatio(const float gear_ratio)

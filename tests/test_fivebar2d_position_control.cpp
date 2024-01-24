@@ -48,7 +48,7 @@ int main(void)
                                                              std::vector<MotorController::Ptr>{odrive_A, odrive_B});
     printf("Created leg controller.\n");
 
-    if (!leg->setState(MotorState::CLOSED_LOOP_CONTROL))
+    if (!leg->setState(AxisState::CLOSED_LOOP_CONTROL))
         return 1;
     printf("Set axis state.\n");
 
@@ -89,7 +89,7 @@ int main(void)
         return 1;
     printf("Centered foot position.\n");
 
-    if (!leg->setState(MotorState::IDLE))
+    if (!leg->setState(AxisState::IDLE))
         return 1;
     printf("Set axis state to idle.\n");
 
