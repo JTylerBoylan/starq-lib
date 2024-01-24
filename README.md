@@ -79,3 +79,71 @@ Instructions on how to enable CAN on the Jetson.
 
 ## STARQ C++ Library
 
+### Creating an executable
+1. Open `~/starq-lib/CMakeLists.txt`
+2. Add the lines:
+```
+add_executable(my_executable examples/my_executable.cpp)
+target_include_directories(my_executable PUBLIC include)
+target_link_libraries(my_executable PUBLIC stdc++ stdc++fs m starq pthread)
+```
+- *Replace `my_executable` with your executable name*
+3. Create the file: `~/starq-lib/examples/my_executable.cpp`
+4. Add the lines:
+```
+#include <stdio.h>
+
+int main()
+{
+    printf("Hello World!\n");
+
+    return 0;
+}
+```
+
+### Compiling and Running an executable
+
+1. Open the Terminal
+2. Go to `~/starq-lib/build` or create it if it doesn't exist
+3. Run the command: $`cmake .. && make`
+4. Run the executable: $`./my_executable`
+
+### Classes
+
+#### CANSocket
+
+* Read and write frames to a CAN interface
+* Source: `~/starq-lib/src/can/can_socket.hpp`
+* Usage:
+```
+#include <stdio.h>
+
+#include "starq/can/can_socket.hpp"
+
+using namespace starq::can;
+
+int main()
+{
+    printf("Hello World!\n");
+
+    // Connect to CAN Interface
+    CANSocket::Ptr can_socket = std::make_shared<CANSocket>("can0");
+    if (!can_socket->connect())
+    {
+        printf("Failed to connect to CAN interface.\n");
+        return 1;
+    }
+
+    // Receive a CAN Frame
+    struct can_frame frame;
+    can_socket->receive(frame);
+    printf("CAN Recieved: ID: %d, Size: %d\n", frame.can_id, frame.can_dlc);
+
+    // Send a CAN Frame
+    uint8_t can_id = 0;
+    uint8_t data[8] = {'A', 'B', 'C', 'D', 'E', 'F', 'G'};
+    can_socket->send(can_id, data, 8);
+
+    return 0;
+}
+```
