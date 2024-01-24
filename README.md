@@ -75,7 +75,8 @@ Instructions on how to enable CAN on the Jetson.
 ### Jetson CAN Setup
 1. Open the Terminal on the Jetson
 2. Go to the `docs` folder: $`cd ~/starq-lib/docs`
-3. Run the command: $`sudo ./loadcan_jetson.sh`
+3. Run the command: $`sudo ./loadcan_jetson.sh` \
+*Note: This needs to be run every time the Jetson is booted.*
 
 ## STARQ C++ Library
 
@@ -114,6 +115,8 @@ int main()
 
 * Read and write frames to a CAN interface
 * Source: `~/starq-lib/src/can/can_socket.hpp`
+* Include: `#include "starq/can/can_socket.hpp"`
+* Namespace `starq::can`
 * Functions:
 ```
 // Connect to a CAN interface.
@@ -131,3 +134,37 @@ bool send(const uint8_t can_id, const uint8_t *data, const uint8_t size);
 // Receive a CAN frame.
 ssize_t receive(struct can_frame &frame);
 ```
+
+#### ODriveSocket
+
+#### MotorController
+
+#### ODriveController
+
+#### LegDynamics
+
+#### STARQ_FiveBar2D
+
+#### LegController
+
+#### LegCommandPublisher
+
+#### TrajectoryPublisher
+
+#### TrajectoryFileReader
+
+#### BodyControlMPC
+
+#### GaitController
+
+#### WalkingGaitController
+
+#### WalkingGaitPlanner
+
+#### SwimmingGaitController
+
+#### GaitPlanner
+
+#### Localization
+
+#### TerrainMap
