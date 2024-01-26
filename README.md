@@ -80,6 +80,14 @@ Instructions on how to enable CAN on the Jetson.
 
 ## STARQ C++ Library
 
+### Installation
+1. Open the Terminal
+2. Go to home folder: $`cd ~`
+3. Run the command: `git clone https://github.com/JTylerBoylan/starq-lib`
+4. Create a build directory: $`cd starq-lib && mkdir build`
+5. Build the project: $`cd build && cmake .. && make`
+6. Test executables will be generated in the build folder
+
 ### Creating an executable
 1. Open `~/starq-lib/CMakeLists.txt`
 2. Add the lines:
@@ -105,7 +113,7 @@ int main()
 ### Compiling and Running an executable
 
 1. Open the Terminal
-2. Go to `~/starq-lib/build` or create it if it doesn't exist
+2. Go to `~/starq-lib/build`
 3. Run the command: $`cmake .. && make`
 4. Run the executable: $`./my_executable`
 
@@ -119,33 +127,159 @@ int main()
 * Namespace `starq::can`
 * Functions:
 ```
-// Connect to a CAN interface.
+// Constructor
 CANSocket(const std::string &interface);
 
-// Disconnect from the CAN interface.
-~CANSocket();
-
-// Initialize the CAN interface.
 bool connect();
 
-// Send a CAN frame.
 bool send(const uint8_t can_id, const uint8_t *data, const uint8_t size);
 
-// Receive a CAN frame.
 ssize_t receive(struct can_frame &frame);
 ```
+*Note: The functions returning a boolean indicate if it was successful or not*
 
 #### ODriveSocket
 
+* Convert ODrive commands to CAN frames
+* Source: `~/starq-lib/src/odrive/odrive_socket.hpp`
+* Include: `#include "starq/odrive/odrive_socket.hpp`
+* Namespace: `starq::odrive`
+* Constructor:
+```
+ODriveSocket(const starq::can::CANSocket::Ptr socket);
+```
+
+*Note: ODriveSocket contains all the same functions as ODriveController, but requires the CAN ID.*
+
 #### MotorController
+
+* Abstract class for motor controllers. Used as a template for derived classes.
+* Include: `#include "starq/motor_controller.hpp`
+* Namespace: `starq`
+* Functions:
+```
+bool setGearRatio(const float gear_ratio);
+
+bool setState(const uint32_t state) = 0;
+
+bool setControlMode(const uint32_t control_mode, const uint32_t input_mode = 0x1);
+
+bool setPosition(const float pos, const float vel_ff = 0, const float torque_ff = 0);
+
+bool setVelocity(const float vel, const float torque_ff = 0);
+
+bool setTorque(const float torque);
+
+float getPositionEstimate();
+
+float getVelocityEstimate();
+
+float getTorqueEstimate();
+```
 
 #### ODriveController
 
+* Implementation of MotorController for ODrive controllers
+* Source: `~/starq-lib/src/odrive/odrive_controller.hpp`
+* Include: `#include "starq/odrive/odrive_controller.hpp`
+* Namespace: `starq::odrive`
+* Functions:
+  * Same as MotorController, but includes:
+```
+// Constructor
+ODriveController(const ODriveSocket::Ptr socket, const uint8_t can_id);
+
+bool setPosGain(const float pos_gain);
+
+bool setVelGains(const float vel_gain, const float integrator_gain);
+
+bool setLimits(const float velocity_limit, const float current_limit);
+
+uint8_t getCANID() const;
+
+uint32_t getAxisError();
+
+uint8_t getAxisState();
+
+float getIqSetpoint();
+
+float getIqMeasured();
+
+float getFETTemperature();
+
+float getMotorTemperature();
+
+float getBusVoltage();
+
+float getBusCurrent();
+
+bool clearErrors();
+
+void printInfo();
+
+std::string getErrorName();
+```
+
 #### LegDynamics
+
+* Abstract class for leg dynamics
+* Include: `#include "starq/leg_dynamics.hpp`
+* Namespace: `starq`
+* Functions:
+```
+bool getForwardKinematics(const VectorXf &joint_angles, VectorXf &foot_position);
+
+bool getInverseKinematics(const VectorXf &foot_position, VectorXf &joint_angles);
+
+getJacobian(const VectorXf &joint_angles, MatrixXf &jacobian);
+```
 
 #### STARQ_FiveBar2D
 
+* Implementation of LegDynamics for the 2D symmetric five-bar leg
+* Source: `~/starq-lib/src/dynamics/starq_fivebar2d.hpp`
+* Include: `#include "starq/dynamics/starq_fivebar2d.hpp`
+* Namespace: `starq::dynamics`
+* Functions:
+    * Same as LegDynamics
+```
+// Constructor
+STARQ_FiveBar2D(float L1, float L2);
+```
+
 #### LegController
+
+* Uses LegDynamics to convert leg commands into motor commands
+* Include: `#include "starq/leg_controller.hpp`
+* Namespace: `starq`
+* Functions:
+```
+// Constructor
+LegController(const starq::LegDynamics::Ptr dynamics, const std::vector<MotorController::Ptr> motor_controllers);
+
+bool setState(const uint32_t state);
+
+bool setControlMode(const uint32_t control_mode, const uint32_t input_mode = 0x1);
+
+bool setFootPosition(const VectorXf &foot_position, const VectorXf &foot_velocity_ff = VectorXf(),
+                        const VectorXf &foot_torque_ff = VectorXf());
+
+bool setFootVelocity(const VectorXf &foot_velocity, const VectorXf &foot_torque_ff = VectorXf());
+
+bool setFootForce(const VectorXf &foot_force);
+
+bool getFootPositionEstimate(VectorXf &foot_position);
+
+bool getFootVelocityEstimate(VectorXf &foot_velocity);
+
+bool getFootForceEstimate(VectorXf &foot_force);
+
+VectorXf getCurrentJointAngles();
+
+VectorXf getCurrentJointVelocities();
+
+VectorXf getCurrentJointTorques();
+```
 
 #### LegCommandPublisher
 
