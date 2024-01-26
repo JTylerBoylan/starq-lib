@@ -261,8 +261,7 @@ bool setState(const uint32_t state);
 
 bool setControlMode(const uint32_t control_mode, const uint32_t input_mode = 0x1);
 
-bool setFootPosition(const VectorXf &foot_position, const VectorXf &foot_velocity_ff = VectorXf(),
-                        const VectorXf &foot_torque_ff = VectorXf());
+bool setFootPosition(const VectorXf &foot_position, const VectorXf &foot_velocity_ff = VectorXf(), const VectorXf &foot_torque_ff = VectorXf());
 
 bool setFootVelocity(const VectorXf &foot_velocity, const VectorXf &foot_torque_ff = VectorXf());
 
@@ -283,9 +282,31 @@ VectorXf getCurrentJointTorques();
 
 #### LegCommandPublisher
 
-#### TrajectoryPublisher
+* Handles leg commands from multiple processes and republishes them at a fixed rate
+* Include: `#include "starq/leg_command_publisher.hpp`
+* Namespace: `starq`
+* Functions:
+```
+// Constructor
+LegCommandPublisher(const std::vector<LegController::Ptr> leg_controllers);
+
+void sendCommand(const LegCommand &leg_command);
+
+void clear();
+
+void setStopOnFail(const bool stop_on_fail);
+
+void setSleepDuration(const time_t sleep_duration_us);
+```
+* Advantages:
+  * Ability to use ODrive's timeout function to shut off the motors if no messages are recieved within some time limit.
+  * Leg force/velocity commands are constantly recomputed with the latest Jacobian, so they will stay in the correct direction.
+  * Multiple processes can send commands to the leg controller without interfering with one another (i.e race conditions)
 
 #### TrajectoryFileReader
+
+
+#### TrajectoryPublisher
 
 #### BodyControlMPC
 
