@@ -255,7 +255,8 @@ STARQ_FiveBar2D(float L1, float L2);
 * Functions:
 ```
 // Constructor
-LegController(const starq::LegDynamics::Ptr dynamics, const std::vector<MotorController::Ptr> motor_controllers);
+LegController(const starq::LegDynamics::Ptr dynamics,
+              const std::vector<MotorController::Ptr> motor_controllers);
 
 bool setState(const uint32_t state);
 
