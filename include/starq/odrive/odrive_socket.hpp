@@ -2,6 +2,7 @@
 #define STARQ_ODRIVE__ODRIVE_SOCKET_HPP_
 
 #include "starq/can/can_socket.hpp"
+#include "starq/thread_runner.hpp"
 
 #include <thread>
 #include <mutex>
@@ -10,7 +11,7 @@ namespace starq::odrive
 {
 
     /// @brief Send ODrive commands and listen for ODrive information over CAN bus
-    class ODriveSocket
+    class ODriveSocket : public ThreadRunner
     {
     public:
         using Ptr = std::shared_ptr<ODriveSocket>;
@@ -137,16 +138,9 @@ namespace starq::odrive
         float getTorqueEstimate(const uint8_t can_id);
 
     private:
-        /// @brief Start the listener.
-        /// @return If the listener was started successfully.
-        bool start();
-
-        /// @brief Stop the listener.
-        /// @return If the listener was stopped successfully.
-        bool stop();
 
         /// @brief Run the listener. (Called by the poll thread.)
-        void run();
+        void run() override;
 
         /// @brief Get the arbitration ID.
         /// @param can_id CAN ID of the axis.

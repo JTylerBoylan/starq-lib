@@ -39,34 +39,6 @@ namespace starq
         leg_command_map_.clear();
     }
 
-    bool LegCommandPublisher::start()
-    {
-
-        if (running_)
-        {
-            std::cerr << "Leg command publisher is already running." << std::endl;
-            return false;
-        }
-
-        clear();
-        running_ = true;
-        std::thread(&LegCommandPublisher::run, this).detach();
-        return true;
-    }
-
-    bool LegCommandPublisher::stop()
-    {
-
-        if (!running_)
-        {
-            std::cerr << "Leg command publisher is not running." << std::endl;
-            return false;
-        }
-
-        running_ = false;
-        return true;
-    }
-
     void LegCommandPublisher::run()
     {
         using namespace std::chrono;

@@ -2,6 +2,8 @@
 #define STARQ__LEG_COMMAND_PUBLISHER_HPP_
 
 #include "starq/leg_controller.hpp"
+#include "starq/thread_runner.hpp"
+
 #include <memory>
 #include <thread>
 #include <mutex>
@@ -21,7 +23,7 @@ namespace starq
         VectorXf target_force = VectorXf();
     };
 
-    class LegCommandPublisher
+    class LegCommandPublisher : public ThreadRunner
     {
     public:
         using Ptr = std::shared_ptr<LegCommandPublisher>;
@@ -49,16 +51,8 @@ namespace starq
         void setSleepDuration(const time_t sleep_duration_us) { sleep_duration_us_ = sleep_duration_us; }
 
     private:
-        /// @brief Start the leg command publisher.
-        /// @return If the leg command publisher was started successfully.
-        bool start();
-
-        /// @brief Stop the leg command publisher.
-        /// @return If the leg command publisher was stopped successfully.
-        bool stop();
-
         /// @brief Run the leg command publisher. (threaded)
-        void run();
+        void run() override;
 
         std::vector<LegController::Ptr> leg_controllers_;
         std::unordered_map<uint8_t, LegCommand> leg_command_map_;

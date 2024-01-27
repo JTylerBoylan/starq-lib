@@ -225,38 +225,8 @@ namespace starq::odrive
         return info_[can_id].torque_estimate;
     }
 
-    bool ODriveSocket::start()
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-
-        if (running_)
-        {
-            std::cerr << "ODrive listener already running." << std::endl;
-            return false;
-        }
-
-        running_ = true;
-        std::thread(&ODriveSocket::run, this).detach();
-        return true;
-    }
-
-    bool ODriveSocket::stop()
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-
-        if (!running_)
-        {
-            std::cerr << "ODrive listener not running." << std::endl;
-            return false;
-        }
-
-        running_ = false;
-        return true;
-    }
-
     void ODriveSocket::run()
     {
-
         while (true)
         {
 
