@@ -13,12 +13,6 @@ namespace starq::slam
     public:
         using Ptr = std::shared_ptr<TerrainMap>;
 
-        /// @brief Create a terrain map.
-        TerrainMap() {}
-
-        /// @brief Destroy the terrain map.
-        ~TerrainMap() {}
-
         /// @brief Get the distance to the nearest obstacle.
         /// @param position Position vector [m] (x, y, z) in the world frame.
         /// @return Distance to the nearest obstacle [m]

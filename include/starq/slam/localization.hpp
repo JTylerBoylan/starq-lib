@@ -14,12 +14,6 @@ namespace starq::slam
     public:
         using Ptr = std::shared_ptr<Localization>;
 
-        /// @brief Create a localization.
-        Localization() {}
-
-        /// @brief Destroy the localization.
-        ~Localization() {}
-
         /// @brief Get the current position of the robot.
         /// @return Position vector [m] (x, y, z) in the world frame.
         virtual Vector3f getCurrentPosition() = 0;

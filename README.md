@@ -349,37 +349,74 @@ bool setTrajectory(const std::vector<LegCommand> &trajectory);
 bool setFrequency(int frequency);
 ```
 
-#### BodyControlMPC
+#### GaitController (TODO)
 
-* TODO
+* Abstract class for gait control
+* Functions:
+```
+void start();
 
-#### GaitController
+void stop();
 
-* TODO
+void setVelocity(const Vector3f &linear_speed, const Vector3f &angular_speed);
+```
 
-#### WalkingGaitController
+#### WalkingGaitController (TODO)
 
-* TODO
+* Implementation of GaitController for walking
 
-#### WalkingGaitPlanner
+#### WalkingGaitPlanner (TODO)
 
-* TODO
+* Plan body of mass trajectory and foot positions
 
-#### SwimmingGaitController
+#### BodyControlMPC (TODO)
 
-* TODO
+* Formulate plan into a QP problem to solve for leg forces
+* QP Solver: OSQP or qpOASIS
+* Reference:
+```
+Di Carlo, J., Wensing, P. M., Katz, B., Bledt, G., & Kim, S. (2018). Dynamic locomotion in the MIT Cheetah 3 through Convex Model-predictive control. 2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). https://doi.org/10.1109/iros.2018.8594448 
+```
 
-#### GaitPlanner
+#### SwimmingGaitController (TODO)
 
-* TODO
+* Implementation of GaitController for swimming
+* Includes FF-SLIP
 
-#### Localization
+#### GaitPlanner (TODO)
 
-* TODO
+* Find the optimal trajectory and gait sequence to a user-defined goal.
+* Planner: SBMPO
 
-#### TerrainMap
+#### Localization (TODO)
 
-* TODO
+* Abstract class for localization methods
+* Functions:
+```
+Vector3f getCurrentPosition();
+
+Vector3f getCurrentOrientation();
+
+Vector3f getCurrentVelocity();
+
+Vector3f getCurrentAngularVelocity();
+```
+
+#### TerrainMap (TODO)
+
+* Abstract class for mapping methods
+* Functions:
+```
+double getDistanceToObstacle(const Vector3f &position);
+```
+
+### ROS Interface (TODO)
+* Library written as a ROS node so it can interface with other ROS packages
+* ROS Packages:
+  * cuVSLAM (NVIDIA's SLAM)
+  * joy (joystick control)
+  * rviz (visualization tools)
+  * MATLAB ROS Toolbox
 
 ### Example Code
 ```
