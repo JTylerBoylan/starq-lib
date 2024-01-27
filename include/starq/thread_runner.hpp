@@ -11,7 +11,7 @@ namespace starq
     public:
         virtual bool start()
         {
-            if (running_)
+            if (isRunning())
                 return false;
 
             running_ = true;
@@ -21,23 +21,25 @@ namespace starq
 
         virtual bool stop()
         {
-            if (!running_)
+            if (!isRunning())
                 return false;
 
             running_ = false;
             return true;
         }
 
-        bool isRunning() const
+        bool isRunning()
         {
+            std::lock_guard<std::mutex> lock(mutex_);
             return running_;
         }
 
-    private:
+    protected:
         virtual void run() = 0;
-
-        bool running_ = false;
         std::mutex mutex_;
+
+    private:
+        bool running_ = false;
     };
 }
 

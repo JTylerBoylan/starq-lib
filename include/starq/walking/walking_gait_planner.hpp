@@ -3,6 +3,7 @@
 
 #include "starq/slam/localization.hpp"
 #include "starq/mpc/body_control_mpc.hpp"
+#include "starq/thread_runner.hpp"
 
 #include <thread>
 #include <mutex>
@@ -10,7 +11,7 @@
 namespace starq::walking
 {
 
-    class WalkingGaitPlanner
+    class WalkingGaitPlanner : public starq::ThreadRunner
     {
     public:
         using Ptr = std::shared_ptr<WalkingGaitPlanner>;
@@ -26,12 +27,6 @@ namespace starq::walking
         /// @param linear_speed Linear velocity of the walk.
         /// @param angular_speed Angular velocity of the walk.
         void setDesiredVelocity(const Eigen::Vector3f &linear_speed, const Eigen::Vector3f &angular_speed);
-
-        /// @brief Start the walking gait planner.
-        void start();
-
-        /// @brief Stop the walking gait planner.
-        void stop();
 
         /// @brief Set the horizon time for the MPC.
         /// @param horizon_time Horizon time for the MPC.
@@ -50,7 +45,7 @@ namespace starq::walking
 
     private:
         /// @brief Run the walking gait planner.
-        void run();
+        void run() override;
 
         starq::mpc::BodyControlMPC::Ptr body_control_mpc_;
         starq::slam::Localization::Ptr localization_;

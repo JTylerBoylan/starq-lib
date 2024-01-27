@@ -227,14 +227,8 @@ namespace starq::odrive
 
     void ODriveSocket::run()
     {
-        while (true)
+        while (isRunning())
         {
-
-            {
-                std::lock_guard<std::mutex> lock(mutex_);
-                if (!running_)
-                    break;
-            }
 
             struct can_frame frame;
             if (socket_->receive(frame) < 0)

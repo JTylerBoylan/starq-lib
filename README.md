@@ -305,13 +305,49 @@ void setSleepDuration(const time_t sleep_duration_us);
   * Leg force/velocity commands are constantly recomputed with the latest Jacobian, so they will stay in the correct direction.
   * Multiple processes can send commands to the leg controller without interfering with one another (race conditions)
 
+* LegCommandPublisher also holds the definition of a LegCommand:
+```
+struct LegCommand
+{
+    uint8_t leg_id = 0;
+    uint32_t control_mode = 0;
+    uint32_t input_mode = 0x1;
+    VectorXf target_position = VectorXf();
+    VectorXf target_velocity = VectorXf();
+    VectorXf target_force = VectorXf();
+};
+```
 #### TrajectoryFileReader
 
-* TODO
+* Reads leg trajectories from text files
+* Include: `#include "starq/trajectory_file_reader.hpp`
+* Namespace: `starq`
+* Functions:
+```
+// Constructor
+TrajectoryFileReader();
+
+bool load2D(const std::string &file_path);
+
+bool load3D(const std::string &file_path);
+
+std::vector<LegCommand> getTrajectory();
+```
 
 #### TrajectoryPublisher
 
-* TODO
+* Publishes a leg trajectory at a fixed frequency
+* Include: `#include "starq/trajectory_publisher.hpp`
+* Namespace: `starq`
+* Functions:
+```
+// Constructor
+TrajectoryPublisher(LegCommandPublisher::Ptr leg_command_publisher);
+
+bool setTrajectory(const std::vector<LegCommand> &trajectory);
+
+bool setFrequency(int frequency);
+```
 
 #### BodyControlMPC
 

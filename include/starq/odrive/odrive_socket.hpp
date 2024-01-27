@@ -168,7 +168,6 @@ namespace starq::odrive
         }
 
         const starq::can::CANSocket::Ptr socket_;
-        bool running_;
 
         struct
         {
@@ -184,8 +183,6 @@ namespace starq::odrive
             float vel_estimate = 0.0f;
             float torque_estimate = 0.0f;
         } info_[MAX_CAN_ID + 1];
-
-        std::mutex mutex_;
     };
 
 }

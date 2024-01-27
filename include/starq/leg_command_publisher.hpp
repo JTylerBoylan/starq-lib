@@ -59,9 +59,6 @@ namespace starq
 
         bool stop_on_fail_;
         time_t sleep_duration_us_;
-
-        bool running_;
-        std::mutex mutex_;
     };
 }
 

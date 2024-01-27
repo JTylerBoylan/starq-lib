@@ -7,7 +7,6 @@ namespace starq
 
     LegCommandPublisher::LegCommandPublisher(const std::vector<LegController::Ptr> leg_controllers)
         : leg_controllers_(leg_controllers),
-          running_(false),
           stop_on_fail_(true),
           sleep_duration_us_(5000)
     {
@@ -16,7 +15,7 @@ namespace starq
 
     LegCommandPublisher::~LegCommandPublisher()
     {
-        if (running_)
+        if (isRunning())
             stop();
     }
 
@@ -43,13 +42,8 @@ namespace starq
     {
         using namespace std::chrono;
 
-        while (true)
+        while (isRunning())
         {
-            {
-                std::lock_guard<std::mutex> lock(mutex_);
-                if (!running_)
-                    break;
-            }
 
             bool command_success = true;
             for (auto iter = leg_command_map_.begin(); iter != leg_command_map_.end() && command_success; ++iter)
