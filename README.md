@@ -480,3 +480,11 @@ int main() {
   return 0;
 } 
 ```
+
+### STARQ Test Executables
+Executables located in the `build` folder:
+* `test_can_connection`: Prints 10 CAN frames to the console.
+* `test_odrive_control`: Moves ODrive motors to a few set positions.
+* `test_clear_errors`: Clears errors for all connected ODrives.
+* `test_fivebar2d_position_control`:  Moves end effector position in a circle of a set radius.
+* `test_fivebar2d_force_control`: Applies a constant end effector force in a set direction.
