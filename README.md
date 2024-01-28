@@ -272,12 +272,6 @@ bool getFootPositionEstimate(VectorXf &foot_position);
 bool getFootVelocityEstimate(VectorXf &foot_velocity);
 
 bool getFootForceEstimate(VectorXf &foot_force);
-
-VectorXf getCurrentJointAngles();
-
-VectorXf getCurrentJointVelocities();
-
-VectorXf getCurrentJointTorques();
 ```
 
 #### LegCommandPublisher
