@@ -369,10 +369,8 @@ void setVelocity(const Vector3f &linear_speed, const Vector3f &angular_speed);
 
 * Formulate plan into a QP problem to solve for leg forces
 * QP Solver: OSQP or qpOASIS
-* Reference:
-```
-Di Carlo, J., Wensing, P. M., Katz, B., Bledt, G., & Kim, S. (2018). Dynamic locomotion in the MIT Cheetah 3 through Convex Model-predictive control. 2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). https://doi.org/10.1109/iros.2018.8594448 
-```
+* Reference: \
+*Di Carlo, J., Wensing, P. M., Katz, B., Bledt, G., & Kim, S. (2018). Dynamic locomotion in the MIT Cheetah 3 through Convex Model-predictive control. 2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). https://doi.org/10.1109/iros.2018.8594448*
 
 #### SwimmingGaitController (TODO)
 
