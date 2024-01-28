@@ -160,7 +160,7 @@ ODriveSocket(const starq::can::CANSocket::Ptr socket);
 ```
 bool setGearRatio(const float gear_ratio);
 
-bool setState(const uint32_t state) = 0;
+bool setState(const uint32_t state);
 
 bool setControlMode(const uint32_t control_mode, const uint32_t input_mode = 0x1);
 
