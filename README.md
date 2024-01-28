@@ -255,15 +255,13 @@ STARQ_FiveBar2D(float L1, float L2);
 * Functions:
 ```
 // Constructor
-LegController(const starq::LegDynamics::Ptr dynamics,
-              const std::vector<MotorController::Ptr> motor_controllers);
+LegController(const starq::LegDynamics::Ptr dynamics, const std::vector<MotorController::Ptr> motor_controllers);
 
 bool setState(const uint32_t state);
 
 bool setControlMode(const uint32_t control_mode, const uint32_t input_mode = 0x1);
 
-bool setFootPosition(const VectorXf &foot_position, const VectorXf &foot_velocity_ff, 
-                                                    const VectorXf &foot_torque_ff);
+bool setFootPosition(const VectorXf &foot_position, const VectorXf &foot_velocity_ff, const VectorXf &foot_torque_ff);
 
 bool setFootVelocity(const VectorXf &foot_velocity, const VectorXf &foot_torque_ff);
 
