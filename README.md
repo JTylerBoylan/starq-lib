@@ -339,6 +339,10 @@ TrajectoryPublisher(LegCommandPublisher::Ptr leg_command_publisher);
 bool setTrajectory(const std::vector<LegCommand> &trajectory);
 
 bool setFrequency(int frequency);
+
+void start();
+
+void stop();
 ```
 
 #### GaitController (TODO)
