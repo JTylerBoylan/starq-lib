@@ -29,6 +29,10 @@ https://docs.odriverobotics.com/v/latest/hardware/pro-datasheet.html
 ### MJ5208 Moteus Motor Shop
 https://mjbots.com/products/mj5208
 
+### NTCLE300E3502SB Thermistor
+Mouser #: 594-NTCLE300E3502SB 
+Data Sheet: https://www.vishay.com/doc?29051
+
 ### MJ5208 ODrive Auto-Configuration Script
 1. Plug in USB from the Jetson to the ODrive controller 
 2. Open the Terminal on the the Jetson
