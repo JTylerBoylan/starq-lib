@@ -29,8 +29,10 @@ https://docs.odriverobotics.com/v/latest/hardware/pro-datasheet.html
 ### MJ5208 Moteus Motor Shop
 https://mjbots.com/products/mj5208
 
-### NTCLE300E3502SB Thermistor
-Mouser #: 594-NTCLE300E3502SB 
+### NTCLE300E3502SB Thermistor Shop
+https://www.mouser.com/ProductDetail/Vishay-BC-Components/NTCLE300E3502SB?qs=%2FWiulJ9oly5IYkswf0Y9eA%3D%3D
+
+### Thermistor Data Sheet
 Data Sheet: https://www.vishay.com/doc?29051
 
 ### MJ5208 ODrive Auto-Configuration Script
