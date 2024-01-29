@@ -2,6 +2,7 @@
 #define STARQ_MPC__BODY_CONTROL_MPC_HPP_
 
 #include "starq/mpc/mpc_types.hpp"
+#include "starq/thread_runner.hpp"
 
 #include <memory>
 #include <thread>
@@ -10,7 +11,7 @@
 namespace starq::mpc
 {
 
-    class BodyControlMPC
+    class BodyControlMPC : public starq::ThreadRunner
     {
     public:
         using Ptr = std::shared_ptr<BodyControlMPC>;
@@ -18,10 +19,6 @@ namespace starq::mpc
         BodyControlMPC();
 
         ~BodyControlMPC();
-
-        void start();
-
-        void stop();
 
         void setReferenceTrajectory(const CenterOfMassTrajectory &com_trajectory,
                                     const StrideTrajectory &stride_trajectory);

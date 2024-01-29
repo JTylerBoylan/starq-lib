@@ -8,13 +8,12 @@
 
 namespace starq::mpc
 {
-
     using namespace Eigen;
 
     struct LegState
     {
         bool in_stance;
-        Eigen::Vector3f position;
+        Eigen::Vector3f foothold_position; // In world frame
     };
 
     using StrideState = std::array<LegState, NUMBER_OF_LEGS>;
