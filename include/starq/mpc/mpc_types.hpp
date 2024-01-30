@@ -2,23 +2,17 @@
 #define STARQ_MPC__MPC_TYPES_HPP_
 
 #include <vector>
-#include "eigen3/Eigen/Dense"
+#include <map>
+#include <chrono>
 
-#define NUMBER_OF_LEGS 4
+#include "eigen3/Eigen/Dense"
 
 namespace starq::mpc
 {
     using namespace Eigen;
 
-    struct LegState
-    {
-        bool in_stance;
-        Eigen::Vector3f foothold_position; // In world frame
-    };
-
-    using StrideState = std::array<LegState, NUMBER_OF_LEGS>;
-
-    using StrideTrajectory = std::vector<StrideState>;
+    using StanceState = std::vector<bool>;
+    using GaitSequence = std::map<time_t, StanceState>;    
 
     struct CenterOfMassState
     {
@@ -30,7 +24,7 @@ namespace starq::mpc
 
     using CenterOfMassTrajectory = std::vector<CenterOfMassState>;
 
-    using LegForces = std::array<Vector3f, NUMBER_OF_LEGS>;
+    using LegForces = std::vector<Vector3f>;
 
 }
 

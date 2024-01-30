@@ -19,17 +19,17 @@ namespace starq
             stop();
     }
 
-    void LegCommandPublisher::sendCommand(const LegCommand &leg_command)
+    void LegCommandPublisher::sendCommand(LegCommand::Ptr leg_command)
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
-        if (leg_command.leg_id >= leg_controllers_.size())
+        if (leg_command->leg_id >= leg_controllers_.size())
         {
             std::cerr << "Leg ID out of range." << std::endl;
             return;
         }
 
-        leg_command_map_[leg_command.leg_id] = leg_command;
+        leg_command_map_[leg_command->leg_id] = leg_command;
     }
 
     void LegCommandPublisher::clear()
@@ -54,7 +54,7 @@ namespace starq
                 LegCommand leg_cmd;
                 {
                     std::lock_guard<std::mutex> lock(mutex_);
-                    leg_cmd = iter->second;
+                    leg_cmd = *(iter->second);
                 }
 
                 if (!leg_controller->setControlMode(leg_cmd.control_mode, leg_cmd.input_mode))

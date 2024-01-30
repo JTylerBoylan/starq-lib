@@ -5,9 +5,6 @@
 #include "starq/mpc/body_control_mpc.hpp"
 #include "starq/thread_runner.hpp"
 
-#include <thread>
-#include <mutex>
-
 namespace starq::walking
 {
 
@@ -38,7 +35,7 @@ namespace starq::walking
 
         /// @brief Set the hip locations for the MPC.
         /// @param hip_locations Hip locations for the MPC.
-        void setHipLocations(const Eigen::Matrix<float, 3, NUMBER_OF_LEGS> &hip_locations) { hip_locations_ = hip_locations; }
+        void setHipLocations(const Eigen::Matrix3Xf &hip_locations) { hip_locations_ = hip_locations; }
 
         /// @brief Set the sleep duration for the walking gait planner.
         void setSleepDuration(const time_t &sleep_duration) { sleep_duration_ = sleep_duration; }
@@ -55,7 +52,7 @@ namespace starq::walking
 
         float horizon_time_;
         int node_count_;
-        Eigen::Matrix<float, 3, NUMBER_OF_LEGS> hip_locations_;
+        Eigen::Matrix3Xf hip_locations_;
 
         bool running_;
         time_t sleep_duration_;

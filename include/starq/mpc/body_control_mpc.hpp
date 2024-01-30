@@ -5,8 +5,6 @@
 #include "starq/thread_runner.hpp"
 
 #include <memory>
-#include <thread>
-#include <mutex>
 
 namespace starq::mpc
 {
@@ -20,9 +18,6 @@ namespace starq::mpc
 
         ~BodyControlMPC();
 
-        void setReferenceTrajectory(const CenterOfMassTrajectory &com_trajectory,
-                                    const StrideTrajectory &stride_trajectory);
-
         void setInertiaTensor(const Matrix3f &inertia_tensor);
 
         void setMass(const float &mass);
@@ -30,13 +25,12 @@ namespace starq::mpc
         void setGravity(const float &gravity);
 
     private:
-        void run();
+        void run() override;
 
         Matrix3f inertia_tensor_;
         float mass_;
         float gravity_;
 
-        std::mutex mutex_;
     };
 }
 

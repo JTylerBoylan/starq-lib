@@ -15,6 +15,8 @@ namespace starq
     /// @brief Leg command structure
     struct LegCommand
     {
+        using Ptr = std::shared_ptr<LegCommand>;
+
         uint8_t leg_id = 0;
         uint32_t control_mode = 0;
         uint32_t input_mode = 0x1;
@@ -37,7 +39,7 @@ namespace starq
 
         /// @brief Send a leg command to the leg controller.
         /// @param leg_command Leg command to send.
-        void sendCommand(const LegCommand &leg_command);
+        void sendCommand(LegCommand::Ptr leg_command);
 
         /// @brief Clear the leg command publisher.
         void clear();
@@ -55,7 +57,7 @@ namespace starq
         void run() override;
 
         std::vector<LegController::Ptr> leg_controllers_;
-        std::unordered_map<uint8_t, LegCommand> leg_command_map_;
+        std::unordered_map<uint8_t, LegCommand::Ptr> leg_command_map_;
 
         bool stop_on_fail_;
         time_t sleep_duration_us_;

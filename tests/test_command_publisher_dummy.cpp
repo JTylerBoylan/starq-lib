@@ -39,12 +39,12 @@ int main(void)
     const float center_x = 0.0;
     const float center_y = -0.15;
 
-    LegCommand cmd;
-    cmd.leg_id = LEG_ID;
-    cmd.control_mode = 0x3;
-    cmd.target_position = Vector2f(center_x, center_y);
-    cmd.target_velocity = VectorXf::Zero(2);
-    cmd.target_force = VectorXf::Zero(2);
+    LegCommand::Ptr cmd = std::make_shared<LegCommand>();
+    cmd->leg_id = LEG_ID;
+    cmd->control_mode = 0x3;
+    cmd->target_position = Vector2f(center_x, center_y);
+    cmd->target_velocity = VectorXf::Zero(2);
+    cmd->target_force = VectorXf::Zero(2);
 
     publisher->sendCommand(cmd);
     printf("Pushed leg command.\n");
